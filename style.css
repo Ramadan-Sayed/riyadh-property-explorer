@@ -1,0 +1,132 @@
+/* محو الهوامش الافتراضية وضبط حساب الأبعاد */
+/*reset style*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+
+/* الشريط العلوي بالتيل الغامق الوقور */
+.app-header {
+    background-color: #004d40; /* Deep Teal */
+    color: #ffffff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.geo-icon {
+    font-size: 1.5rem;
+}
+
+.logo-area h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* شارة المرحلة */
+.badge {
+    background-color: #00796b; /* Light Teal */
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+
+
+
+
+/* حاوية التطبيق الرئيسية */
+.app-container {
+    display: flex;
+    flex: 1;
+}
+
+/* القائمة الجانبية */
+.sidebar {
+    width: 20%;
+    background-color: #002520; /* Darker Teal للخلفية الجانبية */
+    color: #e0f2f1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sidebar h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #004d40;
+    padding-bottom: 10px;
+}
+
+/* كروت الميزات */
+.feature-card {
+    background-color: #00332c;
+    padding: 15px;
+    border-radius: 8px;
+    border-right: 4px solid transparent; /* لتأثير التنشيط جهة اليمين بما أننا RTL */
+    transition: all 0.3s ease;
+}
+
+.feature-card h3 {
+    font-size: 1rem;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.feature-card p {
+    font-size: 0.85rem;
+    color: #b2dfdb;
+}
+
+/* حالة الكارت النشط حالياً */
+.feature-card.active {
+    background-color: #004d40;
+    border-right-color: #26a69a; /* لون تيل مضيء للميزة النشطة */
+}
+
+
+
+
+
+/* مساحة الخريطة المؤقتة */
+.map-area {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+}
+
+.map-placeholder {
+    flex: 1;
+    background-color: white;
+    border: 2px dashed #b2dfdb;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    color: #004d40;
+}
