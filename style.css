@@ -36,7 +36,16 @@ body {
 }
 
 .geo-icon {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    color: #26a69a; /* تيل مضيء يعبر عن النبض البرمجي والمستقبلي */
+    transform: rotate(-5deg); /* ميلان هندسي خفيف يعطي إيحاء بديناميكية الخرائط */
+    transition: transform 0.3s ease;
+}
+
+/* تأثير تفاعلي عند تمرير الماوس على شعار المشروع */
+.logo-area:hover .geo-icon {
+    transform: scale(1.15) rotate(5deg);
+    color: #4db6ac;
 }
 
 .logo-area h1 {
