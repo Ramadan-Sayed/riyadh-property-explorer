@@ -66,21 +66,25 @@ body {
 
 
 
-/* حاوية التطبيق الرئيسية */
+/* تحويل الحاوية الرئيسية إلى شبكة احترافية ثنائية الأبعاد */
 .app-container {
-    display: flex;
-    flex: 1;
+    display: grid;
+    /* تقسيم الشاشة: 300 بكسل للقائمة الجانبية، والـ 1fr الباقي بالكامل لمساحة الخريطة */
+    grid-template-columns: 20% 1fr; 
+    /* جعل الارتفاع المتاح للحاوية يملأ المساحة تحت الهيدر تماماً */
+    height: calc(100vh - 60px); /* بفرض أن ارتفاع الهيدر 60 بكسل */
+    overflow: hidden; /* لمنع ظهور شريطي تمرير عشوائيين للشاشة الكبرى */
 }
 
 /* القائمة الجانبية */
 .sidebar {
-    width: 20%;
     background-color: #002520; /* Darker Teal للخلفية الجانبية */
     color: #e0f2f1;
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    overflow-y: auto; /* لو الكروت زادت يحصل سكرول جوه السايدبار نفسه */
 }
 
 .sidebar h2 {
@@ -122,20 +126,21 @@ body {
 
 /* مساحة الخريطة المؤقتة */
 .map-area {
-    flex: 1;
+    background-color: #f4f7f6;
     padding: 20px;
-    display: flex;
+    display: flex; /* جواها flex لتوسيط محتوى الخريطة المؤقت */
 }
 
 .map-placeholder {
-    flex: 1;
-    background-color: white;
-    border: 2px dashed #b2dfdb;
+    width: 100%;
+    height: 100%;
+    /* تغيير الخلفية مؤقتاً للون رمادي خريطي واضح لتلاحظ المساحة */
+    background-color: #e0f2f1; 
+    border: 2px dashed #004d40;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 15px;
     color: #004d40;
 }
