@@ -106,7 +106,12 @@ body {
     
 }
 
-
+/* التأثير البصري عند مرور الماوس */
+.feature-card:hover{
+    box-shadow: 0px 0px 5px 2px rgb(166, 158, 158); 
+    transform: translateY(-5px); /* رفع الكرت برفق لإشعار المستخدم بالتفاعل */
+    cursor: pointer; /* تحويل شكل الماوس ليد ضاغطة */
+}
 
 .feature-card h3 {
     font-size: 1rem;
