@@ -15,7 +15,7 @@ In the light of Riyadh's rapid urban expansion and multi-billion dollar developm
 - [x] **Day 1:** Structural Setup using Strict Semantic HTML5.
 - [x] **Day 2:** Baseline CSS3 styling, Teal-theme visual identity, and Flexbox implementation.
 - [x] **Day 3:** Advanced multi-dimensional viewport slicing using CSS Grid.
-- [ ] **Day 4:** Dynamic viewport adaptability & Responsive Web Design (RWD) for mobile-field operations.
+- [x] **Day 4:** Dynamic viewport adaptability & Responsive Web Design (RWD) for mobile-field operations.
 - [ ] **Day 5:** Code Review, optimization, and structural synchronization.
 
 ---
@@ -34,6 +34,11 @@ In the light of Riyadh's rapid urban expansion and multi-billion dollar developm
 - Defined the executive corporate visual identity utilizing a professional **Teal color palette** (`#004d40`, `#002520`) tailored for technical engineering platforms.
 - Implemented **CSS Flexbox** alignment on the `.app-header` for seamless, fluid horizontal positioning.
 - Engineered responsive `.feature-card` elements for the sidebar with active state highlights (`.active`).
+
+#### **Day 3 & 4: Grid Engineering & Visual Interactivity**
+- **Robust Grid Refactoring:** Engineered a precise two-dimensional dashboard viewport (`.app-container`) utilizing `grid-template-columns: 300px 1fr` to secure a pixel-perfect, fixed sidebar for asset listings while maintaining a fluid `1fr` footprint for the geospatial map engine.
+- **Viewport Height Constraint:** Managed vertical workspace slicing with `grid-template-rows: 1fr` combined with `height: calc(100vh - 60px)` and strict `overflow: hidden` boundaries to prevent unauthorized viewport scroll leaks.
+- **Micro-interactions:** Integrated smooth hardware-accelerated animations (`transition: all 0.3s ease`) on `.feature-card` structures, deploying a clean white `box-shadow` blueprint and subtle `translateY(-5px)` elevation vectors during hover states to increase tactile user response.
 
 ---
 
