@@ -66,14 +66,16 @@ body {
 
 
 
-/* تحويل الحاوية الرئيسية إلى شبكة احترافية ثنائية الأبعاد */
+/* الحاوية الرئيسية التي تحوي القائمة الجانبية ومساحة الخريطة */
 .app-container {
     display: grid;
-    /* تقسيم الشاشة: 300 بكسل للقائمة الجانبية، والـ 1fr الباقي بالكامل لمساحة الخريطة */
-    grid-template-columns: 20% 1fr; 
-    /* جعل الارتفاع المتاح للحاوية يملأ المساحة تحت الهيدر تماماً */
-    height: calc(100vh - 60px); /* بفرض أن ارتفاع الهيدر 60 بكسل */
-    overflow: hidden; /* لمنع ظهور شريطي تمرير عشوائيين للشاشة الكبرى */
+    /* القائمة الجانبية ثابتة ومريحة للعين، والخريطة تتمدد بحرية */
+    grid-template-columns: 300px 1fr; 
+    /* صف واحد ممتد بالكامل لملء المساحة المتاحة تحت الهيدر */
+    grid-template-rows: 1fr; 
+    /* الارتفاع الإجمالي المتبقي بعد طرح ارتفاع الهيدر (60px) */
+    height: calc(100vh - 60px);
+    overflow: hidden; 
 }
 
 /* القائمة الجانبية */
@@ -100,13 +102,11 @@ body {
     padding: 15px;
     border-radius: 8px;
     border-right: 4px solid transparent; /* لتأثير التنشيط جهة اليمين بما أننا RTL */
-    transition: all 0.3s ease;
+    transition: all 0.5s ease; /*تنعيم لحركة الصعود والظل*/
     
 }
 
-.feature-card:hover{
-    box-shadow: 0px 0px 5px 2px white;
-}
+
 
 .feature-card h3 {
     font-size: 1rem;
@@ -149,4 +149,16 @@ body {
     justify-content: center;
     align-items: center;
     color: #004d40;
+}
+
+
+
+
+
+@media (max-width: 768px) {
+    .app-container {
+        /* تحويل التصميم لعمود واحد في الشاشات الصغيرة */
+        grid-template-columns: 1fr; 
+        grid-template-rows: 60px auto 400px; /* هيدر، ثم القائمة، ثم الخريطة تحت */
+    }
 }
