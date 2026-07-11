@@ -75,7 +75,7 @@ body {
     grid-template-rows: 1fr; 
     /* الارتفاع الإجمالي المتبقي بعد طرح ارتفاع الهيدر (60px) */
     height: calc(100vh - 60px);
-    overflow: hidden; 
+    overflow: auto; 
 }
 
 /* القائمة الجانبية */
