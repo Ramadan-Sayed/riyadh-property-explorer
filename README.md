@@ -1,59 +1,12 @@
-# 🏙️ Riyadh Property Explorer (Core Frontend GIS)
+# GIS Dashboard Static UI - Riyadh Property Explorer (Week 1)
 
-A professional Web GIS Frontend application customized for the booming real estate market in Riyadh. This project is built as part of a 24-week professional development track, showcasing modern layout architectures, spatial data processing, and agile development methodologies.
+This repository tracks my daily progress during the first week of my intensive 6-month technical roadmap to become a Job-Ready Web GIS Developer.
 
----
+## 🛠️ What I Accomplished This Week:
+* **Semantic HTML5:** Built a clean, structured layout for the GIS dashboard using semantic web tags.
+* **CSS Grid & Flexbox Layout:** Designed a robust layout structure featuring a fixed-width interactive sidebar (300px) and a flexible fluid container (1fr) optimized for map rendering.
+* **Responsive UI/UX:** Developed reactive feature cards for property listings with dynamic hover interactions (`transform: translateY` and smooth custom shadow transitions).
 
-## 🎯 Project Overview & Business Value
-In the light of Riyadh's rapid urban expansion and multi-billion dollar developments, managing spatial data visually is a core challenge for PropTech. This platform bridges the gap by transforming complex spatial records into an interactive, highly responsive frontend dashboard, designed for real-time decision-making in the field and office.
-
----
----
-
-## ⚙️ Core Architecture & Roadmap
-
-### 🏁 Phase 1: Core Layout & Baseline GIS UI (Week 1)
-- [x] **Day 1:** Structural Setup using Strict Semantic HTML5.
-- [x] **Day 2:** Baseline CSS3 styling, Teal-theme visual identity, and Flexbox implementation.
-- [x] **Day 3:** Advanced multi-dimensional viewport slicing using CSS Grid.
-- [x] **Day 4:** Dynamic viewport adaptability & Responsive Web Design (RWD) for mobile-field operations.
-- [x] **Day 5:** Code Review, optimization, and structural synchronization.
-
----
-
----
-
-## 🚀 Weekly Sprint Log
-
-### 📂 Week 1: Layout Engineering & Visual Identity
-
-#### **Day 1: Semantic Foundation**
-- Established the foundational directory structure and repository lifecycle.
-- Implemented strict semantic layout using structural tags (`<header>`, `<aside>`, `<main>`, `<footer_metadata>`).
-- Provisioned baseline compartments for the 4 core GIS utilities in the workspace sidebar.
-
-#### **Day 2: Visual Identity & Flexbox Layout**
-- Initiated `style.css` with a global layout reset (`box-sizing: border-box`).
-- Defined the executive corporate visual identity utilizing a professional **Teal color palette** (`#004d40`, `#002520`) tailored for technical engineering platforms.
-- Implemented **CSS Flexbox** alignment on the `.app-header` for seamless, fluid horizontal positioning.
-- Engineered responsive `.feature-card` elements for the sidebar with active state highlights (`.active`).
-
-#### **Day 3 & 4: Grid Engineering & Visual Interactivity**
-- **Robust Grid Refactoring:** Engineered a precise two-dimensional dashboard viewport (`.app-container`) utilizing `grid-template-columns: 300px 1fr` to secure a pixel-perfect, fixed sidebar for asset listings while maintaining a fluid `1fr` footprint for the geospatial map engine.
-- **Viewport Height Constraint:** Managed vertical workspace slicing with `grid-template-rows: 1fr` combined with `height: calc(100vh - 60px)` and strict `overflow: hidden` boundaries to prevent unauthorized viewport scroll leaks.
-- **Micro-interactions:** Integrated smooth hardware-accelerated animations (`transition: all 0.3s ease`) on `.feature-card` structures, deploying a clean white `box-shadow` blueprint and subtle `translateY(-5px)` elevation vectors during hover states to increase tactile user response.
-
-#### **Day 5: Code Review & Mobile Optimization**
-- Conducted a comprehensive code review to ensure strict structural alignment between HTML5 elements and CSS styles.
-- Optimized the responsive layout inside `style.css` by resolving a viewport height constraint issue within the media query, ensuring flawless rendering and natural vertical scrolling on mobile structures ($max-width: 768px$).
-- Finalized and synchronized the Week 1 baseline GIS UI repository lifecycle, establishing a production-ready template for upcoming mapping engine integrations.
-
----
-
-## 🛠️ Tech Stack & Utilities
-* **Layout Core:** Semantic HTML5, CSS3 (Flexbox & CSS Grid)
-* **Design Token:** Engineering Teal Spectrum
-* **Version Control:** Git / GitHub Workflow
-
----
-*Developed with dedication to clean code, performance, and the spatial future of Riyadh.*
+## 🚀 Next Steps (Week 2):
+* Prepare the static interface for dynamic mapping elements.
+* Move forward with core programming concepts to pave the way for the **GeoJSON Viewer** integration.
