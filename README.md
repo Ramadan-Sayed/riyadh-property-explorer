@@ -23,7 +23,7 @@ This repository tracks my daily progress during the first week of my intensive 6
 
 ### 📅 Phase 1 - Week 2: JavaScript & Architectural Logic (5-Day Plan)
 - [x] **Day 1:** Language Fundamentals, Array structures, and Script Initialization.
-- [ ] **Day 2:** Complex Data Modeling using JS Objects & Financial/Area functions.
+- [x] **Day 2:** Complex Data Modeling using JS Objects & Financial/Area functions.
 - [ ] **Day 3:** Dynamic DOM Traversal, querySelectors, and Event Handling interfaces.
 - [ ] **Day 4:** Feature Engineering: Core Compilation of the Land Area Calculator.
 - [ ] **Day 5:** System synchronization, Code Review, and GeoJSON structural mockup.
@@ -34,4 +34,10 @@ This repository tracks my daily progress during the first week of my intensive 6
 - **Environment Bootstrapping:** Provisioned the `app.js` entry point and attached it via strict non-blocking injection before the closing body scope of `index.html`.
 - **Geospatial Data Mocking:** Engineered a baseline data array (`riyadhDistricts`) to handle future real estate boundary scopes in Northern Riyadh (Al-Malqa, Al-Yasmin, Al-Narjis, Al-Qairawan).
 - **Console Synchronization:** Implemented systemic diagnostic outputs to confirm vector state alignment during runtime testing.
+
+#### **Day 2: Object Modeling & Computational Logic**
+- **Property Data Architecture:** Engineered a modular structural registry (`propertiesRegistry`) using JavaScript Objects to model multidimensional real estate profiles, securing attributes like district identification, baseline area specs, and current market price per meter.
+- **Financial Engineering Functions:** Developed the core algorithmic function `calculateTotalPrice` to receive complex property entities and programmatically compute gross asset valuations based on spatial dimensions against localized price vectors.
+- **System Verification:** Verified computational outputs via programmatic runtime execution to guarantee logic consistency for upcoming geospatial layer evaluations.
+
 
