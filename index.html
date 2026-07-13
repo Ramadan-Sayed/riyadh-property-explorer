@@ -1,73 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Riyadh Property Explorer</title>
     <!-- ربط ملف التنسيق الخارجي-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css" type="text/css">
-</head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
 
-<body>
-
+  <body>
     <!-- 1. الشريط العلوي (Header): يضم اسم المشروع وشعار هندسي -->
     <header class="app-header">
-        <div class="logo-area">
-            <!-- أيقونة تعبر عن المضلعات والطبقات الجغرافية المتداخلة المعبرة عن البرج والمشروع -->
-            <i class="fas fa-layer-group geo-icon"></i>
-            <h1>Riyadh Property Explorer</h1>
-        </div>
-        <div class="badge">المرحلة 1: الأسبوع 1</div>
+      <div class="logo-area">
+        <!-- أيقونة تعبر عن المضلعات والطبقات الجغرافية المتداخلة المعبرة عن البرج والمشروع -->
+        <i class="fas fa-layer-group geo-icon"></i>
+        <h1>Riyadh Property Explorer</h1>
+      </div>
+      <div class="badge">المرحلة 1: الأسبوع 1</div>
     </header>
-
-
 
     <!-- الحاوية الرئيسية لتوزيع العناصر جنبًا إلى جنب لاحقاً بالـ CSS -->
     <div class="app-container">
-        
-        <!-- 2. القائمة الجانبية (Aside): لحجز مساحات التحكم والميزات الأربعة -->
-        <aside class="sidebar">
-            <h2>لوحة التحكم والميزات</h2>
-            
-            <!-- ميزة الأسابيع 1-2 -->
-            <section class="feature-card active" id="geojson-viewer">
-                <h3>1. GeoJSON Viewer</h3>
-                <p>رسم خريطة + عرض بيانات ( قيد التنفيذ)</p>
-            </section>
+      <!-- 2. القائمة الجانبية (Aside): لحجز مساحات التحكم والميزات الأربعة -->
+      <aside class="sidebar">
+        <h2>لوحة التحكم والميزات</h2>
 
-            <!-- ميزة الأسبوع 3 -->
-            <section class="feature-card" id="coordinate-converter">
-                <h3>2. Coordinate Converter</h3>
-                <p>أداة تحويل داخل الـ UI (في المستقبل القريب)</p>
-            </section>
+        <!-- ميزة الأسابيع 1-2 -->
+        <section class="feature-card active" id="geojson-viewer">
+          <h3>1. GeoJSON Viewer</h3>
+          <p>رسم خريطة + عرض بيانات ( قيد التنفيذ)</p>
+        </section>
 
-            <!-- ميزة الأسبوع 4 -->
-            <section class="feature-card" id="layer-manager">
-                <h3>3. Layer Manager</h3>
-                <p>تشغيل/إيقاف الطبقات (لاحقاً)</p>
-            </section>
+        <!-- ميزة الأسبوع 3 -->
+        <section class="feature-card" id="coordinate-converter">
+          <h3>2. Coordinate Converter</h3>
+          <p>أداة تحويل داخل الـ UI (في المستقبل القريب)</p>
+        </section>
 
-            <!-- ميزة الأسابيع 5-6 -->
-            <section class="feature-card" id="spatial-search">
-                <h3>4. Spatial Search</h3>
-                <p>بحث + فلاتر وتصفية الـ UI (لاحقاً)</p>
-            </section>
-        </aside>
-        
+        <!-- ميزة الأسبوع 4 -->
+        <section class="feature-card" id="layer-manager">
+          <h3>3. Layer Manager</h3>
+          <p>تشغيل/إيقاف الطبقات (لاحقاً)</p>
+        </section>
 
-        <!-- 3. المساحة الرئيسية (Main): المخصصة لعرض الخريطة التفاعلية -->
-        <main class="map-area">
-            <div class="map-placeholder">
-                <p>📍 مكان خريطة الرياض التفاعلية (GeoJSON Viewer)</p>
-                <span>سيتم ربط الخريطة وتغذيتها برمجياً في الأيام القادمة</span>
-            </div>
-        </main>
+        <!-- ميزة الأسابيع 5-6 -->
+        <section class="feature-card" id="spatial-search">
+          <h3>4. Spatial Search</h3>
+          <p>بحث + فلاتر وتصفية الـ UI (لاحقاً)</p>
+        </section>
+      </aside>
 
+      <!-- 3. المساحة الرئيسية (Main): المخصصة لعرض الخريطة التفاعلية -->
+      <main class="map-area">
+        <div class="map-placeholder">
+          <p>📍 مكان خريطة الرياض التفاعلية (GeoJSON Viewer)</p>
+          <span>سيتم ربط الخريطة وتغذيتها برمجياً في الأيام القادمة</span>
+        </div>
+      </main>
     </div>
 
-
-
     <script src="app.js"></script>
-</body>
+  </body>
 </html>
