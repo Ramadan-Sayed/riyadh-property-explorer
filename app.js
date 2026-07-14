@@ -16,3 +16,12 @@ function calculateTotalPrice(property) {
 
 // تحديد كروت الميزات من الـ DOM باستخدام الفئة المشتركة
 const featureCards = document.querySelectorAll('.feature-card');
+
+featureCards.forEach(card => {
+    card.addEventListener('click', () => {
+        // إزالة التنشيط عن الكرت النشط حالياً إن وُجد
+        document.querySelector('.feature-card.active')?.classList.remove('active');
+        // تفعيل الكرت المحدّد الذي ضغط عليه المستخدم فوراً
+        card.classList.add('active');
+    });
+});
