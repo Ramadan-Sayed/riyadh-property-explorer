@@ -76,3 +76,17 @@ if (calculateBtn && lengthInput && widthInput && resultDisplay) {
         }
     });
 }
+
+// محاكاة لملف GeoJSON يمثل موقع عقاري حقيقي في شمال الرياض
+const mockRiyadhGeoJSON = {
+    type: "FeatureCollection",
+    features: [
+        {
+            type: "Feature",
+            properties: { id: 101, name: "Riyadh Tower Asset", price: "4,500,000 SAR" },
+            geometry: { type: "Point", coordinates: [46.6744, 24.7136] } // إحداثيات الرياض
+        }
+    ]
+};
+
+console.log("GeoJSON Engine Baseline Ready:", mockRiyadhGeoJSON);
