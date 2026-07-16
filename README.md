@@ -19,14 +19,14 @@ This repository tracks my daily progress during the first week of my intensive 6
 
 ### 🏁 Phase 1: Core Layout & Baseline GIS UI (Weeks 1-2)
 - [x] **Week 1:** Layout Engineering, Teal Spectrum Visual Identity & Grid Refactoring.
-- [ ] **Week 2:** JavaScript Fundamentals, DOM Integration & Computational Logic.
+- [x] **Week 2:** JavaScript Fundamentals, DOM Integration & Computational Logic.
 
 ### 📅 Phase 1 - Week 2: JavaScript & Architectural Logic (5-Day Plan)
 - [x] **Day 1:** Language Fundamentals, Array structures, and Script Initialization.
 - [x] **Day 2:** Complex Data Modeling using JS Objects & Financial/Area functions.
 - [x] **Day 3:** Dynamic DOM Traversal, querySelectors, and Event Handling interfaces.
 - [x] **Day 4:** Feature Engineering: Core Compilation of the Land Area Calculator.
-- [ ] **Day 5:** System synchronization, Code Review, and GeoJSON structural mockup.
+- [x] **Day 5:** System synchronization, Code Review, and GeoJSON structural mockup.
 
 ### 📂 Week 2: JavaScript & Interactive Core
 
@@ -49,3 +49,8 @@ This repository tracks my daily progress during the first week of my intensive 6
 - **UI Form Injection:** Integrated strict semantic controls and input validation fields within the dynamic GIS viewport layout.
 - **Computational Core Logic:** Engineered the `calculateLandArea` algorithmic engine to process floating-point spatial parameters securely.
 - **Dynamic Event Dispatching:** Connected DOM input triggers to the calculation handler, ensuring immediate UI feedback and automated validation handling for end-users.
+
+#### **Day 5: Code Refactoring & GeoJSON Simulation**
+- **Code Quality & Refactoring:** Conducted a comprehensive code review on `app.js` to ensure production-grade naming conventions and optimal scope bindings.
+- **Geospatial Data Modeling:** Implemented a simulation of standard GeoJSON structure (`mockRiyadhGeoJSON`) to model geospatial properties (Points) in northern Riyadh.
+- **Repository Synchronization:** Finalized the Week 2 milestone, ensuring all local logic is stabilized and pushing the codebase to the remote repository.
