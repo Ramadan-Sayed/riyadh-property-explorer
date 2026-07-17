@@ -216,10 +216,6 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.calculator-card button:hover {
-  background-color: #00796b;
-}
-
 .calc-result-default {
   margin-top: 15px;
   font-weight: bold;
@@ -227,3 +223,8 @@ body {
   text-align: center;
   font-size: 1.1rem;
 }
+
+.calculator-card button:hover {
+  background-color: #00796b;
+}
+
