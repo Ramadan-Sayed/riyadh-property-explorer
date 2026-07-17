@@ -1,173 +1,231 @@
 /* محو الهوامش الافتراضية وضبط حساب الأبعاد */
 /*reset style*/
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-
-
-
-
 
 /* الشريط العلوي بالتيل الغامق الوقور */
 .app-header {
-    background-color: #004d40; /* Deep Teal */
-    color: #ffffff;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background-color: #004d40;
+  /* Deep Teal */
+  color: #ffffff;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .geo-icon {
-    font-size: 1.6rem;
-    color: #26a69a; /* تيل مضيء يعبر عن النبض البرمجي والمستقبلي */
-    transform: rotate(-5deg); /* ميلان هندسي خفيف يعطي إيحاء بديناميكية الخرائط */
-    transition: transform 0.3s ease;
+  font-size: 1.6rem;
+  color: #26a69a;
+  /* تيل مضيء يعبر عن النبض البرمجي والمستقبلي */
+  transform: rotate(-5deg);
+  /* ميلان هندسي خفيف يعطي إيحاء بديناميكية الخرائط */
+  transition: transform 0.3s ease;
 }
 
 /* تأثير تفاعلي عند تمرير الماوس على شعار المشروع */
 .logo-area:hover .geo-icon {
-    transform: scale(1.15) rotate(5deg);
-    color: #4db6ac;
+  transform: scale(1.15) rotate(5deg);
+  color: #4db6ac;
 }
 
 .logo-area h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 /* شارة المرحلة */
 .badge {
-    background-color: #00796b; /* Light Teal */
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: bold;
+  background-color: #00796b;
+  /* Light Teal */
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
 }
-
-
-
-
 
 /* الحاوية الرئيسية التي تحوي القائمة الجانبية ومساحة الخريطة */
 .app-container {
-    display: grid;
-    /* القائمة الجانبية ثابتة ومريحة للعين، والخريطة تتمدد بحرية */
-    grid-template-columns: 300px 1fr; 
-    /* صف واحد ممتد بالكامل لملء المساحة المتاحة تحت الهيدر */
-    grid-template-rows: 1fr; 
-    /* الارتفاع الإجمالي المتبقي بعد طرح ارتفاع الهيدر (60px) */
-    height: calc(100vh - 60px);
-    overflow: auto; 
+  display: grid;
+  /* القائمة الجانبية ثابتة ومريحة للعين، والخريطة تتمدد بحرية */
+  grid-template-columns: 300px 1fr;
+  /* صف واحد ممتد بالكامل لملء المساحة المتاحة تحت الهيدر */
+  grid-template-rows: 1fr;
+  /* الارتفاع الإجمالي المتبقي بعد طرح ارتفاع الهيدر (60px) */
+  height: calc(100vh - 62px);
+  overflow: auto;
 }
 
 /* القائمة الجانبية */
 .sidebar {
-    background-color: #002520; /* Darker Teal للخلفية الجانبية */
-    color: #e0f2f1;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    overflow-y: auto; /* لو الكروت زادت يحصل سكرول جوه السايدبار نفسه */
+  background-color: #002520;
+  /* Darker Teal للخلفية الجانبية */
+  color: #e0f2f1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto;
+  /* لو الكروت زادت يحصل سكرول جوه السايدبار نفسه */
 }
 
 .sidebar h2 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #004d40;
-    padding-bottom: 10px;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #004d40;
+  padding-bottom: 10px;
 }
 
 /* كروت الميزات */
 .feature-card {
-    background-color: #00332c;
-    padding: 15px;
-    border-radius: 8px;
-    border-right: 4px solid transparent; /* لتأثير التنشيط جهة اليمين بما أننا RTL */
-    transition: all 0.5s ease; /*تنعيم لحركة الصعود والظل*/
-    
+  background-color: #00332c;
+  padding: 15px;
+  border-radius: 8px;
+  border-right: 4px solid transparent;
+  /* لتأثير التنشيط جهة اليمين بما أننا RTL */
+  transition: all 0.5s ease;
+  /*تنعيم لحركة الصعود والظل*/
 }
 
 /* التأثير البصري عند مرور الماوس */
-.feature-card:hover{
-    box-shadow: 0px 0px 5px 2px rgb(166, 158, 158); 
-    transform: translateY(-5px); /* رفع الكرت برفق لإشعار المستخدم بالتفاعل */
-    cursor: pointer; /* تحويل شكل الماوس ليد ضاغطة */
+.feature-card:hover {
+  box-shadow: 0px 0px 5px 2px rgb(166, 158, 158);
+  transform: translateY(-5px);
+  /* رفع الكرت برفق لإشعار المستخدم بالتفاعل */
+  cursor: pointer;
+  /* تحويل شكل الماوس ليد ضاغطة */
 }
 
 .feature-card h3 {
-    font-size: 1rem;
-    color: #ffffff;
-    margin-bottom: 5px;
-    
+  font-size: 1rem;
+  color: #ffffff;
+  margin-bottom: 5px;
 }
 
 .feature-card p {
-    font-size: 0.85rem;
-    color: #b2dfdb;
+  font-size: 0.85rem;
+  color: #b2dfdb;
 }
 
 /* حالة الكارت النشط حالياً */
 .feature-card.active {
-    background-color: #004d40;
-    border-right-color: #26a69a; /* لون تيل مضيء للميزة النشطة */
+  background-color: #004d40;
+  border-right-color: #26a69a;
+  /* لون تيل مضيء للميزة النشطة */
 }
-
-
-
-
 
 /* مساحة الخريطة المؤقتة */
 .map-area {
-    background-color: #f4f7f6;
-    padding: 20px;
-    display: flex; /* جواها flex لتوسيط محتوى الخريطة المؤقت */
+  background-color: #f4f7f6;
+  padding: 20px;
+  display: flex;
+  /* جواها flex لتوسيط محتوى الخريطة المؤقت */
 }
 
 .map-placeholder {
-    width: 100%;
-    height: 100%;
-    /* تغيير الخلفية مؤقتاً للون رمادي خريطي واضح لتلاحظ المساحة */
-    background-color: #e0f2f1; 
-    border: 2px dashed #004d40;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #004d40;
+  width: 100%;
+  height: 100%;
+  /* تغيير الخلفية مؤقتاً للون رمادي خريطي واضح لتلاحظ المساحة */
+  background-color: #e0f2f1;
+  border: 2px dashed #004d40;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #004d40;
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    /* تحويل التصميم لعمود واحد في الشاشات الصغيرة */
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    /* جعل الصفوف تتكيف مع المحتوى */
+    height: auto;
+    /* إلغاء الارتفاع الثابت لمنع اختفاء المحتوى */
+    overflow: auto;
+    /* السماح بالتمرير الشاقولي للموقع بالكامل */
+  }
+
+  .map-area {
+    height: 400px;
+    /* تحديد ارتفاع ثابت ومناسب للخريطة في الموبايل */
+  }
+}
+
+
+/* تنسيقات حاسبة المساحات المضافة */
+.calculator-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  max-width: 400px;
+  margin: auto;
+  z-index: 10; /* لضمان ظهورها فوق أي خلفية */
+}
+
+.calculator-card h3 {
+  color: #004d40;
+  margin-bottom: 15px;
+}
+
+.calculator-card label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.calculator-card input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.calculator-card button {
+  width: 100%;
+  padding: 10px;
+  background-color: #004d40;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
 
 
-@media (max-width: 768px) {
-    .app-container {
-       /* تحويل التصميم لعمود واحد في الشاشات الصغيرة */
-        grid-template-columns: 1fr; 
-        grid-template-rows: auto auto; /* جعل الصفوف تتكيف مع المحتوى */
-        height: auto; /* إلغاء الارتفاع الثابت لمنع اختفاء المحتوى */
-        overflow: auto; /* السماح بالتمرير الشاقولي للموقع بالكامل */
-    }
+.calculator-card button:hover {
+  background-color: #00796b;
+}
 
-    .map-area {
-        height: 400px; /* تحديد ارتفاع ثابت ومناسب للخريطة في الموبايل */
-    }
+.calc-result-default {
+  margin-top: 15px;
+  font-weight: bold;
+  color: #00796b;
+  text-align: center;
+  font-size: 1.1rem;
 }
