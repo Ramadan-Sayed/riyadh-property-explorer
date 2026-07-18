@@ -1,56 +1,42 @@
-# GIS Dashboard Static UI - Riyadh Property Explorer (Week 1)
+# GIS Dashboard Static UI - Riyadh Property Explorer (Weeks 1-3)
 
-This repository tracks my daily progress during the first week of my intensive 6-month technical roadmap to become a Job-Ready Web GIS Developer.
+This repository tracks my daily progress during my intensive 6-month technical roadmap to become a Job-Ready Web GIS Developer.
 
-## 🛠️ What I Accomplished This Week:
-* **Semantic HTML5:** Built a clean, structured layout for the GIS dashboard using semantic web tags.
-* **CSS Grid & Flexbox Layout:** Designed a robust layout structure featuring a fixed-width interactive sidebar (300px) and a flexible fluid container (1fr) optimized for map rendering.
-* **Responsive UI/UX:** Developed reactive feature cards for property listings with dynamic hover interactions (`transform: translateY` and smooth custom shadow transitions).
+## 🛠️ What I Accomplished So Far (Weeks 1-2):
+* **Semantic HTML5 & Responsive UI/UX:** Built a clean, structured layout with interactive sidebar controls, reactive property feature cards, and fluid grid layouts optimized for map rendering.
+* **JavaScript & DOM Architecture:** Implemented dynamic active-state class switching across the dashboard tabs using strict event-driven mechanisms.
+* **Land Area Calculator:** Engineered a production-grade functional core (`calculateLandArea`) with robust form input validation and dynamic floating-point calculations.
 
-## 🚀 Next Steps (Week 2):
-* Prepare the static interface for dynamic mapping elements.
-* Move forward with core programming concepts to pave the way for the **GeoJSON Viewer** integration.
+---
 
-
-
-
-
-
-
-### 🏁 Phase 1: Core Layout & Baseline GIS UI (Weeks 1-2)
+### 🏁 Phase 1: Core Layout & Baseline GIS UI (Weeks 1-4)
 - [x] **Week 1:** Layout Engineering, Teal Spectrum Visual Identity & Grid Refactoring.
 - [x] **Week 2:** JavaScript Fundamentals, DOM Integration & Computational Logic.
+- [ ] **Week 3:** Advanced JS (+ES6), Asynchronous Fetch, and Live GeoJSON Integration.
+- [ ] **Week 4:** Coordinate Converter UI Construction & Geometry Logic.
 
-### 📅 Phase 1 - Week 2: JavaScript & Architectural Logic (5-Day Plan)
-- [x] **Day 1:** Language Fundamentals, Array structures, and Script Initialization.
-- [x] **Day 2:** Complex Data Modeling using JS Objects & Financial/Area functions.
-- [x] **Day 3:** Dynamic DOM Traversal, querySelectors, and Event Handling interfaces.
-- [x] **Day 4:** Feature Engineering: Core Compilation of the Land Area Calculator.
-- [x] **Day 5:** System synchronization, Code Review, and GeoJSON structural mockup.
+---
 
-### 📂 Week 2: JavaScript & Interactive Core
+### 📅 Phase 1 - Week 3: Advanced JavaScript & GeoJSON Integration (5-Day Plan)
+- [ ] **Day 1:** Mastery of ES6+ syntax enhancements and modular JavaScript architecture (ES Modules).
+- [ ] **Day 2:** Deep dive into JSON formatting structures and core Geospatial GeoJSON specifications.
+- [ ] **Day 3:** Asynchronous Programming core concepts, Event Loops, Promises, and Async/Await paradigms.
+- [ ] **Day 4:** Feature Engineering: Deploying Fetch API to ingest external spatial data streams dynamically.
+- [ ] **Day 5:** Dynamic UI Binding: Linking fetched GeoJSON attributes directly to the interactive viewport.
 
-#### **Day 1: Script Environment & Array Topography**
-- **Environment Bootstrapping:** Provisioned the `app.js` entry point and attached it via strict non-blocking injection before the closing body scope of `index.html`.
-- **Geospatial Data Mocking:** Engineered a baseline data array (`riyadhDistricts`) to handle future real estate boundary scopes in Northern Riyadh (Al-Malqa, Al-Yasmin, Al-Narjis, Al-Qairawan).
-- **Console Synchronization:** Implemented systemic diagnostic outputs to confirm vector state alignment during runtime testing.
+### 📂 Week 3: Dynamic Data Ingestion & Modular Architecture
 
-#### **Day 2: Object Modeling & Computational Logic**
-- **Property Data Architecture:** Engineered a modular structural registry (`propertiesRegistry`) using JavaScript Objects to model multidimensional real estate profiles, securing attributes like district identification, baseline area specs, and current market price per meter.
-- **Financial Engineering Functions:** Developed the core algorithmic function `calculateTotalPrice` to receive complex property entities and programmatically compute gross asset valuations based on spatial dimensions against localized price vectors.
-- **System Verification:** Verified computational outputs via programmatic runtime execution to guarantee logic consistency for upcoming geospatial layer evaluations.
+#### **Day 1: ES Modules & Architectural Separation**
+* Refactoring the monolithic `app.js` into decoupled, specialized logical modules using import/export statements.
 
-#### **Day 3: DOM Manipulation & Core Event Architecture**
-- **DOM Element Binding:** Leveraged `querySelectorAll` blueprints to securely reference and monitor all control structures (`.feature-card`) inside the functional sidebar layout.
-- **Dynamic UI State Management:** Engineered a robust event-driven architecture using synchronized `.addEventListener` mechanisms to orchestrate smooth, automated active-class (`.active`) state swapping across the control board.
-- **Workspace Interactivity:** Established an organic interaction layer, allowing user actions to instantly target spatial exploration configurations without breaking document trees.
+#### **Day 2: GeoJSON Schemas & Data Structures**
+* Constructing formal external geospatial data source structures (`riyadh-features.geojson`) to model real-world property boundaries and coordinates in Northern Riyadh.
 
-#### **Day 4: Land Area Calculator Engineering**
-- **UI Form Injection:** Integrated strict semantic controls and input validation fields within the dynamic GIS viewport layout.
-- **Computational Core Logic:** Engineered the `calculateLandArea` algorithmic engine to process floating-point spatial parameters securely.
-- **Dynamic Event Dispatching:** Connected DOM input triggers to the calculation handler, ensuring immediate UI feedback and automated validation handling for end-users.
+#### **Day 3: Async Engine Bootstrapping**
+* Transitioning logic components from blocking synchronous flows into clean, structured asynchronous operations utilizing Promises.
 
-#### **Day 5: Code Refactoring & GeoJSON Simulation**
-- **Code Quality & Refactoring:** Conducted a comprehensive code review on `app.js` to ensure production-grade naming conventions and optimal scope bindings.
-- **Geospatial Data Modeling:** Implemented a simulation of standard GeoJSON structure (`mockRiyadhGeoJSON`) to model geospatial properties (Points) in northern Riyadh.
-- **Repository Synchronization:** Finalized the Week 2 milestone, ensuring all local logic is stabilized and pushing the codebase to the remote repository.
+#### **Day 4: Fetch API & Spatial Resource Consumption**
+* Implementing dynamic AJAX network requests to programmatically read and validate external GeoJSON configuration vectors during app runtime.
+
+#### **Day 5: Viewport Integration & Structural Sync**
+* Generating dynamic HTML elements on-the-fly based on parsed GeoJSON feature collections, successfully linking backend geospatial properties directly to the layout view.
