@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Riyadh Property Explorer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
     <!-- ربط ملف التنسيق الخارجي-->
     <link
       rel="stylesheet"
@@ -51,10 +53,9 @@
 
       <!-- 3. المساحة الرئيسية (Main) -->
       <main class="map-area">
-        <div class="map-placeholder">
-          <p>📍 مكان خريطة الرياض التفاعلية (GeoJSON Viewer)</p>
-          <span>سيتم ربط الخريطة وتغذيتها برمجياً في الأيام القادمة</span>
-        </div>
+
+        <!-- ضع هذا الوسم في المكان المناسب لظهور الخريطة في واجهتك -->
+        <div id="map"></div>
         
         <!-- واجهة حاسبة مساحات الأراضي داخل منطقة الخريطة مؤقتاً -->
         <div id="calculator-container" class="calculator-card">
@@ -75,6 +76,10 @@
       </main>
     </div>
 
-    <script src="app.js"></script>
+    <!-- 1. استدعاء مكتبة Leaflet الأساسية لتوفير حرف الـ L في الذاكرة -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- 2. استدعاء ملف تطبيقك كموديول بعد المكتبة مباشرة -->
+    <script type="module" src="app.js"></script>
   </body>
 </html>
