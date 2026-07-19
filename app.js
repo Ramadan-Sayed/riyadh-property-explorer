@@ -1,3 +1,7 @@
+import { initMap } from 'mapUtils.js';
+
+
+
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS (البيانات الثابتة)
    ========================================== */
@@ -15,6 +19,11 @@ const propertiesRegistry = [
 
 console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
 
+// إعدادات الخريطة المضافة حديثاً لمدينة الرياض
+const appConfig = {
+    containerId: 'map',
+    defaultCenter: [24.7136, 46.6753]
+};
 
 /* ==========================================
    2. COMPUTATIONAL LOGIC (المنطق البرمجي الحسابي)
@@ -90,3 +99,5 @@ const mockRiyadhGeoJSON = {
 };
 
 console.log("GeoJSON Engine Baseline Ready:", mockRiyadhGeoJSON);
+
+const map = initMap(appConfig.containerId, appConfig.defaultCenter);
