@@ -1,4 +1,4 @@
-import { initMap } from 'mapUtils.js';
+import { initMap } from './mapUtils.js';
 
 
 
