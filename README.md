@@ -19,7 +19,7 @@ This repository tracks my daily progress during my intensive 6-month technical r
 
 ### 📅 Phase 1 - Week 3: Advanced JavaScript & GeoJSON Integration (5-Day Plan)
 - [x] **Day 1:** Mastery of ES6+ syntax enhancements and modular JavaScript architecture (ES Modules).
-- [ ] **Day 2:** Deep dive into JSON formatting structures and core Geospatial GeoJSON specifications.
+- [x] **Day 2:** Deep dive into JSON formatting structures and core Geospatial GeoJSON specifications.
 - [ ] **Day 3:** Asynchronous Programming core concepts, Event Loops, Promises, and Async/Await paradigms.
 - [ ] **Day 4:** Feature Engineering: Deploying Fetch API to ingest external spatial data streams dynamically.
 - [ ] **Day 5:** Dynamic UI Binding: Linking fetched GeoJSON attributes directly to the interactive viewport.
@@ -30,7 +30,10 @@ This repository tracks my daily progress during my intensive 6-month technical r
 * Refactoring the monolithic `app.js` into decoupled, specialized logical modules using import/export statements.
 
 #### **Day 2: GeoJSON Schemas & Data Structures**
-* Constructing formal external geospatial data source structures (`riyadh-features.geojson`) to model real-world property boundaries and coordinates in Northern Riyadh.
+* **Core Learning & Methodology:** Mastered the **RFC 7946** geospatial data standard, focusing on feature structure distinction between 2D vector geometry types (`Point` vs `Polygon`) and attribute mapping via the `properties` object.
+* **Practical Application:** Designed an external spatial dataset (`data/riyadh-properties.geojson`) featuring real-world North Riyadh property coordinates:
+  * `Point`: Representing high-rise residential properties (e.g., Rafal Tower in Al-Sahafa).
+  * `Polygon`: Defining boundary boundaries for commercial land plots (e.g., Al-Yasmin District plot).
 
 #### **Day 3: Async Engine Bootstrapping**
 * Transitioning logic components from blocking synchronous flows into clean, structured asynchronous operations utilizing Promises.

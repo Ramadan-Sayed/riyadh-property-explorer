@@ -13,25 +13,6 @@
         "type": "Point",
         "coordinates": [46.6341, 24.7934]
       }
-    }
-  ]
-}
-
-{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "id": 101,
-        "name": "برج رافال - شقة سكنية",
-        "price": "1,200,000 SAR",
-        "district": "الصحافة"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [46.6341, 24.7934]
-      }
     },
     {
       "type": "Feature",
