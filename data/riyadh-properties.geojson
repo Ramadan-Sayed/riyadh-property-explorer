@@ -16,3 +16,43 @@
     }
   ]
 }
+
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 101,
+        "name": "برج رافال - شقة سكنية",
+        "price": "1,200,000 SAR",
+        "district": "الصحافة"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.6341, 24.7934]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 102,
+        "name": "مخطط الياسمين التجاري",
+        "price": "5,500,000 SAR",
+        "district": "الياسمين"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [46.640, 24.810],
+            [46.650, 24.810],
+            [46.650, 24.820],
+            [46.640, 24.820],
+            [46.640, 24.810]
+          ]
+        ]
+      }
+    }
+  ]
+}
