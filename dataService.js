@@ -2,7 +2,10 @@
 export const fetchRiyadhProperties = async (url) => {
     try {
         const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) {
+            console.warn(`Warning: Fetch failed with status ${response.status}`);
+            return null;
+        }
         return await response.json();
     } catch (error) {
         console.error("Failed to load GIS data: ", error);
