@@ -20,7 +20,7 @@ This repository tracks my daily progress during my intensive 6-month technical r
 ### 📅 Phase 1 - Week 3: Advanced JavaScript & GeoJSON Integration (5-Day Plan)
 - [x] **Day 1:** Mastery of ES6+ syntax enhancements and modular JavaScript architecture (ES Modules).
 - [x] **Day 2:** Deep dive into JSON formatting structures and core Geospatial GeoJSON specifications.
-- [ ] **Day 3:** Asynchronous Programming core concepts, Event Loops, Promises, and Async/Await paradigms.
+- [x] **Day 3:** Asynchronous Programming core concepts, Event Loops, Promises, and Async/Await paradigms.
 - [ ] **Day 4:** Feature Engineering: Deploying Fetch API to ingest external spatial data streams dynamically.
 - [ ] **Day 5:** Dynamic UI Binding: Linking fetched GeoJSON attributes directly to the interactive viewport.
 
@@ -35,8 +35,9 @@ This repository tracks my daily progress during my intensive 6-month technical r
   * `Point`: Representing high-rise residential properties (e.g., Rafal Tower in Al-Sahafa).
   * `Polygon`: Defining boundary boundaries for commercial land plots (e.g., Al-Yasmin District plot).
 
-#### **Day 3: Async Engine Bootstrapping**
-* Transitioning logic components from blocking synchronous flows into clean, structured asynchronous operations utilizing Promises.
+#### **Day 3: Async Engine Bootstrapping & Fetch Service**
+* **Core Learning & Methodology:** Mastered non-blocking asynchronous JavaScript workflows, utilizing Promises and modern `async/await` syntax to keep the application responsive during network data ingestion.
+* **Practical Application:** Constructed a specialized data fetching module (`dataService.js`) with integrated defensive error management (`try/catch` & HTTP status validation) to asynchronously request local GeoJSON resources.
 
 #### **Day 4: Fetch API & Spatial Resource Consumption**
 * Implementing dynamic AJAX network requests to programmatically read and validate external GeoJSON configuration vectors during app runtime.
