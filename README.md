@@ -21,7 +21,7 @@ This repository tracks my daily progress during my intensive 6-month technical r
 - [x] **Day 1:** Mastery of ES6+ syntax enhancements and modular JavaScript architecture (ES Modules).
 - [x] **Day 2:** Deep dive into JSON formatting structures and core Geospatial GeoJSON specifications.
 - [x] **Day 3:** Asynchronous Programming core concepts, Event Loops, Promises, and Async/Await paradigms.
-- [ ] **Day 4:** Feature Engineering: Deploying Fetch API to ingest external spatial data streams dynamically.
+- [x] **Day 4:** Feature Engineering: Deploying Fetch API to ingest external spatial data streams dynamically.
 - [ ] **Day 5:** Dynamic UI Binding: Linking fetched GeoJSON attributes directly to the interactive viewport.
 
 ### 📂 Week 3: Dynamic Data Ingestion & Modular Architecture
@@ -39,8 +39,9 @@ This repository tracks my daily progress during my intensive 6-month technical r
 * **Core Learning & Methodology:** Mastered non-blocking asynchronous JavaScript workflows, utilizing Promises and modern `async/await` syntax to keep the application responsive during network data ingestion.
 * **Practical Application:** Constructed a specialized data fetching module (`dataService.js`) with integrated defensive error management (`try/catch` & HTTP status validation) to asynchronously request local GeoJSON resources.
 
-#### **Day 4: Fetch API & Spatial Resource Consumption**
-* Implementing dynamic AJAX network requests to programmatically read and validate external GeoJSON configuration vectors during app runtime.
+#### **Day 4: GeoJSON Viewer Core & Dynamic Layer Binding**
+* **Core Learning & Methodology:** Studied programmatic GIS rendering engines and vector layer mapping, binding external spatial streams asynchronously to Leaflet viewport instances.
+* **Practical Application:** Completed the baseline **GeoJSON Viewer** core within `app.js`. Connected the async `dataService` pipeline to render both points and polygons dynamically with custom interactive HTML popups displaying real-time property attributes (`name`, `price`, and `district`).
 
 #### **Day 5: Viewport Integration & Structural Sync**
 * Generating dynamic HTML elements on-the-fly based on parsed GeoJSON feature collections, successfully linking backend geospatial properties directly to the layout view.
