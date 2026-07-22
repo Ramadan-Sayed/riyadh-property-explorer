@@ -2,6 +2,7 @@
 import { initMap } from './mapUtils.js';
 import { fetchRiyadhProperties } from './dataService.js';
 
+
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
    ========================================== */
