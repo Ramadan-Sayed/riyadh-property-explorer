@@ -1,11 +1,17 @@
 // app.js - الملف الرئيسي لربط المكونات
+
 import { initMap } from './mapUtils.js';
 import { fetchRiyadhProperties } from './dataService.js';
+import { formatCoordinates } from './geoHelpers.js'; // 👈 استيراد الأداة المساعدة الجديدة
 
 
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
    ========================================== */
+
+// اختبار تنسيق إحداثيات الرياض في الكونسول
+console.log("Formatted Riyadh Coordinates (WKT & Array):", formatCoordinates(24.7136, 46.6753));
+
 
 // أ. إعدادات الخريطة لمدينة الرياض
 const appConfig = {
