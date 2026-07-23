@@ -12,7 +12,7 @@ This repository tracks my daily progress during my intensive 6-month technical r
 ### 🏁 Phase 1: Core Layout & Baseline GIS UI (Weeks 1-4)
 - [x] **Week 1:** Layout Engineering, Teal Spectrum Visual Identity & Grid Refactoring.
 - [x] **Week 2:** JavaScript Fundamentals, DOM Integration & Computational Logic.
-- [ ] **Week 3:** Advanced JS (+ES6), Asynchronous Fetch, and Live GeoJSON Integration.
+- [x] **Week 3:** Advanced JS (+ES6), Asynchronous Fetch, and Live GeoJSON Integration.
 - [ ] **Week 4:** Coordinate Converter UI Construction & Geometry Logic.
 
 ---
@@ -22,7 +22,8 @@ This repository tracks my daily progress during my intensive 6-month technical r
 - [x] **Day 2:** Deep dive into JSON formatting structures and core Geospatial GeoJSON specifications.
 - [x] **Day 3:** Asynchronous Programming core concepts, Event Loops, Promises, and Async/Await paradigms.
 - [x] **Day 4:** Feature Engineering: Deploying Fetch API to ingest external spatial data streams dynamically.
-- [ ] **Day 5:** Dynamic UI Binding: Linking fetched GeoJSON attributes directly to the interactive viewport.
+- [x] **Day 5:** Dynamic UI Binding & Spatial Utility Helpers (Coordinate Converter Setup).
+
 
 ### 📂 Week 3: Dynamic Data Ingestion & Modular Architecture
 
@@ -43,5 +44,6 @@ This repository tracks my daily progress during my intensive 6-month technical r
 * **Core Learning & Methodology:** Studied programmatic GIS rendering engines and vector layer mapping, binding external spatial streams asynchronously to Leaflet viewport instances.
 * **Practical Application:** Completed the baseline **GeoJSON Viewer** core within `app.js`. Connected the async `dataService` pipeline to render both points and polygons dynamically with custom interactive HTML popups displaying real-time property attributes (`name`, `price`, and `district`).
 
-#### **Day 5: Viewport Integration & Structural Sync**
-* Generating dynamic HTML elements on-the-fly based on parsed GeoJSON feature collections, successfully linking backend geospatial properties directly to the layout view.
+#### **Day 5: Coordinate Converter Setup & Spatial Helpers**
+* **Core Learning & Methodology:** Studied geospatial point formats, specifically standardizing raw floating-point coordinates into **Well-Known Text (WKT)** structures utilized in spatial database engines (e.g. PostGIS).
+* **Practical Application:** Built `geoHelpers.js` utility module providing precision rounding and dual-format coordinate object output (`WKT` & Array) to prepare underlying logic for Week 4's Coordinate Converter tool.
