@@ -9,11 +9,12 @@ This repository tracks my daily progress during my intensive 6-month technical r
 
 ---
 
-### 🏁 Phase 1: Core Layout & Baseline GIS UI (Weeks 1-4)
+### 📊 Phase 1 Progress Track (Weeks 1-6)
 - [x] **Week 1:** Layout Engineering, Teal Spectrum Visual Identity & Grid Refactoring.
 - [x] **Week 2:** JavaScript Fundamentals, DOM Integration & Computational Logic.
-- [x] **Week 3:** Advanced JS (+ES6), Asynchronous Fetch, and Live GeoJSON Integration.
-- [ ] **Week 4:** Coordinate Converter UI Construction & Geometry Logic.
+- [x] **Week 3:** Coordinate Converter Core — Async Fetch, GeoJSON Ingestion & WKT Conversion Helpers.
+- [ ] **Week 4:** Layer Manager & TypeScript Migration — Interfaces, Types, Enums & Survey Station Card.
+- [ ] **Weeks 5–6:** Spatial Search — Search Filters & UI Spatial Data Querying.
 
 ---
 
@@ -23,6 +24,15 @@ This repository tracks my daily progress during my intensive 6-month technical r
 - [x] **Day 3:** Asynchronous Programming core concepts, Event Loops, Promises, and Async/Await paradigms.
 - [x] **Day 4:** Feature Engineering: Deploying Fetch API to ingest external spatial data streams dynamically.
 - [x] **Day 5:** Dynamic UI Binding & Spatial Utility Helpers (Coordinate Converter Setup).
+
+
+### 📅 Week 4: TypeScript Migration & Layer Management (Planned)
+- [ ] Day 1: TypeScript Bootstrapping & Core GIS Types
+- [ ] Day 2: Utility & Fetch Refactoring with Generics
+- [ ] Day 3: Encapsulated LayerManager Class Implementation
+- [ ] Day 4: Type-Safe SurveyStationCard Component Building
+- [ ] Day 5: Application Orchestration & Event Binding
+
 
 
 ### 📂 Week 3: Dynamic Data Ingestion & Modular Architecture
