@@ -21,7 +21,8 @@
         <i class="fas fa-layer-group geo-icon"></i>
         <h1>Riyadh Property Explorer</h1>
       </div>
-      <div class="badge">المرحلة 1: الاسبوع 3</div>
+      <!-- تحديث شارة الأسبوع إلى الأسبوع 4 -->
+      <div class="badge">المرحلة 1: الاسبوع 4</div>
     </header>
 
     <!-- الحاوية الرئيسية -->
@@ -37,12 +38,34 @@
 
         <section class="feature-card" id="coordinate-converter">
           <h3>2. Coordinate Converter</h3>
-          <p>أداة تحويل داخل الـ UI (في المستقبل القريب)</p>
+          <p>أداة تحويل داخل الـ UI (قيد التنفيذ)</p>
         </section>
 
-        <section class="feature-card" id="layer-manager">
-          <h3>3. Layer Manager</h3>
-          <p>تشغيل/إيقاف الطبقات (لاحقاً)</p>
+        <!-- ============================================================== -->
+        <!-- 🔹 التحديث هنا: استبدال بطاقة Layer Manager القديمة ببطاقة التحكم التفاعلية -->
+        <!-- ============================================================== -->
+        <section class="feature-card" id="layer-manager-card">
+          <h3>3. إدارة الطبقات المكانية (Layer Manager)</h3>
+          <div class="layer-toggles">
+            <label class="toggle-item">
+              <input type="checkbox" id="chk-properties" checked />
+              <span>عقارات الرياض</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="chk-stations" checked />
+              <span>محطات المسح الجيوديسي</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 🔹 التحديث هنا: إضافة بطاقة تفاصيل المحطة المساحية لاستقبال مكون TypeScript -->
+        <!-- ============================================================== -->
+        <section class="feature-card" id="survey-station-container">
+          <h3>تفاصيل المحطة المساحية</h3>
+          <div id="survey-station-content">
+            <!-- سيتم حقنه ديناميكياً بواسطة SurveyStationCardComponent -->
+          </div>
         </section>
 
         <section class="feature-card" id="spatial-search">
@@ -54,7 +77,7 @@
       <!-- 3. المساحة الرئيسية (Main) -->
       <main class="map-area">
 
-        <!-- ضع هذا الوسم في المكان المناسب لظهور الخريطة في واجهتك -->
+        <!-- مكان ظهور خريطة Leaflet -->
         <div id="map"></div>
         
         <!-- واجهة حاسبة مساحات الأراضي داخل منطقة الخريطة مؤقتاً -->
