@@ -235,3 +235,63 @@ body {
   text-align: center;
   font-size: 1.1rem;
 }
+
+
+/* ==========================================================================
+   Week 4 Components: Layer Manager & Survey Station Card Styles
+   ========================================================================== */
+
+.layer-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #004d40;
+  cursor: pointer;
+}
+
+.station-card-body {
+  background-color: #f4fbf7;
+  border: 1px solid #b2dfdb;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 10px;
+}
+
+.station-header h4 {
+  margin: 0 0 8px 0;
+  color: #004d40;
+  font-size: 16px;
+}
+
+.station-details p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #37474f;
+}
+
+.badge-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.status-online {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.status-offline {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
