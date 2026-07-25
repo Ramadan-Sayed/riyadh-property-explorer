@@ -1,0 +1,26 @@
+[
+  {
+    "stationId": "RYD-GEO-01",
+    "codeName": "محطة الملقا الجيوديسية",
+    "location": {
+      "lat": 24.8000,
+      "lng": 46.6100,
+      "altitude": 620
+    },
+    "accuracyMeters": 0.005,
+    "lastCalibrated": "2026-02-01",
+    "status": "تشغيلية"
+  },
+  {
+    "stationId": "RYD-GEO-02",
+    "codeName": "محطة النرجس للرصد المساحي",
+    "location": {
+      "lat": 24.8350,
+      "lng": 46.6500,
+      "altitude": 612
+    },
+    "accuracyMeters": 0.008,
+    "lastCalibrated": "2026-01-15",
+    "status": "تحت الصيانة"
+  }
+]
