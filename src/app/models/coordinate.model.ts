@@ -13,3 +13,15 @@ export interface UTMCoords {
   northing: number;
   zone: string;
 }
+
+
+
+
+export interface ConversionResult {
+  sourceCRS: CRSType;
+  targetCRS: CRSType;
+  wgs84: WGS84Coords;
+  utm: UTMCoords;
+  isValid: boolean;
+  formattedString: string;
+}
