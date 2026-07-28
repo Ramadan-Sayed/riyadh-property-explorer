@@ -3,7 +3,8 @@
 import { initMap } from './mapUtils.js';
 import { fetchRiyadhProperties } from './dataService.js';
 import { formatCoordinates } from './geoHelpers.js'; // 👈 استيراد الأداة المساعدة الجديدة
-
+// في ملف app.js أو الملف الرئيسي المسؤول عن استدعاء الموديولات:
+import { ConverterUIComponent } from './dist/components/converter.component.js';
 
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
@@ -96,3 +97,9 @@ if (calculateBtn && lengthInput && widthInput && resultDisplay) {
         }
     });
 }
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    new ConverterUIComponent();
+});

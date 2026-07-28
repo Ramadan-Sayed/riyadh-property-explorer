@@ -1,5 +1,6 @@
 import proj4 from 'proj4';
-import { CRSType, WGS84Coords, ConversionResult } from '../coordinate.model';
+import { CRSType, WGS84Coords, ConversionResult } from '../coordinate.model.js';
+// import { Coordinate } from '../coordinate.model.js';
 export class CoordinateService {
   private utm38nProj = '+proj=utm +zone=38 +datum=WGS84 +units=m +no_defs';
   private wgs84Proj = '+proj=longlat +datum=WGS84 +no_defs';

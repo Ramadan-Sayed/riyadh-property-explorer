@@ -1,10 +1,14 @@
-import { CoordinateService } from '../app/models/services/coordinate.service';
+// داخل converter.component.ts
+// المسار الصحيح للوصول لمجلد services من داخل components:
+import { CoordinateService } from '../app/models/services/coordinate.service.js';
 export class ConverterUIComponent {
   private coordService = new CoordinateService();
 
   constructor() {
     this.initEvents();
   }
+
+  
 
   private initEvents(): void {
     const convertBtn = document.getElementById('convertBtn');
@@ -40,7 +44,3 @@ export class ConverterUIComponent {
   }
 }
 
-// تشغيل الـ Component مباشرة عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', () => {
-  new ConverterUIComponent();
-});
