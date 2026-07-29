@@ -1,20 +1,18 @@
 # GIS Dashboard Static UI - Riyadh Property Explorer (Weeks 1-3)
 
-This repository tracks my daily progress during my intensive 6-month technical roadmap to become a Job-Ready Web GIS Developer.
+This repository contains the source code and development milestone documentation for the Riyadh Property Explorer—a high-performance, interactive Web GIS platform engineered for spatial data analysis and property mapping.
 
-## 🛠️ What I Accomplished So Far (Weeks 1-2):
-* **Semantic HTML5 & Responsive UI/UX:** Built a clean, structured layout with interactive sidebar controls, reactive property feature cards, and fluid grid layouts optimized for map rendering.
-* **JavaScript & DOM Architecture:** Implemented dynamic active-state class switching across the dashboard tabs using strict event-driven mechanisms.
-* **Land Area Calculator:** Engineered a production-grade functional core (`calculateLandArea`) with robust form input validation and dynamic floating-point calculations.
+
 
 ---
 
 ### 📊 Phase 1 Progress Track (Weeks 1-6)
 - [x] **Week 1:** Layout Engineering, Teal Spectrum Visual Identity & Grid Refactoring.
 - [x] **Week 2:** JavaScript Fundamentals, DOM Integration & Computational Logic.
-- [x] **Week 3:** Coordinate Converter Core — Async Fetch, GeoJSON Ingestion & WKT Conversion Helpers.
-- [ ] **Week 4:** Layer Manager & TypeScript Migration — Interfaces, Types, Enums & Survey Station Card.
-- [ ] **Weeks 5–6:** Spatial Search — Search Filters & UI Spatial Data Querying.
+- [x] **Week 3:** Async Fetch, GeoJSON Ingestion & WKT Conversion Helpers.
+- [ ] **Week 4:** TypeScript Coordinate Converter — Strong Typing, UTM Projections & Interactive Map Integration.
+- [ ] **Week 5:** Layer Manager & TypeScript Migration — Interfaces, Types, Enums & Survey Station Card.
+- [ ] **Weeks 6–7:** Spatial Search — Search Filters & UI Spatial Data Querying.
 
 ---
 
@@ -26,13 +24,12 @@ This repository tracks my daily progress during my intensive 6-month technical r
 - [x] **Day 5:** Dynamic UI Binding & Spatial Utility Helpers (Coordinate Converter Setup).
 
 
-### 📅 Week 4: TypeScript Migration & Layer Management (Planned)
-- [ ] Day 1: TypeScript Bootstrapping & Core GIS Types
-- [ ] Day 2: Utility & Fetch Refactoring with Generics
-- [ ] Day 3: Encapsulated LayerManager Class Implementation
-- [ ] Day 4: Type-Safe SurveyStationCard Component Building
-- [ ] Day 5: Application Orchestration & Event Binding
-
+### 📅 Phase 1 - Week 4: TypeScript Migration & Interactive GIS Tools
+- [x] **Day 1:** TypeScript Bootstrapping & Core GIS Interfaces / Models Setup.
+- [x] **Day 2:** Coordinate Transformation Service (`WGS84` to `UTM Zone 38N`) & Riyadh Bounds Validation.
+- [x] **Day 3:** Encapsulated UI Component Architecture (`ConverterUIComponent`).
+- [x] **Day 4:** GIS Map Integration (`flyToLocation` & Leaflet Marker Ingestion).
+- [] **Day 5:** Result Clipboard Integration (`copyResult`) & End-to-End Application Wiring.
 
 
 ### 📂 Week 3: Dynamic Data Ingestion & Modular Architecture
@@ -57,3 +54,26 @@ This repository tracks my daily progress during my intensive 6-month technical r
 #### **Day 5: Coordinate Converter Setup & Spatial Helpers**
 * **Core Learning & Methodology:** Studied geospatial point formats, specifically standardizing raw floating-point coordinates into **Well-Known Text (WKT)** structures utilized in spatial database engines (e.g. PostGIS).
 * **Practical Application:** Built `geoHelpers.js` utility module providing precision rounding and dual-format coordinate object output (`WKT` & Array) to prepare underlying logic for Week 4's Coordinate Converter tool.
+
+
+### 📂 Week 4: TypeScript Refactoring & Coordinate Tool Engineering
+
+#### **Day 1: TypeScript Bootstrapping & Domain Modeling**
+* **Core Learning & Methodology:** Mastered TypeScript foundational concepts, including strict type definitions, interfaces, type aliases, and project compilation settings (`tsconfig.json`) to enforce type safety across GIS modules.
+* **Practical Application:** Established core data structures and interfaces (`ICoordinate`, `IUTMResult`) to define precise schemas for spatial coordinates and geographic projection outputs.
+
+#### **Day 2: Spatial Transformation Core & Validation Service**
+* **Core Learning & Methodology:** Applied Object-Oriented Programming (OOP) design patterns in TypeScript to encapsulate mathematical logic and geospatial validation rules.
+* **Practical Application:** Engineered `CoordinateService.ts` providing two main spatial functions:
+  * Checking latitude/longitude input against predefined bounding box parameters for Riyadh city.
+  * Projecting WGS84 decimal degrees into UTM Zone 38N formatted coordinate strings.
+
+#### **Day 3: Encapsulated UI Component Architecture**
+* **Core Learning & Methodology:** Studied component-driven design principles for client-side applications, separating visual DOM handlers from underlying business logic services.
+* **Practical Application:** Developed `ConverterUIComponent.ts` to manage input extraction, trigger spatial conversions via `CoordinateService`, and display structured UTM output dynamically while handling invalid input states cleanly.
+
+#### **Day 4: Geospatial Map Integration & Viewport Navigation**
+* **Core Learning & Methodology:** Explored programmatic map viewport manipulation and global window object integration for Leaflet mapping instances.
+* **Practical Application:** Expanded `mapUtils.js` with global utility functions:
+  * `flyToLocation`: Executes smooth camera pan and zoom animations directly to target coordinates.
+  * `addConvertedPointMarker`: Generates interactive map markers with rich HTML popups displaying calculated UTM metrics.
