@@ -19,14 +19,20 @@ export function flyToLocation(lat, lng, zoom = 16) {
     }
 }
 
-// 2️⃣ إضافة دالة رسم العلامة والـ Popup للنقطة المحوّلة
+// 2️⃣ إيجاد العلامة والـ Popup للنقطة المحوّلة
 export function addConvertedPointMarker(lat, lng, popupText) {
     if (window.map) {
+        const popupContent = '<b>النقطة المحوّلة:</b><br>' + popupText;
         L.marker([lat, lng])
-         .addTo(window.map)
-         .bindPopup(`<b>النقطة المحوّلة:</b><br>${popupText}`)
-         .openPopup();
+            .addTo(window.map)
+            .bindPopup(popupContent)
+            .openPopup();
     } else {
         console.warn('⚠️ الخريطة غير مهيأة بعد على window.map');
     }
 }
+
+
+// 💡 أضف هذين السطرين لربطهما بـ window:
+window.flyToLocation = flyToLocation;
+window.addConvertedPointMarker = addConvertedPointMarker;
