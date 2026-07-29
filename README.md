@@ -2,7 +2,12 @@
 
 This repository contains the source code and development milestone documentation for the Riyadh Property Explorer—a high-performance, interactive Web GIS platform engineered for spatial data analysis and property mapping.
 
-
+## 🛠️ What I Accomplished So Far (Weeks 1-4):
+* **Semantic HTML5 & Responsive UI/UX:** Built a clean, structured layout with interactive sidebar controls, reactive property feature cards, and fluid grid layouts optimized for map rendering.
+* **JavaScript & DOM Architecture:** Implemented dynamic active-state class switching across the dashboard tabs using strict event-driven mechanisms.
+* **Land Area Calculator:** Engineered a production-grade functional core (`calculateLandArea`) with robust form input validation and dynamic floating-point calculations.
+* **GeoJSON Ingestion & Map Interactions:** Asynchronously integrated external GeoJSON features and created global spatial utilities (`mapUtils`) for dynamic map transitions (`flyTo`) and converted point markers.
+* **TypeScript Migration & Coordinate Converter:** Migrated core modules to TypeScript, created strong OOP services (`CoordinateService`), and delivered a fully interactive WGS84 to UTM Coordinate Converter with Clipboard support.
 
 ---
 
