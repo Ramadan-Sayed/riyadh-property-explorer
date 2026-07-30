@@ -1,4 +1,4 @@
-# GIS Dashboard Static UI - Riyadh Property Explorer (Weeks 1-3)
+# GIS Dashboard Static UI - Riyadh Property Explorer (Weeks 1-4)
 
 This repository contains the source code and development milestone documentation for the Riyadh Property Explorer—a high-performance, interactive Web GIS platform engineered for spatial data analysis and property mapping.
 
