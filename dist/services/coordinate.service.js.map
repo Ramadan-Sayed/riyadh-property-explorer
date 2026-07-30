@@ -1,0 +1,1 @@
+{"version":3,"file":"coordinate.service.js","sourceRoot":"","sources":["../../src/services/coordinate.service.ts"],"names":[],"mappings":"AAEA,uDAAuD;AACvD,MAAM,OAAO,iBAAiB;IAC5B,eAAe,CAAC,GAAc;QAC5B,OAAO,QAAQ,GAAG,CAAC,IAAI,MAAM,GAAG,CAAC,OAAO,OAAO,GAAG,CAAC,QAAQ,GAAG,CAAC;IACjE,CAAC;CACF"}
