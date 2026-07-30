@@ -6,6 +6,7 @@ import { formatCoordinates } from './geoHelpers.js'; // 👈 استيراد ال
 // في ملف app.js أو الملف الرئيسي المسؤول عن استدعاء الموديولات:
 import { ConverterUIComponent } from './dist/components/converter.component.js';
 
+
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
    ========================================== */
