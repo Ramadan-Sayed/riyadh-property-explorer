@@ -1,1 +1,9 @@
 node_modules/
+
+# Environment local overrides
+.env.local
+.env.development.local
+
+# IDE & OS temporary files
+.vscode/
+.DS_Store
