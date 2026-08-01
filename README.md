@@ -1,4 +1,4 @@
-# GIS Dashboard Static UI - Riyadh Property Explorer (Weeks 1-4)
+# GIS Dashboard Static UI - Riyadh Property Explorer (Weeks 1-5)
 
 This repository contains the source code and development milestone documentation for the Riyadh Property Explorer—a high-performance, interactive Web GIS platform engineered for spatial data analysis and property mapping.
 
@@ -16,18 +16,10 @@ This repository contains the source code and development milestone documentation
 - [x] **Week 2:** JavaScript Fundamentals, DOM Integration & Computational Logic (Completed ✅).
 - [x] **Week 3:** Async Fetch, GeoJSON Ingestion & WKT Conversion Helpers (Completed ✅).
 - [x] **Week 4:** TypeScript Coordinate Converter — Strong Typing, UTM Projections & Interactive Map Integration (Completed ✅).
-- [ ] **Week 5:** Layer Manager & TypeScript Migration — Interfaces, Types, Enums & Survey Station Card (Upcoming ⏳).
+- [/] **Week 5:** Layer Manager & Advanced TypeScript Architecture — Interfaces, Types, Enums & Survey Station Card (In Progress 🔄).
 - [ ] **Weeks 6–7:** Spatial Search — Search Filters & UI Spatial Data Querying (Upcoming ⏳).
 
 ---
-
-### 📅 Phase 1 - Week 3: Advanced JavaScript & GeoJSON Integration (5-Day Plan)
-- [x] **Day 1:** Mastery of ES6+ syntax enhancements and modular JavaScript architecture (ES Modules).
-- [x] **Day 2:** Deep dive into JSON formatting structures and core Geospatial GeoJSON specifications.
-- [x] **Day 3:** Asynchronous Programming core concepts, Event Loops, Promises, and Async/Await paradigms.
-- [x] **Day 4:** Feature Engineering: Deploying Fetch API to ingest external spatial data streams dynamically.
-- [x] **Day 5:** Dynamic UI Binding & Spatial Utility Helpers (Coordinate Converter Setup).
-
 
 ### 📅 Phase 1 - Week 4: TypeScript Migration & Interactive GIS Tools
 - [x] **Day 1:** TypeScript Bootstrapping & Core GIS Interfaces / Models Setup.
@@ -37,29 +29,14 @@ This repository contains the source code and development milestone documentation
 - [x] **Day 5:** Result Clipboard Integration (`copyResult`) & End-to-End Application Wiring.
 
 
-### 📂 Week 3: Dynamic Data Ingestion & Modular Architecture
+### 📅 Phase 1 - Week 5: Advanced TypeScript & Layer Management Engine
+- [ ] **Day 1:** Interfaces & Enums for Spatial Layer Structures (`LayerCategory` & `LayerConfig`).
+- [ ] **Day 2:** Classes & Custom Types for State Management (`LayerService` & `LayerToggleHandler`).
+- [ ] **Day 3:** Generics & Leaflet Map Integration (`toggleMapLayer` Generic Helper & Event Binding).
+- [ ] **Day 4:** Survey Station Card Component Architecture & Layer Manager Integration.
+- [ ] **Day 5:** Refactoring, Type Safety Optimization & Dark Theme UI Refinement.
 
-#### **Day 1: ES Modules & Architectural Separation**
-* Refactoring the monolithic `app.js` into decoupled, specialized logical modules using import/export statements.
-
-#### **Day 2: GeoJSON Schemas & Data Structures**
-* **Core Learning & Methodology:** Mastered the **RFC 7946** geospatial data standard, focusing on feature structure distinction between 2D vector geometry types (`Point` vs `Polygon`) and attribute mapping via the `properties` object.
-* **Practical Application:** Designed an external spatial dataset (`data/riyadh-properties.geojson`) featuring real-world North Riyadh property coordinates:
-  * `Point`: Representing high-rise residential properties (e.g., Rafal Tower in Al-Sahafa).
-  * `Polygon`: Defining boundary boundaries for commercial land plots (e.g., Al-Yasmin District plot).
-
-#### **Day 3: Async Engine Bootstrapping & Fetch Service**
-* **Core Learning & Methodology:** Mastered non-blocking asynchronous JavaScript workflows, utilizing Promises and modern `async/await` syntax to keep the application responsive during network data ingestion.
-* **Practical Application:** Constructed a specialized data fetching module (`dataService.js`) with integrated defensive error management (`try/catch` & HTTP status validation) to asynchronously request local GeoJSON resources.
-
-#### **Day 4: GeoJSON Viewer Core & Dynamic Layer Binding**
-* **Core Learning & Methodology:** Studied programmatic GIS rendering engines and vector layer mapping, binding external spatial streams asynchronously to Leaflet viewport instances.
-* **Practical Application:** Completed the baseline **GeoJSON Viewer** core within `app.js`. Connected the async `dataService` pipeline to render both points and polygons dynamically with custom interactive HTML popups displaying real-time property attributes (`name`, `price`, and `district`).
-
-#### **Day 5: Coordinate Converter Setup & Spatial Helpers**
-* **Core Learning & Methodology:** Studied geospatial point formats, specifically standardizing raw floating-point coordinates into **Well-Known Text (WKT)** structures utilized in spatial database engines (e.g. PostGIS).
-* **Practical Application:** Built `geoHelpers.js` utility module providing precision rounding and dual-format coordinate object output (`WKT` & Array) to prepare underlying logic for Week 4's Coordinate Converter tool.
-
+---
 
 ### 📂 Week 4: TypeScript Refactoring & Coordinate Tool Engineering
 
@@ -86,3 +63,26 @@ This repository contains the source code and development milestone documentation
 #### **Day 5: Async Clipboard Utility & End-to-End System Wiring**
 * **Core Learning & Methodology:** Mastered asynchronous browser web APIs, specifically modern Clipboard interaction primitives (`navigator.clipboard.writeText`) alongside defensive event binding.
 * **Practical Application:** Integrated one-click coordinate copy functionality (`copyResult`) within the converter UI, connected DOM triggers to interactive map updates, and finalized TypeScript compilation for production readiness.
+
+
+### 📂 Week 5: Advanced TypeScript & Layer Management Engine
+
+#### **Day 1: Data Contracts & Layer Architecture**
+* **Core Learning & Methodology:** Applied TypeScript `Interfaces` and `Enums` to establish strict Data Contracts for spatial layers, preventing runtime shape mismatches across the mapping engine.
+* **Practical Application:** Defined `LayerCategory` Enum (Basemap, Districts, Parcels) and `LayerConfig` interface within `src/types/layer.ts` alongside building the Side Panel Layer Manager HTML container.
+
+#### **Day 2: Object-Oriented Layer State Management**
+* **Core Learning & Methodology:** Implemented State Management patterns using TypeScript `Classes`, private member encapsulation (`Map<string, LayerConfig>`), and custom Type Aliases (`LayerToggleHandler`).
+* **Practical Application:** Engineered `LayerService.ts` to encapsulate spatial layer registration, retrieval, and visibility toggling logic safely.
+
+#### **Day 3: Generic Map Helpers & Reactive Leaflet Binding**
+* **Core Learning & Methodology:** Leveraged TypeScript `Generics` (`T extends { addTo: Function; remove: Function }`) to construct highly reusable, framework-agnostic spatial utility functions.
+* **Practical Application:** Built `toggleMapLayer` helper in `src/utils/leaflet-helpers.ts` and bound UI checkboxes directly to live Riyadh GeoJSON layers on the Leaflet map instance.
+
+#### **Day 4: Domain Component Engineering (Survey Station Card)**
+* **Core Learning & Methodology:** Extended OOP modularity by crafting standalone UI components with strongly typed data models (`SurveyStation`).
+* **Practical Application:** Created `SurveyStationCard.ts` component class for spatial elevation rendering, registering survey station vector data as an optional feature layer inside `LayerService`.
+
+#### **Day 5: Clean Code Refactoring & Production UI Polish**
+* **Core Learning & Methodology:** Performed comprehensive Type Safety checks (`tsc --noEmit`), codebase refactoring, and UI/UX alignment to project design systems.
+* **Practical Application:** Refined dark-theme CSS styling for the `.layer-manager-card`, added helper method `getActiveLayers()`, and updated overall project documentation.
