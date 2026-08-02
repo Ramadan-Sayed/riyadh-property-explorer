@@ -4,22 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Riyadh Property Explorer</title>
+    
+    <!-- مكتبة Leaflet للتنسيق -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <!-- ربط ملف التنسيق الخارجي-->
+    <!-- مكتبة FontAwesome والأيقونات -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
+    
+    <!-- ملف التنسيق الخاص بالمشروع -->
     <link rel="stylesheet" href="style.css" type="text/css" />
-    <!-- إخبار المتصفح بكيفية الوصول لمكتبة proj4 -->
-  <script type="importmap">
-    {
-      "imports": {
-        "proj4": "https://esm.sh/proj4@2.15.0"
+
+    <!-- إخبار المتصفح بكيفية الوصول لمكتبة proj4 كموديول -->
+    <script type="importmap">
+      {
+        "imports": {
+          "proj4": "https://esm.sh/proj4@2.15.0"
+        }
       }
-    }
-  </script>
+    </script>
   </head>
 
   <body>
@@ -29,8 +34,8 @@
         <i class="fas fa-layer-group geo-icon"></i>
         <h1>Riyadh Property Explorer</h1>
       </div>
-      <!-- تحديث شارة الأسبوع إلى الأسبوع 4 -->
-      <div class="badge">المرحلة 1: الاسبوع 4</div>
+      <!-- تحديث شارة الأسبوع إلى الأسبوع 5 -->
+      <div class="badge">المرحلة 1: الاسبوع 5</div>
     </header>
 
     <!-- الحاوية الرئيسية -->
@@ -39,15 +44,10 @@
       <aside class="sidebar">
         <h2>لوحة التحكم والميزات</h2>
 
-        <!-- <section class="feature-card active" id="geojson-viewer">
-          <h3>1. GeoJSON Viewer</h3>
-          <p>رسم خريطة + عرض بيانات (مكتمل ✅)</p>
-        </section> -->
-
+        <!-- ميزة محول الإحداثيات -->
         <section class="feature-card" id="coordinate-converter">
-          <!-- <p>أداة تحويل داخل الـ UI (قيد التنفيذ)</p> -->
           <div class="converter-panel">
-            <h3> Coordinate Converter</h3>
+            <h3>Coordinate Converter .2</h3>
             <div class="input-group">
               <label for="latInput">خط العرض (Latitude):</label>
               <input type="number" id="latInput" value="24.8211" step="0.0001" placeholder="24.8211">
@@ -63,13 +63,12 @@
           </div>
         </section>
 
-        <!-- ============================================================== -->
-        <!-- 🔹 التحديث هنا: استبدال بطاقة Layer Manager القديمة ببطاقة التحكم التفاعلية -->
-        <!-- ============================================================== -->
+        <!-- ميزة إدارة الطبقات المكانية (Layer Manager) -->
         <section class="feature-card" id="layer-manager-card">
-          <h3>3. Layer Manager (In Progress 🔄)</h3>
+          <h3>3. إدارة الطبقات المكانية (Layer Manager)</h3>
+          <div id="layers-list"></div>
           
-          <!-- <div class="layer-toggles">
+          <div class="layer-toggles">
             <label class="toggle-item">
               <input type="checkbox" id="chk-properties" checked />
               <span>عقارات الرياض</span>
@@ -78,19 +77,18 @@
               <input type="checkbox" id="chk-stations" checked />
               <span>محطات المسح الجيوديسي</span>
             </label>
-          </div> -->
+          </div>
         </section>
 
-        <!-- ============================================================== -->
-        <!-- 🔹 التحديث هنا: إضافة بطاقة تفاصيل المحطة المساحية لاستقبال مكون TypeScript -->
-        <!-- ============================================================== -->
-        <!-- <section class="feature-card" id="survey-station-container">
+        <!-- مكون بطاقة المحطة المساحية (Survey Station Card) -->
+        <section class="feature-card" id="survey-station-container">
           <h3>تفاصيل المحطة المساحية</h3>
-          <div id="survey-station-content"> -->
+          <div id="survey-station-content"> 
             <!-- سيتم حقنه ديناميكياً بواسطة SurveyStationCardComponent -->
-          <!-- </div>
-        </section> -->
+          </div>
+        </section>
 
+        <!-- الميزة القادمة -->
         <section class="feature-card" id="spatial-search">
           <h3>4. Spatial Search</h3>
           <p>بحث + فلاتر وتصفية الـ UI (Upcoming ⏳)</p>
@@ -103,9 +101,9 @@
         <!-- مكان ظهور خريطة Leaflet -->
         <div id="map"></div>
         
-        <!-- واجهة حاسبة مساحات الأراضي داخل منطقة الخريطة مؤقتاً -->
+        <!-- واجهة حاسبة مساحات الأراضي -->
         <div id="calculator-container" class="calculator-card">
-          <h3>Land Area Calculator</h3>
+          <h3>حاسبة مساحات الأراضي في الرياض</h3>
 
           <label for="land-length">الطول (بالمتر):</label>
           <input type="number" id="land-length" placeholder="مثال: 30">
@@ -122,13 +120,10 @@
       </main>
     </div>
 
-    <!-- 1. استدعاء مكتبة Leaflet الأساسية لتوفير حرف الـ L في الذاكرة -->
+    <!-- 1. استدعاء مكتبة Leaflet الأساسية لتوفير الـ L Global Object -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- CDN لمكتبة proj4 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
-
-    <!-- 2. استدعاء ملف تطبيقك كموديول بعد المكتبة مباشرة -->
+    <!-- 2. استدعاء الموديول البرمجي الرئيسي الخاص بك -->
     <script type="module" src="./app.js"></script>
 
   </body>
