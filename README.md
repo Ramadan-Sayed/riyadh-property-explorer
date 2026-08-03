@@ -73,7 +73,7 @@ This repository contains the source code and development milestone documentation
 
 #### **Day 2: Object-Oriented Layer State Management**
 * **Core Learning & Methodology:** Implemented State Management patterns using TypeScript `Classes`, private member encapsulation (`Map<string, LayerConfig>`), and custom Type Aliases (`LayerToggleHandler`).
-* **Practical Application:** Engineered `LayerService.ts` to encapsulate spatial layer registration, retrieval, and visibility toggling logic safely.
+* **Practical Application:** Engineered `LayerService.ts` to encapsulate spatial layer registration, retrieval, active filtering (`getActiveLayers`), and reactive visibility toggling logic via callbacks safely.
 
 #### **Day 3: Generic Map Helpers & Reactive Leaflet Binding**
 * **Core Learning & Methodology:** Leveraged TypeScript `Generics` (`T extends { addTo: Function; remove: Function }`) to construct highly reusable, framework-agnostic spatial utility functions.
