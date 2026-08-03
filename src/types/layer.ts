@@ -12,3 +12,4 @@ export interface LayerConfig {
   leafletLayer?: any;
 }
 
+export type LayerToggleHandler = (layerId: string, isVisible: boolean) => void;
