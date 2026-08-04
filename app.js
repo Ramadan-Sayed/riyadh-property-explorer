@@ -9,27 +9,26 @@ import { formatCoordinates } from './geoHelpers.js';
 import { ConverterUIComponent } from './dist/components/converter.component.js';
 import { LayerService } from './dist/services/layerService.js';
 import { LayerCategory } from './dist/types/layer.js';
+import { toggleMapLayer } from './dist/utils/leaflet-helper.js'; // 👈 مسار المخرجات وبامتداد .js
 
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
    ========================================== */
 
-// إنشاء الـ instance هنا في بداية منطق التطبيق
+// أ. إنشاء الـ Service ورصد الإحداثيات
 const layerService = new LayerService();
-
-// اختبار تنسيق إحداثيات الرياض في الكونسول
 console.log("Formatted Riyadh Coordinates (WKT & Array):", formatCoordinates(24.7136, 46.6753));
 
-// أ. إعدادات الخريطة لمدينة الرياض
+// ب. إعدادات الخريطة لمدينة الرياض
 const appConfig = {
     containerId: 'map',
     defaultCenter: [24.7136, 46.6753]
 };
 
-// ب. إنشاء الخريطة في البداية أولاً لتكون جاهزة لاستقبال الطبقات
+// ج. إنشاء الخريطة أولاً لتكون جاهزة لاستقبال الاستماعات والطبقات
 const map = initMap(appConfig.containerId, appConfig.defaultCenter);
 
-// ج. بيانات تجريبية للأحياء والعقارات
+// د. بيانات تجريبية للأحياء
 const RIYADH_DISTRICTS = ['Al-Malqa', 'Al-Yasmin', 'Al-Narjis', 'Al-Qairawan'];
 console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
 
@@ -71,7 +70,7 @@ const loadAndDisplayProperties = async () => {
     }
 };
 
-// تشغيل الدالة الآن بعد أن أصبحت الخريطة (map) جاهزة وموجودة في الذاكرة
+// تشغيل الدالة الآن بعد إنشاء الخريطة
 loadAndDisplayProperties();
 
 const calculateLandArea = (length, width) => length * width;
@@ -81,7 +80,27 @@ const calculateLandArea = (length, width) => length * width;
    3. DOM INTERACTION & EVENTS
    ========================================== */
 
-// أ. التفاعل والتبديل النشط لكروت الميزات الجانبية
+// أ. الاستماع للـ Checkboxes الخاصة بالـ Layer Manager (بعد إنشاء map)
+const propertiesCheckbox = document.getElementById('chk-properties');
+
+if (propertiesCheckbox) {
+  propertiesCheckbox.addEventListener('change', (e) => {
+    const target = e.target;
+
+    // 1. التبديل البرمجي لحالة الطبقة في الـ Service
+    layerService.toggleLayerVisibility('chk-properties');
+
+    // 2. الحصول على كائن طبقة Leaflet الفعلي
+    const layerConfig = layerService.getLayer('chk-properties');
+
+    // 3. تطبيق التغيير الحي على الخريطة باستخدام دالة الـ Generic
+    if (layerConfig && layerConfig.leafletLayer) {
+      toggleMapLayer(layerConfig.leafletLayer, map, target.checked);
+    }
+  });
+}
+
+// ب. التفاعل والتبديل النشط لكروت الميزات الجانبية
 const featureCards = document.querySelectorAll('.feature-card');
 featureCards.forEach(card => {
     card.addEventListener('click', () => {
@@ -93,7 +112,7 @@ featureCards.forEach(card => {
     });
 });
 
-// ب. حاسبة مساحات الأراضي
+// ج. حاسبة مساحات الأراضي
 const lengthInput = document.getElementById('land-length');
 const widthInput = document.getElementById('land-width');
 const calculateBtn = document.getElementById('btn-calculate');
