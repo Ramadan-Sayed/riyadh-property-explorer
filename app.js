@@ -1,19 +1,24 @@
 // app.js - الملف الرئيسي لربط المكونات
 
+/* ==========================================
+   0. IMPORTS (جميع الاستيرادات في الأعلى)
+   ========================================== */
 import { initMap } from './mapUtils.js';
 import { fetchRiyadhProperties } from './dataService.js';
-import { formatCoordinates } from './geoHelpers.js'; // 👈 استيراد الأداة المساعدة الجديدة
-// في ملف app.js أو الملف الرئيسي المسؤول عن استدعاء الموديولات:
+import { formatCoordinates } from './geoHelpers.js';
 import { ConverterUIComponent } from './dist/components/converter.component.js';
-
+import { LayerService } from './dist/services/layerService.js';
+import { LayerCategory } from './dist/types/layer.js';
 
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
    ========================================== */
 
+// إنشاء الـ instance هنا في بداية منطق التطبيق
+const layerService = new LayerService();
+
 // اختبار تنسيق إحداثيات الرياض في الكونسول
 console.log("Formatted Riyadh Coordinates (WKT & Array):", formatCoordinates(24.7136, 46.6753));
-
 
 // أ. إعدادات الخريطة لمدينة الرياض
 const appConfig = {
@@ -39,7 +44,7 @@ console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
 const loadAndDisplayProperties = async () => {
     const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
     if (data) {
-        L.geoJSON(data, {
+        const propertiesLayer = L.geoJSON(data, {
             onEachFeature: (feature, layer) => {
                 if (feature.properties && feature.properties.name) {
                     layer.bindPopup(`
@@ -52,6 +57,17 @@ const loadAndDisplayProperties = async () => {
                 }
             }
         }).addTo(map);
+
+        // تسجيل الطبقة داخل LayerService بعد تحميل البيانات بنجاح
+        if (typeof layerService !== 'undefined' && LayerCategory) {
+            layerService.addLayer({
+                id: 'chk-properties',
+                name: 'عقارات الرياض',
+                category: LayerCategory.PARCELS,
+                visible: true,
+                leafletLayer: propertiesLayer
+            });
+        }
     }
 };
 
@@ -98,8 +114,6 @@ if (calculateBtn && lengthInput && widthInput && resultDisplay) {
         }
     });
 }
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
     new ConverterUIComponent();
