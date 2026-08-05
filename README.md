@@ -16,7 +16,8 @@ This repository contains the source code and development milestone documentation
 - [x] **Week 2:** JavaScript Fundamentals, DOM Integration & Computational Logic (Completed ✅).
 - [x] **Week 3:** Async Fetch, GeoJSON Ingestion & WKT Conversion Helpers (Completed ✅).
 - [x] **Week 4:** TypeScript Coordinate Converter — Strong Typing, UTM Projections & Interactive Map Integration (Completed ✅).
-- [/] **Week 5:** Layer Manager & Advanced TypeScript Architecture — Interfaces, Types, Enums & Survey Station Card (In Progress 🔄).
+- [x] **Week 5:** Layer Manager & Advanced TypeScript Architecture — Interfaces, Types, Enums & Survey Station Card (Completed ✅).
+- [x] Survey Station Card Component (Completed ✅).
 - [ ] **Weeks 6–7:** Spatial Search — Search Filters & UI Spatial Data Querying (Upcoming ⏳).
 
 ---
@@ -33,8 +34,8 @@ This repository contains the source code and development milestone documentation
 - [x] **Day 1:** Interfaces & Enums for Spatial Layer Structures (`LayerCategory` & `LayerConfig`).
 - [x] **Day 2:** Classes & Custom Types for State Management (`LayerService` & `LayerToggleHandler`).
 - [ ] **Day 3:** Generics & Leaflet Map Integration (`toggleMapLayer` Generic Helper & Event Binding).
-- [ ] **Day 4:** Survey Station Card Component Architecture & Layer Manager Integration.
-- [ ] **Day 5:** Refactoring, Type Safety Optimization & Dark Theme UI Refinement.
+- [x] **Day 4:** Survey Station Card Component Architecture & Layer Manager Integration.
+- [x] **Day 5:** Refactoring, Type Safety Optimization & Dark Theme UI Refinement.
 
 ---
 
