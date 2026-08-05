@@ -9,7 +9,7 @@ import { formatCoordinates } from './geoHelpers.js';
 import { ConverterUIComponent } from './dist/components/converter.component.js';
 import { LayerService } from './dist/services/layerService.js';
 import { LayerCategory } from './dist/types/layer.js';
-import { toggleMapLayer } from './dist/utils/leaflet-helper.js'; // 👈 مسار المخرجات وبامتداد .js
+import { toggleMapLayer } from './dist/utils/leaflet-helper.js';
 import { SurveyStationCard } from './dist/components/SurveyStationCard.js';
 import { mockSurveyStations } from './dist/data/surveyStationsData.js';
 
@@ -82,7 +82,7 @@ const calculateLandArea = (length, width) => length * width;
    3. DOM INTERACTION & EVENTS
    ========================================== */
 
-// أ. الاستماع للـ Checkboxes الخاصة بالـ Layer Manager (بعد إنشاء map)
+// أ. الاستماع لـ Checkbox عقارات الرياض
 const propertiesCheckbox = document.getElementById('chk-properties');
 
 if (propertiesCheckbox) {
@@ -95,7 +95,7 @@ if (propertiesCheckbox) {
     // 2. الحصول على كائن طبقة Leaflet الفعلي
     const layerConfig = layerService.getLayer('chk-properties');
 
-    // 3. تطبيق التغيير الحي على الخريطة باستخدام دالة الـ Generic
+    // 3. تطبيق التغيير الحي على الخريطة
     if (layerConfig && layerConfig.leafletLayer) {
       toggleMapLayer(layerConfig.leafletLayer, map, target.checked);
     }
@@ -140,31 +140,16 @@ document.addEventListener('DOMContentLoaded', () => {
     new ConverterUIComponent();
 });
 
-// تسجيل طبقة محطات المسح داخل layerService
-layerService.addLayer({ 
-  id: 'survey-stations', 
-  name: 'محطات المسح الجغرافي', 
-  category: LayerCategory.PARCELS, 
-  visible: false 
-});
 
-// الاستماع لـ Checkbox محطات المسح
-const surveyCheckbox = document.getElementById('chk-survey-stations');
+/* ==========================================
+   4. SURVEY STATIONS MODULE
+   ========================================== */
 
-if (surveyCheckbox) {
-  surveyCheckbox.addEventListener('change', (e) => {
-    const target = e.target;
-    // تبديل حالة مرئية الطبقة في الخدمة
-    layerService.toggleLayerVisibility('survey-stations');
-  });
-}
-
-
-// استهداف الحاوية في القائمة الجانبية
+// 1. عرض كروت محطات المسح في القائمة الجانبية
 const surveyContainer = document.getElementById('survey-station-container');
 
 if (surveyContainer) {
-  surveyContainer.innerHTML = ''; // تنظيف الحاوية
+  surveyContainer.innerHTML = '';
   
   mockSurveyStations.forEach(stationData => {
     const stationCard = new SurveyStationCard(stationData);
@@ -172,7 +157,7 @@ if (surveyContainer) {
   });
 }
 
-// 1. إنشاء مجموعة طبقات Leaflet للمحطات
+// 2. إنشاء نقاط Leaflet (Markers) للمحطات
 const surveyLayersGroup = L.layerGroup();
 
 mockSurveyStations.forEach(station => {
@@ -185,7 +170,7 @@ mockSurveyStations.forEach(station => {
   surveyLayersGroup.addLayer(marker);
 });
 
-// 2. تحديث تسجيل الطبقة في LayerService لتشمل طبقة Leaflet
+// 3. تسجيل طبقة محطات المسح مرة واحدة في LayerService
 layerService.addLayer({ 
   id: 'survey-stations', 
   name: 'محطات المسح الجغرافي', 
@@ -194,7 +179,7 @@ layerService.addLayer({
   leafletLayer: surveyLayersGroup
 });
 
-// 3. ربط الـ Checkbox بإظهار وإخفاء النقاط على الخريطة
+// 4. الاستماع لـ Checkbox محطات المسح وتفعيل/إخفاء النقاط على الخريطة
 const surveyCheckbox = document.getElementById('chk-survey-stations');
 
 if (surveyCheckbox) {

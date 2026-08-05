@@ -14,5 +14,8 @@ export class LayerService {
     getLayer(id) {
         return this.layers.get(id);
     }
+    getActiveLayers() {
+        return Array.from(this.layers.values()).filter(l => l.visible);
+    }
 }
 //# sourceMappingURL=layerService.js.map
