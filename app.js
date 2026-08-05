@@ -10,6 +10,8 @@ import { ConverterUIComponent } from './dist/components/converter.component.js';
 import { LayerService } from './dist/services/layerService.js';
 import { LayerCategory } from './dist/types/layer.js';
 import { toggleMapLayer } from './dist/utils/leaflet-helper.js'; // 👈 مسار المخرجات وبامتداد .js
+import { SurveyStationCard } from './dist/components/SurveyStationCard.js';
+import { mockSurveyStations } from './dist/data/surveyStationsData.js';
 
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
@@ -154,5 +156,18 @@ if (surveyCheckbox) {
     const target = e.target;
     // تبديل حالة مرئية الطبقة في الخدمة
     layerService.toggleLayerVisibility('survey-stations');
+  });
+}
+
+
+// استهداف الحاوية في القائمة الجانبية
+const surveyContainer = document.getElementById('survey-station-container');
+
+if (surveyContainer) {
+  surveyContainer.innerHTML = ''; // تنظيف الحاوية
+  
+  mockSurveyStations.forEach(stationData => {
+    const stationCard = new SurveyStationCard(stationData);
+    surveyContainer.insertAdjacentHTML('beforeend', stationCard.render());
   });
 }
