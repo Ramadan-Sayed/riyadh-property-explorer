@@ -1,3 +1,5 @@
+import { SurveyStation } from "../types/survey";
+
 export class SurveyStationCard {
   constructor(private station: SurveyStation) {}
   render(): string {

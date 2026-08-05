@@ -137,3 +137,22 @@ if (calculateBtn && lengthInput && widthInput && resultDisplay) {
 document.addEventListener('DOMContentLoaded', () => {
     new ConverterUIComponent();
 });
+
+// تسجيل طبقة محطات المسح داخل layerService
+layerService.addLayer({ 
+  id: 'survey-stations', 
+  name: 'محطات المسح الجغرافي', 
+  category: LayerCategory.PARCELS, 
+  visible: false 
+});
+
+// الاستماع لـ Checkbox محطات المسح
+const surveyCheckbox = document.getElementById('chk-survey-stations');
+
+if (surveyCheckbox) {
+  surveyCheckbox.addEventListener('change', (e) => {
+    const target = e.target;
+    // تبديل حالة مرئية الطبقة في الخدمة
+    layerService.toggleLayerVisibility('survey-stations');
+  });
+}
