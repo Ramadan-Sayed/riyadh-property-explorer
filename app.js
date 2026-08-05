@@ -171,3 +171,44 @@ if (surveyContainer) {
     surveyContainer.insertAdjacentHTML('beforeend', stationCard.render());
   });
 }
+
+// 1. إنشاء مجموعة طبقات Leaflet للمحطات
+const surveyLayersGroup = L.layerGroup();
+
+mockSurveyStations.forEach(station => {
+  const marker = L.marker(station.coordinates).bindPopup(`
+    <div style="direction: rtl; text-align: right;">
+      <b>رمز المحطة:</b> ${station.code}<br>
+      <b>الارتفاع:</b> ${station.elevation}m
+    </div>
+  `);
+  surveyLayersGroup.addLayer(marker);
+});
+
+// 2. تحديث تسجيل الطبقة في LayerService لتشمل طبقة Leaflet
+layerService.addLayer({ 
+  id: 'survey-stations', 
+  name: 'محطات المسح الجغرافي', 
+  category: LayerCategory.PARCELS, 
+  visible: false,
+  leafletLayer: surveyLayersGroup
+});
+
+// 3. ربط الـ Checkbox بإظهار وإخفاء النقاط على الخريطة
+const surveyCheckbox = document.getElementById('chk-survey-stations');
+
+if (surveyCheckbox) {
+  surveyCheckbox.addEventListener('change', (e) => {
+    const isChecked = e.target.checked;
+    
+    layerService.toggleLayerVisibility('survey-stations');
+
+    if (map) {
+      if (isChecked) {
+        surveyLayersGroup.addTo(map);
+      } else {
+        map.removeLayer(surveyLayersGroup);
+      }
+    }
+  });
+}
