@@ -9,22 +9,15 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <!-- مكتبة FontAwesome والأيقونات -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <link rel="shortcut icon" href="#">
     
     <!-- ملف التنسيق الخاص بالمشروع -->
     <link rel="stylesheet" href="style.css" type="text/css" />
 
     <!-- إخبار المتصفح بكيفية الوصول لمكتبة proj4 كموديول -->
-    <script type="importmap">
-      {
-        "imports": {
-          "proj4": "https://esm.sh/proj4@2.15.0"
-        }
-      }
-    </script>
+    <script type="importmap"> {"imports": {"proj4": "https://esm.sh/proj4@2.15.0"} } </script>
   </head>
 
   <body>
@@ -45,9 +38,9 @@
         <h2>لوحة التحكم والميزات</h2>
 
         <!-- ميزة محول الإحداثيات -->
-        <section class="feature-card" id="coordinate-converter">
+        <section class="feature-card light-gray" id="coordinate-converter">
           <div class="converter-panel">
-            <h3>Coordinate Converter .2</h3>
+            <h3>Coordinate Converter</h3>
             <div class="input-group">
               <label for="latInput">خط العرض (Latitude):</label>
               <input type="number" id="latInput" value="24.8211" step="0.0001" placeholder="24.8211">
@@ -64,7 +57,7 @@
         </section>
 
         <!-- ميزة إدارة الطبقات المكانية (Layer Manager) -->
-        <section class="feature-card" id="layer-manager-card">
+        <section class="feature-card " id="layer-manager-card">
           <h3>Layer Manager (In Progress 🔄)</h3>
           <div id="layers-list"></div>
           
