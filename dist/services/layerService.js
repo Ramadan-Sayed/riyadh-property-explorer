@@ -11,5 +11,8 @@ export class LayerService {
         }
         return false;
     }
+    getLayer(id) {
+        return this.layers.get(id);
+    }
 }
 //# sourceMappingURL=layerService.js.map

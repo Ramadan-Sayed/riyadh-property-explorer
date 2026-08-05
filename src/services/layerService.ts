@@ -15,5 +15,9 @@ export class LayerService {
     }
     return false;
   }
+
+  public getLayer(id: string): LayerConfig | undefined {
+    return this.layers.get(id);
+  }
 }
 
