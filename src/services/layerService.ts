@@ -19,5 +19,10 @@ export class LayerService {
   public getLayer(id: string): LayerConfig | undefined {
     return this.layers.get(id);
   }
+
+  getActiveLayers(): LayerConfig[] {
+    return Array.from(this.layers.values()).filter(l => l.visible);
+  }
+
 }
 
