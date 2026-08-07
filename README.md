@@ -9,6 +9,8 @@ This repository contains the source code and development milestone documentation
 * **GeoJSON Ingestion & Map Interactions:** Asynchronously integrated external GeoJSON features and created global spatial utilities (`mapUtils`) for dynamic map transitions (`flyTo`) and converted point markers.
 * **TypeScript Migration & Coordinate Converter:** Migrated core modules to TypeScript, created strong OOP services (`CoordinateService`), and delivered a fully interactive WGS84 to UTM Coordinate Converter with Clipboard support.
 
+* **Layer Management Engine & Survey Stations (Week 5):** Built an extensible `LayerService` using TypeScript classes, interfaces, and generic Leaflet helpers. Rendered 35 interactive survey stations across Riyadh districts with dynamic sidebar cards and live map marker toggling.
+
 ---
 
 ### 📊 Phase 1 Progress Track (Weeks 1-7)
@@ -16,8 +18,7 @@ This repository contains the source code and development milestone documentation
 - [x] **Week 2:** JavaScript Fundamentals, DOM Integration & Computational Logic (Completed ✅).
 - [x] **Week 3:** Async Fetch, GeoJSON Ingestion & WKT Conversion Helpers (Completed ✅).
 - [x] **Week 4:** TypeScript Coordinate Converter — Strong Typing, UTM Projections & Interactive Map Integration (Completed ✅).
-- [x] **Week 5:** Layer Manager & Advanced TypeScript Architecture — Interfaces, Types, Enums & Survey Station Card (Completed ✅).
-- [x] Survey Station Card Component (Completed ✅).
+- [x] **Week 5:** Layer Manager & Advanced TypeScript Architecture — Interfaces, Types, Enums, 35 Survey Stations & Dynamic Map Markers (Completed ✅).
 - [ ] **Weeks 6–7:** Spatial Search — Search Filters & UI Spatial Data Querying (Upcoming ⏳).
 
 ---
@@ -33,9 +34,9 @@ This repository contains the source code and development milestone documentation
 ### 📅 Phase 1 - Week 5: Advanced TypeScript & Layer Management Engine
 - [x] **Day 1:** Interfaces & Enums for Spatial Layer Structures (`LayerCategory` & `LayerConfig`).
 - [x] **Day 2:** Classes & Custom Types for State Management (`LayerService` & `LayerToggleHandler`).
-- [ ] **Day 3:** Generics & Leaflet Map Integration (`toggleMapLayer` Generic Helper & Event Binding).
+- [x] **Day 3:** Generics & Leaflet Map Integration (`toggleMapLayer` Generic Helper & Event Binding).
 - [x] **Day 4:** Survey Station Card Component Architecture & Layer Manager Integration.
-- [x] **Day 5:** Refactoring, Type Safety Optimization & Dark Theme UI Refinement.
+- [x] **Day 5:** Dataset Expansion (35 Survey Stations), Live Leaflet Markers Integration & Clean Code Refactoring.
 
 ---
 
@@ -67,7 +68,6 @@ This repository contains the source code and development milestone documentation
 
 
 ### 📂 Week 5: Advanced TypeScript & Layer Management Engine
-
 #### **Day 1: Data Contracts & Layer Architecture**
 * **Core Learning & Methodology:** Applied TypeScript `Interfaces` and `Enums` to establish strict Data Contracts for spatial layers, preventing runtime shape mismatches across the mapping engine.
 * **Practical Application:** Defined `LayerCategory` Enum (Basemap, Districts, Parcels) and `LayerConfig` interface within `src/types/layer.ts` alongside building the Side Panel Layer Manager HTML container.
@@ -84,6 +84,9 @@ This repository contains the source code and development milestone documentation
 * **Core Learning & Methodology:** Extended OOP modularity by crafting standalone UI components with strongly typed data models (`SurveyStation`).
 * **Practical Application:** Created `SurveyStationCard.ts` component class for spatial elevation rendering, registering survey station vector data as an optional feature layer inside `LayerService`.
 
-#### **Day 5: Clean Code Refactoring & Production UI Polish**
-* **Core Learning & Methodology:** Performed comprehensive Type Safety checks (`tsc --noEmit`), codebase refactoring, and UI/UX alignment to project design systems.
-* **Practical Application:** Refined dark-theme CSS styling for the `.layer-manager-card`, added helper method `getActiveLayers()`, and updated overall project documentation.
+#### **Day 5: Dataset Expansion, Dynamic Markers & Application Wiring**
+* **Core Learning & Methodology:** Applied full-stack GIS UI dynamic rendering, connecting TypeScript component instances to live Leaflet map layer groups (`L.layerGroup`).
+* **Practical Application:** 
+  * Expanded mock survey stations dataset (`surveyStationsData.ts`) to 35 locations covering all major Riyadh districts (North, South, East, West, Central).
+  * Resolved event listener and syntax errors in `app.js` to ensure single-responsibility layer toggling.
+  * Rendered 35 dynamic `SurveyStationCard` HTML elements in the sidebar and wired their coordinates to interactive Leaflet markers with rich Popups (Code & Elevation).
