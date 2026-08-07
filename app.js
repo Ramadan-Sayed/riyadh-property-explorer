@@ -140,12 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
     new ConverterUIComponent();
 });
 
-
 /* ==========================================
-   4. SURVEY STATIONS MODULE
+   SURVEY STATIONS MODULE
    ========================================== */
 
-// 1. عرض كروت محطات المسح في القائمة الجانبية
+// 1. توليد كروت المحطات الـ 35 في القائمة الجانبية
 const surveyContainer = document.getElementById('survey-station-container');
 
 if (surveyContainer) {
@@ -157,7 +156,7 @@ if (surveyContainer) {
   });
 }
 
-// 2. إنشاء نقاط Leaflet (Markers) للمحطات
+// 2. إنشاء نقاط الخريطة (Markers Layer Group)
 const surveyLayersGroup = L.layerGroup();
 
 mockSurveyStations.forEach(station => {
@@ -170,7 +169,7 @@ mockSurveyStations.forEach(station => {
   surveyLayersGroup.addLayer(marker);
 });
 
-// 3. تسجيل طبقة محطات المسح مرة واحدة في LayerService
+// 3. تسجيل الطبقة في LayerService
 layerService.addLayer({ 
   id: 'survey-stations', 
   name: 'محطات المسح الجغرافي', 
@@ -179,7 +178,7 @@ layerService.addLayer({
   leafletLayer: surveyLayersGroup
 });
 
-// 4. الاستماع لـ Checkbox محطات المسح وتفعيل/إخفاء النقاط على الخريطة
+// 4. ربط الـ Checkbox بالتفاعل الحي على الخريطة
 const surveyCheckbox = document.getElementById('chk-survey-stations');
 
 if (surveyCheckbox) {
