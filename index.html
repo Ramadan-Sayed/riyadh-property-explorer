@@ -87,7 +87,28 @@
         <!-- الميزة القادمة -->
         <section class="feature-card" id="spatial-search">
           <h3>4. Spatial Search</h3>
-          <p>بحث + فلاتر وتصفية الـ UI (Upcoming ⏳)</p>
+          <div class="search-panel-card" style="margin-top: 15px; background: #1a2332; padding: 15px; border-radius: 8px; color: #fff;">
+          <h3 style="margin-top: 0; color: #00b4d8; font-size: 1.1rem;">🔍 البحث المكاني والتصفية</h3>
+          
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label for="txt-search-query" style="display: block; font-size: 0.85rem; margin-bottom: 5px;">اسم الحي / العقار:</label>
+            <input type="text" id="txt-search-query" placeholder="أدخل اسم الحي..." style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label for="sel-property-type" style="display: block; font-size: 0.85rem; margin-bottom: 5px;">نوع العقار:</label>
+            <select id="sel-property-type" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;">
+              <option value="ALL">الكل</option>
+              <option value="RESIDENTIAL">سكني</option>
+              <option value="COMMERCIAL">تجاري</option>
+              <option value="AGRICULTURAL">زراعي</option>
+            </select>
+          </div>
+
+          <button id="btn-spatial-search" style="width: 100%; padding: 8px; background: #00b4d8; border: none; color: #fff; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 5px;">
+            تطبيق البحث
+          </button>
+        </div>
         </section>
       </aside>
 
