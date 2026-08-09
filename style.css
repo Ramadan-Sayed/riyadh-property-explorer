@@ -14,6 +14,10 @@ body {
   flex-direction: column;
 }
 
+.light-gray {
+  background-color: rgb(174, 168, 168) !important;
+}
+
 /* الشريط العلوي بالتيل الغامق الوقور */
 .app-header {
   background-color: #004d40;
@@ -173,9 +177,11 @@ body {
 }
 
 #map {
-    width: 100%;      /* لتأخذ الخريطة كامل عرض الحاوية الخاصة بها */
-    /* height: 700px;     يمكنك زيادة أو تقليل الطول حسب تصميم واجهتك */
-    border-radius: 8px; /* اختياري: لإعطاء حواف ناعمة متناسقة مع واجهتك التيل */
+  width: 100%;
+  /* لتأخذ الخريطة كامل عرض الحاوية الخاصة بها */
+  /* height: 700px;     يمكنك زيادة أو تقليل الطول حسب تصميم واجهتك */
+  border-radius: 8px;
+  /* اختياري: لإعطاء حواف ناعمة متناسقة مع واجهتك التيل */
 }
 
 
@@ -184,11 +190,12 @@ body {
   background: lightgray;
   padding: 20px;
   border-radius: 50px;
-  box-shadow: 0 0px 10px 10px rgba(0,80,80,0.15);
+  box-shadow: 0 0px 10px 10px rgba(0, 80, 80, 0.15);
   max-width: 400px;
   margin-right: 20px;
   /* margin:  auto; */
-  z-index: 10; /* لضمان ظهورها فوق أي خلفية */
+  z-index: 10;
+  /* لضمان ظهورها فوق أي خلفية */
 }
 
 .calculator-card h3 {
@@ -357,4 +364,10 @@ body {
   margin: 0;
   color: #38bdf8;
   font-weight: 500;
+}
+
+#layer-manager-card {
+  background: #1a2332 ;
+  border-radius: 10px;
+  padding: 12px;
 }

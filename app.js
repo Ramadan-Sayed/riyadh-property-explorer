@@ -1,30 +1,36 @@
 // app.js - الملف الرئيسي لربط المكونات
 
+/* ==========================================
+   0. IMPORTS (جميع الاستيرادات في الأعلى)
+   ========================================== */
 import { initMap } from './mapUtils.js';
 import { fetchRiyadhProperties } from './dataService.js';
-import { formatCoordinates } from './geoHelpers.js'; // 👈 استيراد الأداة المساعدة الجديدة
-// في ملف app.js أو الملف الرئيسي المسؤول عن استدعاء الموديولات:
+import { formatCoordinates } from './geoHelpers.js';
 import { ConverterUIComponent } from './dist/components/converter.component.js';
-
+import { LayerService } from './dist/services/layerService.js';
+import { LayerCategory } from './dist/types/layer.js';
+import { toggleMapLayer } from './dist/utils/leaflet-helper.js';
+import { SurveyStationCard } from './dist/components/SurveyStationCard.js';
+import { mockSurveyStations } from './dist/data/surveyStationsData.js';
 
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
    ========================================== */
 
-// اختبار تنسيق إحداثيات الرياض في الكونسول
+// أ. إنشاء الـ Service ورصد الإحداثيات
+const layerService = new LayerService();
 console.log("Formatted Riyadh Coordinates (WKT & Array):", formatCoordinates(24.7136, 46.6753));
 
-
-// أ. إعدادات الخريطة لمدينة الرياض
+// ب. إعدادات الخريطة لمدينة الرياض
 const appConfig = {
     containerId: 'map',
     defaultCenter: [24.7136, 46.6753]
 };
 
-// ب. إنشاء الخريطة في البداية أولاً لتكون جاهزة لاستقبال الطبقات
+// ج. إنشاء الخريطة أولاً لتكون جاهزة لاستقبال الاستماعات والطبقات
 const map = initMap(appConfig.containerId, appConfig.defaultCenter);
 
-// ج. بيانات تجريبية للأحياء والعقارات
+// د. بيانات تجريبية للأحياء
 const RIYADH_DISTRICTS = ['Al-Malqa', 'Al-Yasmin', 'Al-Narjis', 'Al-Qairawan'];
 console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
 
@@ -39,7 +45,7 @@ console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
 const loadAndDisplayProperties = async () => {
     const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
     if (data) {
-        L.geoJSON(data, {
+        const propertiesLayer = L.geoJSON(data, {
             onEachFeature: (feature, layer) => {
                 if (feature.properties && feature.properties.name) {
                     layer.bindPopup(`
@@ -52,10 +58,21 @@ const loadAndDisplayProperties = async () => {
                 }
             }
         }).addTo(map);
+
+        // تسجيل الطبقة داخل LayerService بعد تحميل البيانات بنجاح
+        if (typeof layerService !== 'undefined' && LayerCategory) {
+            layerService.addLayer({
+                id: 'chk-properties',
+                name: 'عقارات الرياض',
+                category: LayerCategory.PARCELS,
+                visible: true,
+                leafletLayer: propertiesLayer
+            });
+        }
     }
 };
 
-// تشغيل الدالة الآن بعد أن أصبحت الخريطة (map) جاهزة وموجودة في الذاكرة
+// تشغيل الدالة الآن بعد إنشاء الخريطة
 loadAndDisplayProperties();
 
 const calculateLandArea = (length, width) => length * width;
@@ -65,7 +82,27 @@ const calculateLandArea = (length, width) => length * width;
    3. DOM INTERACTION & EVENTS
    ========================================== */
 
-// أ. التفاعل والتبديل النشط لكروت الميزات الجانبية
+// أ. الاستماع لـ Checkbox عقارات الرياض
+const propertiesCheckbox = document.getElementById('chk-properties');
+
+if (propertiesCheckbox) {
+  propertiesCheckbox.addEventListener('change', (e) => {
+    const target = e.target;
+
+    // 1. التبديل البرمجي لحالة الطبقة في الـ Service
+    layerService.toggleLayerVisibility('chk-properties');
+
+    // 2. الحصول على كائن طبقة Leaflet الفعلي
+    const layerConfig = layerService.getLayer('chk-properties');
+
+    // 3. تطبيق التغيير الحي على الخريطة
+    if (layerConfig && layerConfig.leafletLayer) {
+      toggleMapLayer(layerConfig.leafletLayer, map, target.checked);
+    }
+  });
+}
+
+// ب. التفاعل والتبديل النشط لكروت الميزات الجانبية
 const featureCards = document.querySelectorAll('.feature-card');
 featureCards.forEach(card => {
     card.addEventListener('click', () => {
@@ -77,7 +114,7 @@ featureCards.forEach(card => {
     });
 });
 
-// ب. حاسبة مساحات الأراضي
+// ج. حاسبة مساحات الأراضي
 const lengthInput = document.getElementById('land-length');
 const widthInput = document.getElementById('land-width');
 const calculateBtn = document.getElementById('btn-calculate');
@@ -99,8 +136,63 @@ if (calculateBtn && lengthInput && widthInput && resultDisplay) {
     });
 }
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
     new ConverterUIComponent();
 });
+
+/* ==========================================
+   SURVEY STATIONS MODULE
+   ========================================== */
+
+// 1. توليد كروت المحطات الـ 35 في القائمة الجانبية
+const surveyContainer = document.getElementById('survey-station-container');
+
+if (surveyContainer) {
+  surveyContainer.innerHTML = '';
+  
+  mockSurveyStations.forEach(stationData => {
+    const stationCard = new SurveyStationCard(stationData);
+    surveyContainer.insertAdjacentHTML('beforeend', stationCard.render());
+  });
+}
+
+// 2. إنشاء نقاط الخريطة (Markers Layer Group)
+const surveyLayersGroup = L.layerGroup();
+
+mockSurveyStations.forEach(station => {
+  const marker = L.marker(station.coordinates).bindPopup(`
+    <div style="direction: rtl; text-align: right;">
+      <b>رمز المحطة:</b> ${station.code}<br>
+      <b>الارتفاع:</b> ${station.elevation}m
+    </div>
+  `);
+  surveyLayersGroup.addLayer(marker);
+});
+
+// 3. تسجيل الطبقة في LayerService
+layerService.addLayer({ 
+  id: 'survey-stations', 
+  name: 'محطات المسح الجغرافي', 
+  category: LayerCategory.PARCELS, 
+  visible: false,
+  leafletLayer: surveyLayersGroup
+});
+
+// 4. ربط الـ Checkbox بالتفاعل الحي على الخريطة
+const surveyCheckbox = document.getElementById('chk-survey-stations');
+
+if (surveyCheckbox) {
+  surveyCheckbox.addEventListener('change', (e) => {
+    const isChecked = e.target.checked;
+    
+    layerService.toggleLayerVisibility('survey-stations');
+
+    if (map) {
+      if (isChecked) {
+        surveyLayersGroup.addTo(map);
+      } else {
+        map.removeLayer(surveyLayersGroup);
+      }
+    }
+  });
+}

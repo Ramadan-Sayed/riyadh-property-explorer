@@ -9,22 +9,15 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <!-- مكتبة FontAwesome والأيقونات -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <link rel="shortcut icon" href="#">
     
     <!-- ملف التنسيق الخاص بالمشروع -->
     <link rel="stylesheet" href="style.css" type="text/css" />
 
     <!-- إخبار المتصفح بكيفية الوصول لمكتبة proj4 كموديول -->
-    <script type="importmap">
-      {
-        "imports": {
-          "proj4": "https://esm.sh/proj4@2.15.0"
-        }
-      }
-    </script>
+    <script type="importmap"> {"imports": {"proj4": "https://esm.sh/proj4@2.15.0"} } </script>
   </head>
 
   <body>
@@ -45,9 +38,9 @@
         <h2>لوحة التحكم والميزات</h2>
 
         <!-- ميزة محول الإحداثيات -->
-        <section class="feature-card" id="coordinate-converter">
+        <section class="feature-card light-gray" id="coordinate-converter">
           <div class="converter-panel">
-            <h3>Coordinate Converter .2</h3>
+            <h3>Coordinate Converter</h3>
             <div class="input-group">
               <label for="latInput">خط العرض (Latitude):</label>
               <input type="number" id="latInput" value="24.8211" step="0.0001" placeholder="24.8211">
@@ -64,34 +57,37 @@
         </section>
 
         <!-- ميزة إدارة الطبقات المكانية (Layer Manager) -->
-        <section class="feature-card" id="layer-manager-card">
-          <h3>3. إدارة الطبقات المكانية (Layer Manager)</h3>
+        <section class="feature-card " id="layer-manager-card">
+          <h3>Layer Manager</h3>
           <div id="layers-list"></div>
           
-          <div class="layer-toggles">
-            <label class="toggle-item">
+          <div class="layer-control-item">
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
               <input type="checkbox" id="chk-properties" checked />
               <span>عقارات الرياض</span>
             </label>
-            <label class="toggle-item">
-              <input type="checkbox" id="chk-stations" checked />
-              <span>محطات المسح الجيوديسي</span>
+          </div>
+          
+          <!-- خيار محطات المسح -->
+          <div class="layer-control-item">
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" id="chk-survey-stations" />
+              <span>محطات المسح الجغرافي</span>
             </label>
           </div>
+
+          <!-- حاوية عرض كروت المحطات الجانبية -->
+          <!-- <div id="survey-station-container" class="survey-stations-list"> -->
+            <!-- سيتم توليد الكروت هنا ديناميكياً بواسطة JavaScript -->
+          <!-- </div> -->
         </section>
 
-        <!-- مكون بطاقة المحطة المساحية (Survey Station Card) -->
-        <section class="feature-card" id="survey-station-container">
-          <h3>تفاصيل المحطة المساحية</h3>
-          <div id="survey-station-content"> 
-            <!-- سيتم حقنه ديناميكياً بواسطة SurveyStationCardComponent -->
-          </div>
-        </section>
+       
 
         <!-- الميزة القادمة -->
-        <section class="feature-card" id="spatial-search">
+        <section class="feature-card " id="spatial-search">
           <h3>4. Spatial Search</h3>
-          <p>بحث + فلاتر وتصفية الـ UI (Upcoming ⏳)</p>
+          <p> في المستقبل القريب</p>
         </section>
       </aside>
 
@@ -128,3 +124,8 @@
 
   </body>
 </html>
+
+
+
+
+
