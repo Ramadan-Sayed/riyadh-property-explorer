@@ -33,12 +33,6 @@ This repository contains the source code and development milestone documentation
 
 ### 📅 Phase 1 - Week 5: Advanced TypeScript & Layer Management Engine
 - [x] **Day 1:** Interfaces & Enums for Spatial Layer Structures (`LayerCategory` & `LayerConfig`).
-<<<<<<< HEAD
-- [ ] **Day 2:** Classes & Custom Types for State Management (`LayerService` & `LayerToggleHandler`).
-- [ ] **Day 3:** Generics & Leaflet Map Integration (`toggleMapLayer` Generic Helper & Event Binding).
-- [ ] **Day 4:** Survey Station Card Component Architecture & Layer Manager Integration.
-- [ ] **Day 5:** Refactoring, Type Safety Optimization & Dark Theme UI Refinement.
-=======
 - [x] **Day 2:** Classes & Custom Types for State Management (`LayerService` & `LayerToggleHandler`).
 - [x] **Day 3:** Generics & Leaflet Map Integration (`toggleMapLayer` Generic Helper & Event Binding).
 - [x] **Day 4:** Survey Station Card Component Architecture & Layer Manager Integration.
