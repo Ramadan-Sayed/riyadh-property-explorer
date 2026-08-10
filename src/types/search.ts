@@ -18,3 +18,10 @@ export enum QueryStatus {
   SUCCESS = 'SUCCESS',
   EMPTY = 'EMPTY'
 }
+
+export interface ISearchResult<T> {
+  totalMatches: number;
+  results: T[];
+  executionTimeMs: number;
+  status: QueryStatus;
+}
