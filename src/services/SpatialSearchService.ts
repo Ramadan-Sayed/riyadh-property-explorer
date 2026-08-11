@@ -1,17 +1,16 @@
-// import { ISpatialSearchCriteria, ISearchResult } from '../types/search.js';
+import { ISpatialSearchCriteria, ISearchResult, QueryStatus } from '../types/search.js';
 
-// export class SpatialSearchService<T extends { properties: Record<string, any> }> {
-//   private dataset: T[];
+export class SpatialSearchService<T extends { properties: Record<string, any> }> {
+  private dataset: T[] = [];
 
-//   constructor(initialData: T[] = []) {
-//     this.dataset = initialData;
-//   }
+  constructor(initialData: T[] = []) {
+    this.dataset = initialData;
+  }
 
-//   // تحديث البيانات الأساسية
-//   public setDataset(data: T[]): void {
-//     this.dataset = data;
-//   }
-
+  public setDataset(data: T[]): void {
+    this.dataset = data;
+  }
+}
 //   // تنفيذ البحث وتصفية النتائج
 //   public filter(criteria: ISpatialSearchCriteria): ISearchResult<T> {
 //     const startTime = performance.now();
