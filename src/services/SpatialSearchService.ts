@@ -13,19 +13,21 @@ export class SpatialSearchService<T extends { properties: Record<string, any> }>
 
     //   تنفيذ البحث وتصفية النتائج
     public filter(criteria: ISpatialSearchCriteria): ISearchResult<T> {
+        const startTime = performance.now();
+        
         const filtered = this.dataset.filter(item => {
             const props = item.properties || {};
-            const matchQuery = !criteria.query || 
+            return !criteria.query || 
             (props.district_ar && props.district_ar.includes(criteria.query)) ||
             (props.name && props.name.includes(criteria.query));
-            
-            return matchQuery;
         });
+
+        const endTime = performance.now();
 
         return {
             totalMatches: filtered.length,
             results: filtered,
-            executionTimeMs: 0,
+            executionTimeMs: Number((endTime - startTime).toFixed(2)),
             status: filtered.length ? QueryStatus.SUCCESS : QueryStatus.EMPTY
         };
     }
