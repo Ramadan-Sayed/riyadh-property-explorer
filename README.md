@@ -23,8 +23,8 @@ This repository contains the source code and development milestone documentation
 ---
 
 ### 📅 Phase 1 - Week 6: Spatial Search Engine Architecture & UI Foundations
-- [ ] **Day 1:** Spatial Search Interfaces, Query Enums & Criteria Models Setup (`src/types/search.ts`).
-- [ ] **Day 2:** Spatial Filtering Engine Core Implementation (`SpatialSearchService.ts`).
+- [x] **Day 1:** Spatial Search Interfaces, Query Enums & Criteria Models Setup (`src/types/search.ts`).
+- [x] **Day 2:** Spatial Filtering Engine Core Implementation (`SpatialSearchService.ts`).
 - [ ] **Day 3:** Search Panel Component & Responsive Form Control Markup (`src/components/SearchPanel.ts`).
 - [ ] **Day 4:** Live Text & Multi-Criteria Attribute Filtering Binding (District Name, Property Type).
 - [ ] **Day 5:** Spatial Bounding Box & Radius Query Calculation Helpers.
