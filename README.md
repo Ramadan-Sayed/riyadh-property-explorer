@@ -1,7 +1,9 @@
-# GIS Dashboard Static UI - Riyadh Property Explorer (Weeks 1-7)
+# 🗺️ Riyadh Property Explorer — Web GIS Dashboard
+
+> 🔄 **Current Active Branch / Feature:** `feature/spatial-search` (Sprint 5 / Weeks 6–7)  
+> 📌 **Development Roadmap:** Phase 1 — Interactive Mapping & Spatial Search Engine Architecture
 
 This repository contains the source code and development milestone documentation for the Riyadh Property Explorer—a high-performance, interactive Web GIS platform engineered for spatial data analysis and property mapping.
-
 ## 🛠️ What I Accomplished So Far (Weeks 1-5):
 * **Semantic HTML5 & Responsive UI/UX:** Built a clean, structured layout with interactive sidebar controls, reactive property feature cards, and fluid grid layouts optimized for map rendering.
 * **JavaScript & DOM Architecture:** Implemented dynamic active-state class switching across the dashboard tabs using strict event-driven mechanisms.
