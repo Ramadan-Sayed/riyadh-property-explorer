@@ -197,6 +197,10 @@ if (surveyCheckbox) {
   });
 }
 
+
+
+
+
 const searchInput = document.getElementById('txt-search-query');
 if (searchInput) {
   searchInput.addEventListener('keyup', (e) => {
@@ -204,3 +208,12 @@ if (searchInput) {
     // استدعاء محرك البحث
   });
 }
+
+const categorySelect = document.getElementById('sel-property-type');
+if (categorySelect) {
+  categorySelect.addEventListener('change', (e) => {
+    const category = e.target.value;
+    // استدعاء محرك البحث
+  });
+}
+
