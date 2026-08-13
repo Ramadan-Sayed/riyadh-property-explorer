@@ -12,6 +12,8 @@ import { LayerCategory } from './dist/types/layer.js';
 import { toggleMapLayer } from './dist/utils/leaflet-helper.js';
 import { SurveyStationCard } from './dist/components/SurveyStationCard.js';
 import { mockSurveyStations } from './dist/data/surveyStationsData.js';
+import { SpatialSearchService } from './dist/services/SpatialSearchService.js';
+import { debounce } from './dist/utils/debounce.js';
 
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
@@ -199,21 +201,48 @@ if (surveyCheckbox) {
 
 
 
+/* ==========================================
+   5. SPATIAL SEARCH ENGINE MODULE (اليوم الرابع)
+   ========================================== */
 
-
+// أ. جلب عناصر التحكم من الواجهة
 const searchInput = document.getElementById('txt-search-query');
+const categorySelect = document.getElementById('sel-property-type');
+
+/**
+ * دالة تجميع المعايير واستدعاء محرك البحث (Multi-Criteria Execution)
+ */
+const executeSearch = () => {
+  const queryValue = searchInput ? searchInput.value.trim() : '';
+  const categoryValue = categorySelect ? categorySelect.value : '';
+
+  // تجميع كائن المعايير الموحد
+  const searchCriteria = {
+    query: queryValue,
+    category: categoryValue !== 'ALL' && categoryValue !== '' ? categoryValue : undefined
+  };
+
+  console.log('🔍 Executing Spatial Search with criteria:', searchCriteria);
+
+  // استدعاء محرك البحث
+  const results = SpatialSearchService.search(searchCriteria);
+  console.log(`Found ${results.length} matching properties:`, results);
+
+  // (جاهز للربط مع الخريطة وعرض النتائج في الأيام التالية)
+};
+
+// ب. تطبيق تأخير الـ Debounce على دالة البحث لتخفيف الضغط على المتصفح (300ms)
+const debouncedSearch = debounce(executeSearch, 300);
+
+// ج. ربط الأحدث بالحقول
+
+// 1. حقل النص: استخدام حدث 'input' بدلاً من 'keyup' لاقتناص النص فور الكتابة أو اللصق
 if (searchInput) {
-  searchInput.addEventListener('keyup', (e) => {
-    const query = e.target.value;
-    // استدعاء محرك البحث
-  });
+  searchInput.addEventListener('input', debouncedSearch);
 }
 
-const categorySelect = document.getElementById('sel-property-type');
+// 2. القائمة المنسدلة: استخدام حدث 'change'
 if (categorySelect) {
-  categorySelect.addEventListener('change', (e) => {
-    const category = e.target.value;
-    // استدعاء محرك البحث
-  });
+  categorySelect.addEventListener('change', debouncedSearch);
 }
 
