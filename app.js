@@ -196,3 +196,11 @@ if (surveyCheckbox) {
     }
   });
 }
+
+const searchInput = document.getElementById('txt-search-query');
+if (searchInput) {
+  searchInput.addEventListener('keyup', (e) => {
+    const query = e.target.value;
+    // استدعاء محرك البحث
+  });
+}
