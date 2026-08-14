@@ -1,41 +1,30 @@
-import { ISpatialSearchCriteria, ISearchResult, QueryStatus } from '../types/search.js';
+import { QueryStatus } from '../types/search.js';
 import { isWithinAreaRange } from '../utils/spatial-helpers.js';
-
-export class SpatialSearchService<T extends { properties: Record<string, any> }> {
-    private dataset: T[] = [];
-
-    constructor(initialData: T[] = []) {
+export class SpatialSearchService {
+    dataset = [];
+    constructor(initialData = []) {
         this.dataset = initialData;
     }
-
-    public setDataset(data: T[]): void {
+    setDataset(data) {
         this.dataset = data;
     }
-
     // تنفيذ البحث وتصفية النتائج بجميع المعايير
-    public filter(criteria: ISpatialSearchCriteria): ISearchResult<T> {
+    filter(criteria) {
         const startTime = performance.now();
-
         const filtered = this.dataset.filter(item => {
             const props = item.properties || {};
-
             // 1. تصفية النص (اسم الحي أو اسم العقار)
-            const matchQuery = !criteria.query || 
+            const matchQuery = !criteria.query ||
                 (props.district_ar && props.district_ar.includes(criteria.query)) ||
                 (props.name && props.name.includes(criteria.query));
-
             // 2. تصفية نوع العقار (Category)
             const matchCategory = !criteria.category || props.category === criteria.category;
-
             // 3. تصفية نطاق المساحة باستعمال الدالة المساعدة
             const matchArea = isWithinAreaRange(props.area || 0, criteria.minArea, criteria.maxArea);
-
             // دمج الشروط الثلاثة معاً (AND Logic)
             return matchQuery && matchCategory && matchArea;
         });
-
         const endTime = performance.now();
-
         return {
             totalMatches: filtered.length,
             results: filtered,
@@ -44,3 +33,4 @@ export class SpatialSearchService<T extends { properties: Record<string, any> }>
         };
     }
 }
+//# sourceMappingURL=SpatialSearchService.js.map
