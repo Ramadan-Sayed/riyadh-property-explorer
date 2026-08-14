@@ -2,8 +2,10 @@
 
 > 🔄 **Current Active Branch / Feature:** `feature/spatial-search` (Sprint 5 / Weeks 6–7)  
 > 📌 **Development Roadmap:** Phase 1 — Interactive Mapping & Spatial Search Engine Architecture
+> ⚡ **Latest Milestone:** Week 6 Completed — Spatial Search Engine Architecture & Range Helpers
 
 This repository contains the source code and development milestone documentation for the Riyadh Property Explorer—a high-performance, interactive Web GIS platform engineered for spatial data analysis and property mapping.
+
 ## 🛠️ What I Accomplished So Far (Weeks 1-5):
 * **Semantic HTML5 & Responsive UI/UX:** Built a clean, structured layout with interactive sidebar controls, reactive property feature cards, and fluid grid layouts optimized for map rendering.
 * **JavaScript & DOM Architecture:** Implemented dynamic active-state class switching across the dashboard tabs using strict event-driven mechanisms.
@@ -14,13 +16,14 @@ This repository contains the source code and development milestone documentation
 
 ---
 
-### 📊 Phase 1 Progress Track (Weeks 1-7)
+### 📊 Phase 1 Progress Track (Weeks 1–7)
 - [x] **Week 1:** Layout Engineering, Teal Spectrum Visual Identity & Grid Refactoring (Completed ✅).
 - [x] **Week 2:** JavaScript Fundamentals, DOM Integration & Computational Logic (Completed ✅).
 - [x] **Week 3:** Async Fetch, GeoJSON Ingestion & WKT Conversion Helpers (Completed ✅).
 - [x] **Week 4:** TypeScript Coordinate Converter — Strong Typing, UTM Projections & Interactive Map Integration (Completed ✅).
 - [x] **Week 5:** Layer Manager & Advanced TypeScript Architecture — Interfaces, Types, Enums, 35 Survey Stations & Dynamic Map Markers (Completed ✅).
-- [ ] **Weeks 6–7:** Spatial Search Engine & Final Platform Release — Advanced Query Filters, Real-Time Spatial Indexing & UI Bounds Zoom (In Progress ⏳).
+- [x] **Week 6:** Spatial Search Engine Architecture & UI Foundations — Interfaces, Services, Multi-Attribute Filtering & Range Helpers (Completed ✅).
+- [ ] **Week 7:** Map Spatial Synchronization & Final Project Integration — Dynamic Highlighting, Auto Bounds & Final Release (In Progress ⏳).
 
 ---
 
@@ -28,8 +31,8 @@ This repository contains the source code and development milestone documentation
 - [x] **Day 1:** Spatial Search Interfaces, Query Enums & Criteria Models Setup (`src/types/search.ts`).
 - [x] **Day 2:** Spatial Filtering Engine Core Implementation (`SpatialSearchService.ts`).
 - [x] **Day 3:** Search Panel Component & Responsive Form Control Markup (`src/components/SearchPanel.ts`).
-- [x] **Day 4:** Live Text & Multi-Criteria Attribute Filtering Binding (District Name, Property Type).
-- [ ] **Day 5:** Spatial Bounding Box & Radius Query Calculation Helpers.
+- [x] **Day 4:** Live Text & Multi-Criteria Attribute Filtering Binding (District Name, Property Type) (`app.js`).
+- [x] **Day 5:** Spatial Bounding Box & Area Range Query Calculation Helpers (`src/utils/spatial-helpers.ts`).
 
 ### 📅 Phase 1 - Week 7: Map Spatial Synchronization & Final Project Integration
 - [ ] **Day 6:** Spatial Highlight Layer & Dynamic Leaflet Marker Filtering (`mapUtils.ts`).
@@ -39,6 +42,8 @@ This repository contains the source code and development milestone documentation
 - [ ] **Day 10:** Final Production Build, Codebase Cleanup & Platform Release Deployment.
 
 ---
+
+## 📂 Detailed Weekly Breakdown & Technical Highlights
 
 ### 📂 Week 4: TypeScript Refactoring & Coordinate Tool Engineering
 
