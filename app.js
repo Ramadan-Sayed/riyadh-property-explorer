@@ -246,3 +246,9 @@ if (categorySelect) {
   categorySelect.addEventListener('change', debouncedSearch);
 }
 
+
+
+function applyMapSearchFilter(searchResults) {
+  const ids = new Set(searchResults.map(r => r.properties.id));
+  highlightMatchedFeatures(activeGeoJsonLayer, ids);
+}
