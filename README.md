@@ -43,7 +43,7 @@ This repository contains the source code and development milestone documentation
 
 ---
 
-## 📂 Detailed Weekly Breakdown & Technical Highlights
+## 📂 Detailed Weekly Breakdown & Technical Highlightsc
 
 ### 📂 Week 4: TypeScript Refactoring & Coordinate Tool Engineering
 
