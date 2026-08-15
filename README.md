@@ -2,7 +2,7 @@
 
 > 🔄 **Current Active Branch / Feature:** `feature/spatial-search` (Sprint 5 / Weeks 6–7)  
 > 📌 **Development Roadmap:** Phase 1 — Interactive Mapping & Spatial Search Engine Architecture
-> ⚡ **Latest Milestone:** Week 6 Completed — Spatial Search Engine Architecture & Range Helpers
+> ⚡ **Latest Milestone:** Week 7 (Day 6) — Map Spatial Synchronization & Dynamic Leaflet Layer Highlighting
 
 This repository contains the source code and development milestone documentation for the Riyadh Property Explorer—a high-performance, interactive Web GIS platform engineered for spatial data analysis and property mapping.
 
@@ -35,7 +35,7 @@ This repository contains the source code and development milestone documentation
 - [x] **Day 5:** Spatial Bounding Box & Area Range Query Calculation Helpers (`src/utils/spatial-helpers.ts`).
 
 ### 📅 Phase 1 - Week 7: Map Spatial Synchronization & Final Project Integration
-- [ ] **Day 6:** Spatial Highlight Layer & Dynamic Leaflet Marker Filtering (`mapUtils.ts`).
+- [x] **Day 6:** Spatial Highlight Layer & Dynamic Leaflet Marker Filtering (`mapUtils.ts`).
 - [ ] **Day 7:** Auto Viewport Transition & Extent Fitting (`map.fitBounds`) on Filter Results.
 - [ ] **Day 8:** Reactive UI State Management & Dynamic Spatial Results Summary Counter.
 - [ ] **Day 9:** End-to-End Search Performance Optimization & Defensive Error Handling.
