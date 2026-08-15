@@ -2,6 +2,7 @@
 
 > 🔄 **Current Active Branch / Feature:** `feature/spatial-search` (Sprint 5 / Weeks 6–7)  
 > 📌 **Development Roadmap:** Phase 1 — Interactive Mapping & Spatial Search Engine Architecture
+
 > ⚡ **Latest Milestone:** Week 7 (Day 6) — Map Spatial Synchronization & Dynamic Leaflet Layer Highlighting
 
 This repository contains the source code and development milestone documentation for the Riyadh Property Explorer—a high-performance, interactive Web GIS platform engineered for spatial data analysis and property mapping.
