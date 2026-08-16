@@ -252,3 +252,8 @@ function applyMapSearchFilter(searchResults) {
   const ids = new Set(searchResults.map(r => r.properties.id));
   highlightMatchedFeatures(activeGeoJsonLayer, ids);
 }
+
+if (matchedResults.length > 1) {
+  const bounds = getBoundsFromFeatures(matchedResults);
+  map.fitBounds(bounds, { padding: [20, 20], maxZoom: 15 });
+}
