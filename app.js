@@ -3,6 +3,7 @@
 /* ==========================================
    0. IMPORTS (جميع الاستيرادات في الأعلى)
    ========================================== */
+import * as L from 'leaflet';
 import { initMap } from './mapUtils.js';
 import { fetchRiyadhProperties } from './dataService.js';
 import { formatCoordinates } from './geoHelpers.js';
@@ -14,25 +15,23 @@ import { SurveyStationCard } from './dist/components/SurveyStationCard.js';
 import { mockSurveyStations } from './dist/data/surveyStationsData.js';
 import { SpatialSearchService } from './dist/services/SpatialSearchService.js';
 import { debounce } from './dist/utils/debounce.js';
+import { getBoundsFromFeatures, filterGeoJsonLayer } from './dist/utils/spatial-helpers.js';
 
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
    ========================================== */
 
-// أ. إنشاء الـ Service ورصد الإحداثيات
 const layerService = new LayerService();
 console.log("Formatted Riyadh Coordinates (WKT & Array):", formatCoordinates(24.7136, 46.6753));
 
-// ب. إعدادات الخريطة لمدينة الرياض
 const appConfig = {
     containerId: 'map',
     defaultCenter: [24.7136, 46.6753]
 };
 
-// ج. إنشاء الخريطة أولاً لتكون جاهزة لاستقبال الاستماعات والطبقات
 const map = initMap(appConfig.containerId, appConfig.defaultCenter);
+let propertiesLayer = null; // الاحتفاظ بمرجع طبقة العقارات لاستخدامها في فلترة البحث
 
-// د. بيانات تجريبية للأحياء
 const RIYADH_DISTRICTS = ['Al-Malqa', 'Al-Yasmin', 'Al-Narjis', 'Al-Qairawan'];
 console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
 
@@ -41,13 +40,10 @@ console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
    2. COMPUTATIONAL & ASYNC LOGIC
    ========================================== */
 
-/**
- * دالة جلب وعرض العقارات الجغرافية على الخريطة
- */
 const loadAndDisplayProperties = async () => {
     const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
     if (data) {
-        const propertiesLayer = L.geoJSON(data, {
+        propertiesLayer = L.geoJSON(data, {
             onEachFeature: (feature, layer) => {
                 if (feature.properties && feature.properties.name) {
                     layer.bindPopup(`
@@ -61,7 +57,6 @@ const loadAndDisplayProperties = async () => {
             }
         }).addTo(map);
 
-        // تسجيل الطبقة داخل LayerService بعد تحميل البيانات بنجاح
         if (typeof layerService !== 'undefined' && LayerCategory) {
             layerService.addLayer({
                 id: 'chk-properties',
@@ -74,7 +69,6 @@ const loadAndDisplayProperties = async () => {
     }
 };
 
-// تشغيل الدالة الآن بعد إنشاء الخريطة
 loadAndDisplayProperties();
 
 const calculateLandArea = (length, width) => length * width;
@@ -84,27 +78,20 @@ const calculateLandArea = (length, width) => length * width;
    3. DOM INTERACTION & EVENTS
    ========================================== */
 
-// أ. الاستماع لـ Checkbox عقارات الرياض
 const propertiesCheckbox = document.getElementById('chk-properties');
 
 if (propertiesCheckbox) {
   propertiesCheckbox.addEventListener('change', (e) => {
     const target = e.target;
-
-    // 1. التبديل البرمجي لحالة الطبقة في الـ Service
     layerService.toggleLayerVisibility('chk-properties');
-
-    // 2. الحصول على كائن طبقة Leaflet الفعلي
     const layerConfig = layerService.getLayer('chk-properties');
 
-    // 3. تطبيق التغيير الحي على الخريطة
     if (layerConfig && layerConfig.leafletLayer) {
       toggleMapLayer(layerConfig.leafletLayer, map, target.checked);
     }
   });
 }
 
-// ب. التفاعل والتبديل النشط لكروت الميزات الجانبية
 const featureCards = document.querySelectorAll('.feature-card');
 featureCards.forEach(card => {
     card.addEventListener('click', () => {
@@ -116,7 +103,6 @@ featureCards.forEach(card => {
     });
 });
 
-// ج. حاسبة مساحات الأراضي
 const lengthInput = document.getElementById('land-length');
 const widthInput = document.getElementById('land-width');
 const calculateBtn = document.getElementById('btn-calculate');
@@ -143,10 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================
-   SURVEY STATIONS MODULE
+   4. SURVEY STATIONS MODULE
    ========================================== */
 
-// 1. توليد كروت المحطات الـ 35 في القائمة الجانبية
 const surveyContainer = document.getElementById('survey-station-container');
 
 if (surveyContainer) {
@@ -158,7 +143,6 @@ if (surveyContainer) {
   });
 }
 
-// 2. إنشاء نقاط الخريطة (Markers Layer Group)
 const surveyLayersGroup = L.layerGroup();
 
 mockSurveyStations.forEach(station => {
@@ -171,7 +155,6 @@ mockSurveyStations.forEach(station => {
   surveyLayersGroup.addLayer(marker);
 });
 
-// 3. تسجيل الطبقة في LayerService
 layerService.addLayer({ 
   id: 'survey-stations', 
   name: 'محطات المسح الجغرافي', 
@@ -180,7 +163,6 @@ layerService.addLayer({
   leafletLayer: surveyLayersGroup
 });
 
-// 4. ربط الـ Checkbox بالتفاعل الحي على الخريطة
 const surveyCheckbox = document.getElementById('chk-survey-stations');
 
 if (surveyCheckbox) {
@@ -200,23 +182,17 @@ if (surveyCheckbox) {
 }
 
 
-
 /* ==========================================
-   5. SPATIAL SEARCH ENGINE MODULE (اليوم الرابع)
+   5. SPATIAL SEARCH ENGINE MODULE
    ========================================== */
 
-// أ. جلب عناصر التحكم من الواجهة
 const searchInput = document.getElementById('txt-search-query');
 const categorySelect = document.getElementById('sel-property-type');
 
-/**
- * دالة تجميع المعايير واستدعاء محرك البحث (Multi-Criteria Execution)
- */
 const executeSearch = () => {
   const queryValue = searchInput ? searchInput.value.trim() : '';
   const categoryValue = categorySelect ? categorySelect.value : '';
 
-  // تجميع كائن المعايير الموحد
   const searchCriteria = {
     query: queryValue,
     category: categoryValue !== 'ALL' && categoryValue !== '' ? categoryValue : undefined
@@ -224,41 +200,30 @@ const executeSearch = () => {
 
   console.log('🔍 Executing Spatial Search with criteria:', searchCriteria);
 
-  // استدعاء محرك البحث
-  const results = SpatialSearchService.search(searchCriteria);
-  console.log(`Found ${results.length} matching properties:`, results);
+  const matchedResults = SpatialSearchService.search(searchCriteria);
+  console.log(`Found ${matchedResults.length} matching properties:`, matchedResults);
 
-  // (جاهز للربط مع الخريطة وعرض النتائج في الأيام التالية)
+  // تحديث الطبقات وإعادة توجيه الخريطة بناءً على النتائج
+  if (propertiesLayer && matchedResults) {
+    const matchedIds = new Set(matchedResults.map(r => r.properties.id));
+    filterGeoJsonLayer(propertiesLayer, matchedIds);
+
+    if (matchedResults.length > 1) {
+      const bounds = getBoundsFromFeatures(matchedResults);
+      map.fitBounds(bounds, { padding: [20, 20], maxZoom: 15 });
+    } else if (matchedResults.length === 1) {
+      const coords = matchedResults[0].geometry.coordinates;
+      map.flyTo([coords[1], coords[0]], 16, { duration: 1.2 });
+    }
+  }
 };
 
-// ب. تطبيق تأخير الـ Debounce على دالة البحث لتخفيف الضغط على المتصفح (300ms)
 const debouncedSearch = debounce(executeSearch, 300);
 
-// ج. ربط الأحدث بالحقول
-
-// 1. حقل النص: استخدام حدث 'input' بدلاً من 'keyup' لاقتناص النص فور الكتابة أو اللصق
 if (searchInput) {
   searchInput.addEventListener('input', debouncedSearch);
 }
 
-// 2. القائمة المنسدلة: استخدام حدث 'change'
 if (categorySelect) {
   categorySelect.addEventListener('change', debouncedSearch);
-}
-
-
-
-function applyMapSearchFilter(searchResults) {
-  const ids = new Set(searchResults.map(r => r.properties.id));
-  highlightMatchedFeatures(activeGeoJsonLayer, ids);
-}
-
-if (matchedResults.length > 1) {
-  const bounds = getBoundsFromFeatures(matchedResults);
-  map.fitBounds(bounds, { padding: [20, 20], maxZoom: 15 });
-}
-
-if (matchedResults.length === 1) {
-  const coords = matchedResults[0].geometry.coordinates;
-  map.flyTo([coords[1], coords[0]], 16, { duration: 1.2 });
 }
