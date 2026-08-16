@@ -257,3 +257,8 @@ if (matchedResults.length > 1) {
   const bounds = getBoundsFromFeatures(matchedResults);
   map.fitBounds(bounds, { padding: [20, 20], maxZoom: 15 });
 }
+
+if (matchedResults.length === 1) {
+  const coords = matchedResults[0].geometry.coordinates;
+  map.flyTo([coords[1], coords[0]], 16, { duration: 1.2 });
+}
