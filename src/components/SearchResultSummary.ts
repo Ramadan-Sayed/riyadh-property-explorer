@@ -8,4 +8,10 @@ export class SearchResultSummary {
       </div>
     `;
   }
+
+
+  public calculateTotalArea(features: any[]): number {
+  return features.reduce((acc, curr) => acc + (curr.properties?.area || 0), 0);
 }
+}
+
