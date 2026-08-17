@@ -1,12 +1,10 @@
 export class SearchResultSummary {
-
     // دالة حساب مجموع مساحات العقارات المفلترة
-    public calculateTotalArea(features: any[]): number {
+    calculateTotalArea(features) {
         return features.reduce((acc, curr) => acc + (curr.properties?.area || 0), 0);
     }
-
     // دالة توليد كود HTML
-    public render(count: number, totalArea: number, executionTime: number): string {
+    render(count, totalArea, executionTime) {
         return `
         <div class="search-summary" style="padding: 8px; background: #0f172a; color: #fff; border-radius: 4px;">
             <p>النتائج: ${count}</p>
@@ -15,8 +13,5 @@ export class SearchResultSummary {
         </div>
         `;
     }
-
-
-
 }
-
+//# sourceMappingURL=SearchResultSummary.js.map

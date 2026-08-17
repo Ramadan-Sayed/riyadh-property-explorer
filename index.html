@@ -36,7 +36,7 @@
         <h1>Riyadh Property Explorer</h1>
       </div>
       <!-- تحديث شارة الأسبوع إلى الأسبوع 5 -->
-      <div class="badge">المرحلة 1: الاسبوع 6</div>
+      <div class="badge">المرحلة 1: الاسبوع 7</div>
     </header>
 
     <!-- الحاوية الرئيسية -->
@@ -92,12 +92,19 @@
 
        
 
-        <!-- الميزة القادمة -->
         <section class="feature-card " id="spatial-search">
-          <h3>4. Spatial Search</h3>
+          <h3>Spatial Search</h3>
           <p>قيد التنفيذ</p>
           <div id="spatial-search-container" class="sidebar-section">
-            <!-- سيتم حقن مكون SearchPanel هنا ديناميكياً -->
+                      
+          <div id="search-panel">
+            <!-- حقول الإدخال والقوائم المنسدلة للبحث -->
+            <input type="text" id="txt-search-query" placeholder="ابحث باسم الحي..." />
+            <select id="sel-property-type"><!-- ... --></select>
+
+            <!-- حاوية ملخص الإحصائيات الحية -->
+            <div id="search-summary-container"></div>
+          </div>
           </div>
         </section>
       </aside>

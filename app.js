@@ -16,12 +16,16 @@ import { mockSurveyStations } from './dist/data/surveyStationsData.js';
 import { SpatialSearchService } from './dist/services/SpatialSearchService.js';
 import { debounce } from './dist/utils/debounce.js';
 import { getBoundsFromFeatures, filterGeoJsonLayer } from './dist/utils/spatial-helpers.js';
+import { SearchResultSummary } from './dist/components/SearchResultSummary.js';
 
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
    ========================================== */
 
 const layerService = new LayerService();
+const spatialSearchService = new SpatialSearchService();
+const summaryComponent = new SearchResultSummary();
+
 console.log("Formatted Riyadh Coordinates (WKT & Array):", formatCoordinates(24.7136, 46.6753));
 
 const appConfig = {
@@ -30,7 +34,7 @@ const appConfig = {
 };
 
 const map = initMap(appConfig.containerId, appConfig.defaultCenter);
-let propertiesLayer = null; // الاحتفاظ بمرجع طبقة العقارات لاستخدامها في فلترة البحث
+let propertiesLayer = null;
 
 const RIYADH_DISTRICTS = ['Al-Malqa', 'Al-Yasmin', 'Al-Narjis', 'Al-Qairawan'];
 console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
@@ -43,6 +47,9 @@ console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
 const loadAndDisplayProperties = async () => {
     const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
     if (data) {
+        // تعبئة قاعدة بيانات محرك البحث بالبيانات المحملة
+        spatialSearchService.setDataset(data.features || []);
+
         propertiesLayer = L.geoJSON(data, {
             onEachFeature: (feature, layer) => {
                 if (feature.properties && feature.properties.name) {
@@ -188,6 +195,7 @@ if (surveyCheckbox) {
 
 const searchInput = document.getElementById('txt-search-query');
 const categorySelect = document.getElementById('sel-property-type');
+const summaryContainer = document.getElementById('search-summary-container');
 
 const executeSearch = () => {
   const queryValue = searchInput ? searchInput.value.trim() : '';
@@ -200,10 +208,23 @@ const executeSearch = () => {
 
   console.log('🔍 Executing Spatial Search with criteria:', searchCriteria);
 
-  const matchedResults = SpatialSearchService.search(searchCriteria);
+  // 1. إجراء الفلترة من خلال الكائن المنشأة
+  const searchResult = spatialSearchService.filter(searchCriteria);
+  const matchedResults = searchResult.results;
+
   console.log(`Found ${matchedResults.length} matching properties:`, matchedResults);
 
-  // تحديث الطبقات وإعادة توجيه الخريطة بناءً على النتائج
+  // 2. تحديث بطاقة الملخص الإحصائي
+  if (summaryContainer) {
+    const totalArea = summaryComponent.calculateTotalArea(matchedResults);
+    summaryContainer.innerHTML = summaryComponent.render(
+      searchResult.totalMatches,
+      totalArea,
+      searchResult.executionTimeMs
+    );
+  }
+
+  // 3. تحديث الخريطة
   if (propertiesLayer && matchedResults) {
     const matchedIds = new Set(matchedResults.map(r => r.properties.id));
     filterGeoJsonLayer(propertiesLayer, matchedIds);
@@ -226,10 +247,4 @@ if (searchInput) {
 
 if (categorySelect) {
   categorySelect.addEventListener('change', debouncedSearch);
-}
-
-
-const summaryContainer = document.getElementById('search-summary-container');
-if (summaryContainer) {
-  summaryContainer.innerHTML = summaryComponent.render(results.length, totalArea, executionTimeMs);
 }
