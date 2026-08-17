@@ -227,3 +227,9 @@ if (searchInput) {
 if (categorySelect) {
   categorySelect.addEventListener('change', debouncedSearch);
 }
+
+
+const summaryContainer = document.getElementById('search-summary-container');
+if (summaryContainer) {
+  summaryContainer.innerHTML = summaryComponent.render(results.length, totalArea, executionTimeMs);
+}
