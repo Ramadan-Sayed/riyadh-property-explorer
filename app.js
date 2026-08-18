@@ -188,7 +188,6 @@ if (surveyCheckbox) {
   });
 }
 
-
 /* ==========================================
    5. SPATIAL SEARCH ENGINE MODULE
    ========================================== */
@@ -196,6 +195,7 @@ if (surveyCheckbox) {
 const searchInput = document.getElementById('txt-search-query');
 const categorySelect = document.getElementById('sel-property-type');
 const summaryContainer = document.getElementById('search-summary-container');
+const noResultsMsg = document.getElementById('no-results-msg'); // 🟢 إضافة مرجع الرسالة
 
 const executeSearch = () => {
   const queryValue = searchInput ? searchInput.value.trim() : '';
@@ -214,7 +214,12 @@ const executeSearch = () => {
 
   console.log(`Found ${matchedResults.length} matching properties:`, matchedResults);
 
-  // 2. تحديث بطاقة الملخص الإحصائي
+  // 🟢 2. التحكم في إظهار/إخفاء واجهة انعدام النتائج (Empty State)
+  if (noResultsMsg) {
+    noResultsMsg.style.display = matchedResults.length === 0 ? 'block' : 'none';
+  }
+
+  // 3. تحديث بطاقة الملخص الإحصائي
   if (summaryContainer) {
     const totalArea = summaryComponent.calculateTotalArea(matchedResults);
     summaryContainer.innerHTML = summaryComponent.render(
@@ -224,7 +229,7 @@ const executeSearch = () => {
     );
   }
 
-  // 3. تحديث الخريطة
+  // 4. تحديث الخريطة
   if (propertiesLayer && matchedResults) {
     const matchedIds = new Set(matchedResults.map(r => r.properties.id));
     filterGeoJsonLayer(propertiesLayer, matchedIds);
@@ -248,3 +253,26 @@ if (searchInput) {
 if (categorySelect) {
   categorySelect.addEventListener('change', debouncedSearch);
 }
+
+// 🟢 دالة إعادة ضبط رؤية الخريطة والطبقات وإعادة إظهار العقارات بالكامل
+const resetMapView = () => {
+  if (propertiesLayer) {
+    // إعادة إظهار كل العناصر في layer الفلترة
+    const allIds = new Set(spatialSearchService['dataset'].map(item => item.properties.id));
+    filterGeoJsonLayer(propertiesLayer, allIds);
+  }
+  
+  // إرجاع الإحداثيات والزوم الافتراضي للمدينة
+  map.setView(appConfig.defaultCenter, 11); 
+  
+  // تفريغ الملخص وإخفاء رسالة لا توجد نتائج
+  if (summaryContainer) summaryContainer.innerHTML = '';
+  if (noResultsMsg) noResultsMsg.style.display = 'none';
+};
+
+// ربط الحدث زر إعادة الضبط
+document.getElementById('btn-reset-search')?.addEventListener('click', () => {
+  if (searchInput) searchInput.value = '';
+  if (categorySelect) categorySelect.value = 'ALL';
+  resetMapView();
+});
