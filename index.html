@@ -97,14 +97,19 @@
           <p>قيد التنفيذ</p>
           <div id="spatial-search-container" class="sidebar-section">
                       
-          <div id="search-panel">
-            <!-- حقول الإدخال والقوائم المنسدلة للبحث -->
-            <input type="text" id="txt-search-query" placeholder="ابحث باسم الحي..." />
-            <select id="sel-property-type"><!-- ... --></select>
+            <div id="search-panel">
+              <!-- حقول الإدخال والقوائم المنسدلة للبحث -->
+              <input type="text" id="txt-search-query" placeholder="ابحث باسم الحي..." />
+              <select id="sel-property-type"><!-- ... --></select>
 
-            <!-- حاوية ملخص الإحصائيات الحية -->
-            <div id="search-summary-container"></div>
-          </div>
+              <!-- حاوية ملخص الإحصائيات الحية -->
+              <div id="search-summary-container"></div>
+
+              <div id="no-results-msg" style="display: none; color: #ef4444; padding: 10px;">
+                عذراً، لم يتم العثور على نتائج تطابق معايير البحث.
+              </div>
+
+            </div>
           </div>
         </section>
       </aside>
