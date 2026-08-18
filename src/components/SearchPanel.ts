@@ -16,4 +16,10 @@ export class SearchPanel {
         </div>
     `;
   }
+  public toggleEmptyState(show: boolean): void {
+    const msgElement = document.getElementById('no-results-msg');
+    if (msgElement) {
+      msgElement.style.display = show ? 'block' : 'none';
+    }
+  }
 }
