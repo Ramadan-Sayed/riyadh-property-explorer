@@ -15,5 +15,11 @@ export class SearchPanel {
         </div>
     `;
     }
+    toggleEmptyState(show) {
+        const msgElement = document.getElementById('no-results-msg');
+        if (msgElement) {
+            msgElement.style.display = show ? 'block' : 'none';
+        }
+    }
 }
 //# sourceMappingURL=SearchPanel.js.map
