@@ -1,4 +1,4 @@
-import { UTMCoords } from '../app/models/coordinate.model';
+import { UTMCoords } from "../app/models/core/coordinate.model";
 
 // في الدوال المساعدة تأكيد صرامة الأنواع وعدم وجود any
 export class CoordinateService {

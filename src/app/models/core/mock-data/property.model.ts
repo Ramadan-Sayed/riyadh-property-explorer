@@ -4,10 +4,8 @@ export interface PropertyProperties {
   district: string;
   type: 'Land' | 'Villa' | 'Building' | 'Commercial';
   price: number;
-  area: number;
+  area: number; // بالمتر المربع
   pricePerMeter?: number;
-  perimeter?: number;
-  centroid?: [number, number];
 }
 
 export interface PropertyFeature {
@@ -32,13 +30,5 @@ export interface FilterCriteria {
   maxPrice?: number;
   minArea?: number;
   maxArea?: number;
-  minPricePerMeter?: number;
-  maxPricePerMeter?: number;
 }
 
-export interface StatisticsSummary {
-  totalCount: number;
-  avgPrice: number;
-  avgArea: number;
-  avgPricePerMeter: number;
-}

@@ -10,5 +10,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "src/app/models/riyadh-mock-coords.ts", "src/app/models/core/mock-data/property.model.ts"]
 }
