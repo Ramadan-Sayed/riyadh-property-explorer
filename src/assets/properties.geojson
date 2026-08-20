@@ -1,0 +1,35 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.6345, 24.8123]
+      },
+      "properties": {
+        "id": "RP-101",
+        "title": "أرض سكنية في الملقا",
+        "district": "الملقا",
+        "type": "Land",
+        "price": 1850000,
+        "area": 750
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.6211, 24.8250]
+      },
+      "properties": {
+        "id": "RP-102",
+        "title": "فيلا مودرن في حطين",
+        "district": "حطين",
+        "type": "Villa",
+        "price": 3200000,
+        "area": 500
+      }
+    }
+  ]
+}
