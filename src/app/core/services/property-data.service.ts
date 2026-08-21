@@ -27,6 +27,7 @@ export class PropertyDataService {
     }
   }
 }
+<<<<<<< HEAD
 
 
 // اختبار سريع للتأكد من عمل الخدمة واسترجاع البيانات
@@ -41,3 +42,5 @@ export async function testPropertyService() {
     return false;
   }
 }
+=======
+>>>>>>> develop
