@@ -20,7 +20,7 @@ export class MainShell {
         <header class="main-header">
           <div class="header-brand">
             <span class="logo-icon">🗺️</span>
-            <h1>مستكشف عقارات الرياض</h1>
+            <h1>Riyadh Property Explorer</h1>
           </div>
           <div class="header-actions">
             <span class="status-badge">V1.0</span>
@@ -35,7 +35,7 @@ export class MainShell {
               <span class="toggle-icon">❮</span>
             </button>
             <div class="sidebar-content">
-              <h3>لوحة التحكم والتحليل</h3>
+              <h2>لوحة التحكم والميزات</h2>
               <div id="sidebar-widgets-container">
                 <!-- أشرطة أدوات البحث والفلترة ستوضع هنا -->
               </div>
@@ -80,21 +80,32 @@ this.sidebar = document.getElementById('main-sidebar');
     const widgetsContainer = document.getElementById('sidebar-widgets-container');
     if (!widgetsContainer) return;
 
-    // نقل أي عناصر إضافية موجودة خارج الهيكل إلى داخل الـ Sidebar
-    const elementsToMove = ['#converter-widget', '#search-widget', '#layer-manager-widget', '#land-calculator-widget'];
-    elementsToMove.forEach(selector => {
-      const el = document.querySelector(selector);
-      if (el) {
-        widgetsContainer.appendChild(el);
-      }
-    });
-  }
+    // قائمة بمعرفات وكلاسات جميع الأدوات والـ Widgets المتاحة في الواجهة
+    const elementsToMove = [
+        '#land-calculator-widget',
+        '#converter-widget',
+        '#search-widget',
+        '#layer-manager-widget',
+        '.feature-card',
+        '.widget-card',
+        '#survey-station-container'
+    ];
 
-  private bindEvents(): void {
-    if (this.toggleBtn && this.sidebar) {
-      this.toggleBtn.addEventListener('click', () => {
-        this.sidebar?.classList.toggle('collapsed');
-      });
+    elementsToMove.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+        if (el && !widgetsContainer.contains(el)) {
+            widgetsContainer.appendChild(el);
+        }
+        });
+    });
     }
-  }
+
+    private bindEvents(): void {
+        if (this.toggleBtn && this.sidebar) {
+        this.toggleBtn.addEventListener('click', () => {
+            this.sidebar?.classList.toggle('collapsed');
+        });
+        }
+    }
 }

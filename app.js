@@ -20,24 +20,27 @@ import { SearchResultSummary } from './dist/components/SearchResultSummary.js';
 import { MainShell } from './dist/app/features/shell/main-shell.js';
 
 
-
 /* ==========================================
-   1. GLOBAL DATA & CONFIGURATIONS
+   1. GLOBAL INITIALIZATION & SHELL BUILD
    ========================================== */
+
+// 🟢 أولاً: بناء هيكل الصفحة كاملاً لضمان توفر عناصر الـ DOM
+const mainShell = new MainShell();
+
+const appConfig = {
+    containerId: 'main-map',
+    defaultCenter: [24.7136, 46.6753]
+};
+
+// 🟢 ثانياً: تهيئة الخريطة بعد توفر عنصر #main-map في الهيكل
+const map = initMap(appConfig.containerId, appConfig.defaultCenter);
+let propertiesLayer = null;
 
 const layerService = new LayerService();
 const spatialSearchService = new SpatialSearchService();
 const summaryComponent = new SearchResultSummary();
 
 console.log("Formatted Riyadh Coordinates (WKT & Array):", formatCoordinates(24.7136, 46.6753));
-
-const appConfig = {
-    containerId: 'main-map', // 🟢 تم التحديث ليشير إلى id الخريطة الجديد
-    defaultCenter: [24.7136, 46.6753]
-};
-
-const map = initMap(appConfig.containerId, appConfig.defaultCenter);
-let propertiesLayer = null;
 
 const RIYADH_DISTRICTS = ['Al-Malqa', 'Al-Yasmin', 'Al-Narjis', 'Al-Qairawan'];
 console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
@@ -50,7 +53,6 @@ console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
 const loadAndDisplayProperties = async () => {
     const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
     if (data) {
-        // تعبئة قاعدة بيانات محرك البحث بالبيانات المحملة
         spatialSearchService.setDataset(data.features || []);
 
         propertiesLayer = L.geoJSON(data, {
@@ -88,8 +90,9 @@ const calculateLandArea = (length, width) => length * width;
    3. DOM INTERACTION & EVENTS
    ========================================== */
 
-const propertiesCheckbox = document.getElementById('chk-properties');
+new ConverterUIComponent();
 
+const propertiesCheckbox = document.getElementById('chk-properties');
 if (propertiesCheckbox) {
   propertiesCheckbox.addEventListener('change', (e) => {
     const target = e.target;
@@ -134,9 +137,6 @@ if (calculateBtn && lengthInput && widthInput && resultDisplay) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    new ConverterUIComponent();
-});
 
 /* ==========================================
    4. SURVEY STATIONS MODULE
@@ -191,6 +191,7 @@ if (surveyCheckbox) {
   });
 }
 
+
 /* ==========================================
    5. SPATIAL SEARCH ENGINE MODULE
    ========================================== */
@@ -198,7 +199,7 @@ if (surveyCheckbox) {
 const searchInput = document.getElementById('txt-search-query');
 const categorySelect = document.getElementById('sel-property-type');
 const summaryContainer = document.getElementById('search-summary-container');
-const noResultsMsg = document.getElementById('no-results-msg'); // 🟢 إضافة مرجع الرسالة
+const noResultsMsg = document.getElementById('no-results-msg');
 
 const executeSearch = () => {
   const queryValue = searchInput ? searchInput.value.trim() : '';
@@ -211,18 +212,15 @@ const executeSearch = () => {
 
   console.log('🔍 Executing Spatial Search with criteria:', searchCriteria);
 
-  // 1. إجراء الفلترة من خلال الكائن المنشأة
   const searchResult = spatialSearchService.filter(searchCriteria);
   const matchedResults = searchResult.results;
 
   console.log(`Found ${matchedResults.length} matching properties:`, matchedResults);
 
-  // 🟢 2. التحكم في إظهار/إخفاء واجهة انعدام النتائج (Empty State)
   if (noResultsMsg) {
     noResultsMsg.style.display = matchedResults.length === 0 ? 'block' : 'none';
   }
 
-  // 3. تحديث بطاقة الملخص الإحصائي
   if (summaryContainer) {
     const totalArea = summaryComponent.calculateTotalArea(matchedResults);
     summaryContainer.innerHTML = summaryComponent.render(
@@ -232,7 +230,6 @@ const executeSearch = () => {
     );
   }
 
-  // 4. تحديث الخريطة
   if (propertiesLayer && matchedResults) {
     const matchedIds = new Set(matchedResults.map(r => r.properties.id));
     filterGeoJsonLayer(propertiesLayer, matchedIds);
@@ -257,35 +254,20 @@ if (categorySelect) {
   categorySelect.addEventListener('change', debouncedSearch);
 }
 
-// 🟢 دالة إعادة ضبط رؤية الخريطة والطبقات وإعادة إظهار العقارات بالكامل
 const resetMapView = () => {
   if (propertiesLayer) {
-    // إعادة إظهار كل العناصر في layer الفلترة
     const allIds = new Set(spatialSearchService['dataset'].map(item => item.properties.id));
     filterGeoJsonLayer(propertiesLayer, allIds);
   }
   
-  // إرجاع الإحداثيات والزوم الافتراضي للمدينة
   map.setView(appConfig.defaultCenter, 11); 
   
-  // تفريغ الملخص وإخفاء رسالة لا توجد نتائج
   if (summaryContainer) summaryContainer.innerHTML = '';
   if (noResultsMsg) noResultsMsg.style.display = 'none';
 };
 
-// ربط الحدث زر إعادة الضبط
 document.getElementById('btn-reset-search')?.addEventListener('click', () => {
   if (searchInput) searchInput.value = '';
   if (categorySelect) categorySelect.value = 'ALL';
   resetMapView();
-});
-
-
-
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  // تهيئة الهيكل العام للشاشة
-  new MainShell();
 });
