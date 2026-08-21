@@ -32,7 +32,7 @@ const summaryComponent = new SearchResultSummary();
 console.log("Formatted Riyadh Coordinates (WKT & Array):", formatCoordinates(24.7136, 46.6753));
 
 const appConfig = {
-    containerId: 'map',
+    containerId: 'main-map', // 🟢 تم التحديث ليشير إلى id الخريطة الجديد
     defaultCenter: [24.7136, 46.6753]
 };
 
