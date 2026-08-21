@@ -276,3 +276,22 @@ document.getElementById('btn-reset-search')?.addEventListener('click', () => {
   if (categorySelect) categorySelect.value = 'ALL';
   resetMapView();
 });
+
+
+
+
+
+
+// // إنشاء كائن من الخدمة
+// const propertyService = new PropertyDataService();
+
+// // استدعاء دالة تحميل البيانات
+// propertyService.loadProperties().then(data => {
+//   if (data) {
+//     console.log('✅ تم تحميل بيانات العقارات بنجاح:');
+//     console.log('عدد العقارات:', data.features.length);
+//     console.log('تفاصيل البيانات مع سعر المتر المحسوب:', data);
+//   } else {
+//     console.error('❌ حدث خطأ أثناء تحميل البيانات.');
+//   }
+// });
