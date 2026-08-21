@@ -17,6 +17,9 @@ import { SpatialSearchService } from './dist/services/SpatialSearchService.js';
 import { debounce } from './dist/utils/debounce.js';
 import { getBoundsFromFeatures, filterGeoJsonLayer } from './dist/utils/spatial-helpers.js';
 import { SearchResultSummary } from './dist/components/SearchResultSummary.js';
+import { MainShell } from './app/features/shell/main-shell';
+
+
 
 /* ==========================================
    1. GLOBAL DATA & CONFIGURATIONS
@@ -282,16 +285,7 @@ document.getElementById('btn-reset-search')?.addEventListener('click', () => {
 
 
 
-// // إنشاء كائن من الخدمة
-// const propertyService = new PropertyDataService();
-
-// // استدعاء دالة تحميل البيانات
-// propertyService.loadProperties().then(data => {
-//   if (data) {
-//     console.log('✅ تم تحميل بيانات العقارات بنجاح:');
-//     console.log('عدد العقارات:', data.features.length);
-//     console.log('تفاصيل البيانات مع سعر المتر المحسوب:', data);
-//   } else {
-//     console.error('❌ حدث خطأ أثناء تحميل البيانات.');
-//   }
-// });
+document.addEventListener('DOMContentLoaded', () => {
+  // تهيئة الهيكل العام للشاشة
+  new MainShell();
+});
