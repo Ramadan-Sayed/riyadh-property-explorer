@@ -17,7 +17,7 @@ import { SpatialSearchService } from './dist/services/SpatialSearchService.js';
 import { debounce } from './dist/utils/debounce.js';
 import { getBoundsFromFeatures, filterGeoJsonLayer } from './dist/utils/spatial-helpers.js';
 import { SearchResultSummary } from './dist/components/SearchResultSummary.js';
-import { MainShell } from './app/features/shell/main-shell';
+import { MainShell } from './dist/app/features/shell/main-shell.js';
 
 
 

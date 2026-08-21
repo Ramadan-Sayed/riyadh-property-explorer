@@ -1,20 +1,13 @@
 export class MainShell {
-  private sidebar: HTMLElement | null = null;
-  private toggleBtn: HTMLElement | null = null;
-
-  constructor() {
-    this.initLayout();
-    this.bindEvents();
-  }
-
-  private initLayout(): void {
-    // الاحتفاظ بالكونتينر الرئيسي أو بدنه
-    const appContainer = document.getElementById('app-container') || document.body;
-    
-    // الاحتفاظ بالعناصر القديمة في الـ DOM قبل إعادة التشكيل لنقلها
-    const existingWidgets = Array.from(document.querySelectorAll('.feature-card, .widget-card, .converter-card, #survey-station-container'));
-
-    appContainer.innerHTML = `
+    sidebar = null;
+    toggleBtn = null;
+    constructor() {
+        this.initLayout();
+        this.bindEvents();
+    }
+    initLayout() {
+        const appContainer = document.getElementById('app-container') || document.body;
+        appContainer.innerHTML = `
       <div class="shell-wrapper">
         <!-- Header -->
         <header class="main-header">
@@ -65,36 +58,15 @@ export class MainShell {
         </footer>
       </div>
     `;
-
-this.sidebar = document.getElementById('main-sidebar');
-    this.toggleBtn = document.getElementById('btn-toggle-sidebar');
-    
-    // إعادة إرجاع الـ Widgets المحفوظة داخل الـ Sidebar الجديد
-    const widgetsContainer = document.getElementById('sidebar-widgets-container');
-    if (widgetsContainer && existingWidgets.length > 0) {
-      existingWidgets.forEach(widget => widgetsContainer.appendChild(widget));
+        this.sidebar = document.getElementById('main-sidebar');
+        this.toggleBtn = document.getElementById('btn-toggle-sidebar');
     }
-  }
-
-  private mountExistingWidgets(): void {
-    const widgetsContainer = document.getElementById('sidebar-widgets-container');
-    if (!widgetsContainer) return;
-
-    // نقل أي عناصر إضافية موجودة خارج الهيكل إلى داخل الـ Sidebar
-    const elementsToMove = ['#converter-widget', '#search-widget', '#layer-manager-widget', '#land-calculator-widget'];
-    elementsToMove.forEach(selector => {
-      const el = document.querySelector(selector);
-      if (el) {
-        widgetsContainer.appendChild(el);
-      }
-    });
-  }
-
-  private bindEvents(): void {
-    if (this.toggleBtn && this.sidebar) {
-      this.toggleBtn.addEventListener('click', () => {
-        this.sidebar?.classList.toggle('collapsed');
-      });
+    bindEvents() {
+        if (this.toggleBtn && this.sidebar) {
+            this.toggleBtn.addEventListener('click', () => {
+                this.sidebar?.classList.toggle('collapsed');
+            });
+        }
     }
-  }
 }
+//# sourceMappingURL=main-shell.js.map
