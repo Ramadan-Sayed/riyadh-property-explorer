@@ -4,7 +4,6 @@
    0. IMPORTS (جميع الاستيرادات في الأعلى)
    ========================================== */
 import * as L from 'leaflet';
-import { initMap } from './mapUtils.js';
 import { fetchRiyadhProperties } from './dataService.js';
 import { formatCoordinates } from './geoHelpers.js';
 import { ConverterUIComponent } from './dist/components/converter.component.js';
@@ -18,6 +17,7 @@ import { debounce } from './dist/utils/debounce.js';
 import { getBoundsFromFeatures, filterGeoJsonLayer } from './dist/utils/spatial-helpers.js';
 import { SearchResultSummary } from './dist/components/SearchResultSummary.js';
 import { MainShell } from './dist/app/features/shell/main-shell.js';
+import { MapComponent } from './dist/app/features/map/map.component.js'; // 🆕 استيراد مكون الخريطة الجديد
 
 
 /* ==========================================
@@ -32,8 +32,10 @@ const appConfig = {
     defaultCenter: [24.7136, 46.6753]
 };
 
-// 🟢 ثانياً: تهيئة الخريطة بعد توفر عنصر #main-map في الهيكل
-const map = initMap(appConfig.containerId, appConfig.defaultCenter);
+// 🟢 ثانياً: تهيئة الخريطة بواسطة MapComponent والحصول على instance الخريطة
+const mapComponent = new MapComponent(appConfig.containerId, appConfig.defaultCenter, 11);
+const map = mapComponent.getMapInstance();
+
 let propertiesLayer = null;
 
 const layerService = new LayerService();
@@ -47,11 +49,37 @@ console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
 
 
 /* ==========================================
+   1.5. MAP CONTROLS EVENT LISTENERS (🆕 ربط أزرار التحكم بالخريطة)
+   ========================================== */
+
+document.getElementById('btn-zoom-in')?.addEventListener('click', () => mapComponent.zoomIn());
+document.getElementById('btn-zoom-out')?.addEventListener('click', () => mapComponent.zoomOut());
+document.getElementById('btn-reset-extent')?.addEventListener('click', () => mapComponent.resetExtent());
+
+const btnOsm = document.getElementById('btn-basemap-osm');
+const btnSat = document.getElementById('btn-basemap-sat');
+
+btnOsm?.addEventListener('click', () => {
+  mapComponent.setBasemap('osm');
+  btnOsm.classList.add('active');
+  btnSat?.classList.remove('active');
+});
+
+btnSat?.addEventListener('click', () => {
+  mapComponent.setBasemap('satellite');
+  btnSat.classList.add('active');
+  btnOsm?.classList.remove('active');
+});
+
+
+/* ==========================================
    2. COMPUTATIONAL & ASYNC LOGIC
    ========================================== */
 
 const loadAndDisplayProperties = async () => {
+    mapComponent.setLoadingState(true); // إظهار مؤشر التحميل عند جلب GeoJSON
     const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
+    
     if (data) {
         spatialSearchService.setDataset(data.features || []);
 
@@ -79,6 +107,7 @@ const loadAndDisplayProperties = async () => {
             });
         }
     }
+    mapComponent.setLoadingState(false); // إخفاء مؤشر التحميل
 };
 
 loadAndDisplayProperties();
@@ -260,7 +289,7 @@ const resetMapView = () => {
     filterGeoJsonLayer(propertiesLayer, allIds);
   }
   
-  map.setView(appConfig.defaultCenter, 11); 
+  mapComponent.resetExtent(); // استخدام دالة إعادة التمركز المباشرة
   
   if (summaryContainer) summaryContainer.innerHTML = '';
   if (noResultsMsg) noResultsMsg.style.display = 'none';
