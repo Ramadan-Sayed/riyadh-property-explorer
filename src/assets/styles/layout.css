@@ -176,3 +176,83 @@ body, html {
   gap: 20px; /* التحكم في المسافة بين كل كارت والآخر */
   padding: 10px; /* مسافة داخلية من أطراف الشريط الجانبي */
 }
+
+/* Custom Map Controls UI */
+.custom-map-controls {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.map-btn {
+  width: 36px;
+  height: 36px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  color: var(--dark-teal);
+}
+
+.map-btn:hover {
+  background-color: var(--light-teal);
+}
+
+.basemap-switcher {
+  display: flex;
+  background: white;
+  border-radius: 6px;
+  padding: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  gap: 3px;
+}
+
+.basemap-btn {
+  border: none;
+  background: transparent;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.basemap-btn.active {
+  background: var(--primary-teal);
+  color: white;
+}
+
+.map-loader {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 41, 59, 0.85);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

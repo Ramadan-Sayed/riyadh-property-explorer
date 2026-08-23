@@ -53,8 +53,24 @@ export class MainShell {
           <!-- Map Viewport -->
           <main class="map-viewport">
             <div id="main-map" style="width: 100%; height: 100%;"></div>
+
+            <!-- Map Loader State Indicator -->
+            <div id="map-loader" class="map-loader" style="display: none;">
+              <span class="spinner"></span>
+              <span>جاري تحميل الطبقات...</span>
+            </div>
+
+            <!-- Custom Map Controls -->
+            <div class="custom-map-controls">
+              <button id="btn-zoom-in" class="map-btn" title="تكبير">+</button>
+              <button id="btn-zoom-out" class="map-btn" title="تصغير">-</button>
+              <button id="btn-reset-extent" class="map-btn" title="إعادة النطاق الجغرافي للرياض">🎯</button>
+              <div class="basemap-switcher">
+                <button id="btn-basemap-osm" class="basemap-btn active">شارع</button>
+                <button id="btn-basemap-sat" class="basemap-btn">قمر صناعي</button>
+              </div>
+            </div>
           </main>
-        </div>
 
 
 
