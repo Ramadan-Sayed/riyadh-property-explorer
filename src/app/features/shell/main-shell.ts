@@ -16,6 +16,8 @@ export class MainShell {
 
     appContainer.innerHTML = `
       <div class="shell-wrapper">
+
+
         <!-- Header -->
         <header class="main-header">
           <div class="header-brand">
@@ -27,9 +29,13 @@ export class MainShell {
           </div>
         </header>
 
+
+
+
         <!-- Main Content Area -->
         <div class="main-content">
           <!-- Collapsible Sidebar -->
+          
           <aside id="main-sidebar" class="sidebar">
             <button id="btn-toggle-sidebar" class="toggle-btn" title="طي/فتح القائمة">
               <span class="toggle-icon">❮</span>
@@ -42,11 +48,17 @@ export class MainShell {
             </div>
           </aside>
 
+
+
           <!-- Map Viewport -->
           <main class="map-viewport">
             <div id="main-map" style="width: 100%; height: 100%;"></div>
           </main>
         </div>
+
+
+
+
 
         <!-- Bottom Stats Bar -->
         <footer class="bottom-stats-bar">
