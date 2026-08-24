@@ -18,6 +18,8 @@ import { getBoundsFromFeatures, filterGeoJsonLayer } from './dist/utils/spatial-
 import { SearchResultSummary } from './dist/components/SearchResultSummary.js';
 import { MainShell } from './dist/app/features/shell/main-shell.js';
 import { MapComponent } from './dist/app/features/map/map.component.js'; // 🆕 استيراد مكون الخريطة الجديد
+import { LayerManager } from './src/app/features/map/layer-manager.js';
+
 
 
 /* ==========================================
@@ -72,18 +74,24 @@ btnSat?.addEventListener('click', () => {
   btnOsm?.classList.remove('active');
 });
 
-
 /* ==========================================
    2. COMPUTATIONAL & ASYNC LOGIC
    ========================================== */
 
+const layerManager = new LayerManager(map);
+
 const loadAndDisplayProperties = async () => {
-    mapComponent.setLoadingState(true); // إظهار مؤشر التحميل عند جلب GeoJSON
+    // 🟢 1. إظهار مؤشر التحميل عبر MapComponent
+    mapComponent.setLoadingState(true);
+
+    // 🟢 2. جلب البيانات مرة واحدة فقط
     const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
     
     if (data) {
+        // تغذية محرك البحث مكانيًا
         spatialSearchService.setDataset(data.features || []);
 
+        // رسم الطبقة على الخريطة
         propertiesLayer = L.geoJSON(data, {
             onEachFeature: (feature, layer) => {
                 if (feature.properties && feature.properties.name) {
@@ -98,6 +106,7 @@ const loadAndDisplayProperties = async () => {
             }
         }).addTo(map);
 
+        // تسجيل الطبقة في LayerService
         if (typeof layerService !== 'undefined' && LayerCategory) {
             layerService.addLayer({
                 id: 'chk-properties',
@@ -108,65 +117,12 @@ const loadAndDisplayProperties = async () => {
             });
         }
     }
-    mapComponent.setLoadingState(false); // إخفاء مؤشر التحميل
+
+    // 🟢 3. إخفاء مؤشر التحميل
+    mapComponent.setLoadingState(false);
 };
 
 loadAndDisplayProperties();
-
-const calculateLandArea = (length, width) => length * width;
-
-
-/* ==========================================
-   3. DOM INTERACTION & EVENTS
-   ========================================== */
-
-new ConverterUIComponent();
-
-const propertiesCheckbox = document.getElementById('chk-properties');
-if (propertiesCheckbox) {
-  propertiesCheckbox.addEventListener('change', (e) => {
-    const target = e.target;
-    layerService.toggleLayerVisibility('chk-properties');
-    const layerConfig = layerService.getLayer('chk-properties');
-
-    if (layerConfig && layerConfig.leafletLayer) {
-      toggleMapLayer(layerConfig.leafletLayer, map, target.checked);
-    }
-  });
-}
-
-const featureCards = document.querySelectorAll('.feature-card');
-featureCards.forEach(card => {
-    card.addEventListener('click', () => {
-        const activeCard = document.querySelector('.feature-card.active');
-        if (activeCard && activeCard !== card) {
-            activeCard.classList.remove('active');
-        }
-        card.classList.add('active');
-    });
-});
-
-const lengthInput = document.getElementById('land-length');
-const widthInput = document.getElementById('land-width');
-const calculateBtn = document.getElementById('btn-calculate');
-const resultDisplay = document.getElementById('calculation-result');
-
-if (calculateBtn && lengthInput && widthInput && resultDisplay) {
-    calculateBtn.addEventListener('click', () => {
-        const length = parseFloat(lengthInput.value);
-        const width = parseFloat(widthInput.value);
-
-        if (isNaN(length) || isNaN(width) || length <= 0 || width <= 0) {
-            resultDisplay.textContent = "الرجاء إدخال قيم صحيحة أكبر من الصفر!";
-            resultDisplay.style.color = "#d32f2f";
-        } else {
-            const totalArea = calculateLandArea(length, width);
-            resultDisplay.textContent = `المساحة الإجمالية: ${totalArea.toLocaleString()} م²`;
-            resultDisplay.style.color = "#00796b";
-        }
-    });
-}
-
 
 /* ==========================================
    4. SURVEY STATIONS MODULE
