@@ -1,5 +1,5 @@
-import { ISpatialSearchCriteria, ISearchResult, QueryStatus } from '../types/search.js';
-import { isWithinAreaRange } from '../utils/spatial-helpers.js';
+import { ISpatialSearchCriteria, ISearchResult, QueryStatus } from '../models/search.model.js';
+import { isWithinAreaRange } from '../spatial/spatial-helpers.js';
 
 export class SpatialSearchService<T extends { properties: Record<string, any> }> {
     private dataset: T[] = [];

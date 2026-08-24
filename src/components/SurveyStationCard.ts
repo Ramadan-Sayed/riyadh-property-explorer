@@ -1,4 +1,4 @@
-import { SurveyStation } from "../types/survey";
+import { SurveyStation } from "../app/core/models/survey.model";
 
 export class SurveyStationCard {
   constructor(private station: SurveyStation) {}

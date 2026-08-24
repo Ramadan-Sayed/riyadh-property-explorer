@@ -1,4 +1,4 @@
-import { LayerConfig } from '../types/layer';
+import { LayerConfig } from '../models/layer.model';
 
 export class LayerService {
   private layers: Map<string, LayerConfig> = new Map();

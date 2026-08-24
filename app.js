@@ -5,14 +5,14 @@
    ========================================== */
 import * as L from 'leaflet';
 import { fetchRiyadhProperties } from './dataService.js';
-import { formatCoordinates } from './geoHelpers.js';
+import { formatCoordinates } from './src/app/core/spatial/geo-helpers.js';
 import { ConverterUIComponent } from './dist/components/converter.component.js';
-import { LayerService } from './dist/services/layerService.js';
+import { LayerService } from './src/app/core/services/layer.service.js';
 import { LayerCategory } from './dist/types/layer.js';
 import { toggleMapLayer } from './dist/utils/leaflet-helper.js';
 import { SurveyStationCard } from './dist/components/SurveyStationCard.js';
 import { mockSurveyStations } from './dist/data/surveyStationsData.js';
-import { SpatialSearchService } from './dist/services/SpatialSearchService.js';
+import { SpatialSearchService } from './src/app/core/services/spatial-search.service.js';
 import { debounce } from './dist/utils/debounce.js';
 import { getBoundsFromFeatures, filterGeoJsonLayer } from './dist/utils/spatial-helpers.js';
 import { SearchResultSummary } from './dist/components/SearchResultSummary.js';
