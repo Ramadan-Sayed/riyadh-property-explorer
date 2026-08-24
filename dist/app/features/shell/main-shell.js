@@ -6,12 +6,11 @@ export class MainShell {
         this.bindEvents();
     }
     initLayout() {
-        // الاحتفاظ بالكونتينر الرئيسي أو بدنه
         const appContainer = document.getElementById('app-container') || document.body;
-        // الاحتفاظ بالعناصر القديمة في الـ DOM قبل إعادة التشكيل لنقلها
         const existingWidgets = Array.from(document.querySelectorAll('.feature-card, .widget-card, .converter-card, #survey-station-container'));
         appContainer.innerHTML = `
       <div class="shell-wrapper">
+
         <!-- Header -->
         <header class="main-header">
           <div class="header-brand">
@@ -23,7 +22,7 @@ export class MainShell {
           </div>
         </header>
 
-        <!-- Main Content Area -->
+        <!-- Main Content Area (يحتوي فقط على الـ Sidebar والـ Map) -->
         <div class="main-content">
           <!-- Collapsible Sidebar -->
           <aside id="main-sidebar" class="sidebar">
@@ -41,10 +40,27 @@ export class MainShell {
           <!-- Map Viewport -->
           <main class="map-viewport">
             <div id="main-map" style="width: 100%; height: 100%;"></div>
-          </main>
-        </div>
 
-        <!-- Bottom Stats Bar -->
+            <!-- Map Loader State Indicator -->
+            <div id="map-loader" class="map-loader" style="display: none;">
+              <span class="spinner"></span>
+              <span>جاري تحميل الطبقات...</span>
+            </div>
+
+            <!-- Custom Map Controls -->
+            <div class="custom-map-controls">
+              <button id="btn-zoom-in" class="map-btn" title="تكبير">+</button>
+              <button id="btn-zoom-out" class="map-btn" title="تصغير">-</button>
+              <button id="btn-reset-extent" class="map-btn" title="إعادة النطاق الجغرافي للرياض">🎯</button>
+              <div class="basemap-switcher">
+                <button id="btn-basemap-osm" class="basemap-btn active">شارع</button>
+                <button id="btn-basemap-sat" class="basemap-btn">قمر صناعي</button>
+              </div>
+            </div>
+          </main>
+        </div> <!-- 👈 إغلاق main-content هنا بشكل صحيح! -->
+
+        <!-- Bottom Stats Bar (يقع أسفل main-content مباشرة) -->
         <footer class="bottom-stats-bar">
           <div class="stat-item">
             <span class="stat-label">العقارات المعروضة:</span>
@@ -59,11 +75,11 @@ export class MainShell {
             <span id="stat-active-region" class="stat-value">الرياض</span>
           </div>
         </footer>
+
       </div>
     `;
         this.sidebar = document.getElementById('main-sidebar');
         this.toggleBtn = document.getElementById('btn-toggle-sidebar');
-        // إعادة إرجاع الـ Widgets المحفوظة داخل الـ Sidebar الجديد
         const widgetsContainer = document.getElementById('sidebar-widgets-container');
         if (widgetsContainer && existingWidgets.length > 0) {
             existingWidgets.forEach(widget => widgetsContainer.appendChild(widget));
@@ -73,7 +89,6 @@ export class MainShell {
         const widgetsContainer = document.getElementById('sidebar-widgets-container');
         if (!widgetsContainer)
             return;
-        // قائمة بمعرفات وكلاسات جميع الأدوات والـ Widgets المتاحة في الواجهة
         const elementsToMove = [
             '#land-calculator-widget',
             '#converter-widget',

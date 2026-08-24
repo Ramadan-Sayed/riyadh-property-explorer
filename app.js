@@ -35,6 +35,7 @@ const appConfig = {
 // 🟢 ثانياً: تهيئة الخريطة بواسطة MapComponent والحصول على instance الخريطة
 const mapComponent = new MapComponent(appConfig.containerId, appConfig.defaultCenter, 11);
 const map = mapComponent.getMapInstance();
+mapComponent.invalidateSize();
 
 let propertiesLayer = null;
 

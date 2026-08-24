@@ -28,6 +28,7 @@ body, html {
   flex-direction: column;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
 
 /* Header */
@@ -67,6 +68,7 @@ body, html {
   flex: 1;
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 .sidebar {
@@ -77,18 +79,16 @@ body, html {
   transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 900;
   box-shadow: -2px 0 8px rgba(0,0,0,0.05);
-  margin-top: 20px;
 }
 
 .sidebar.collapsed {
-  
   margin-right: calc(-1 * var(--sidebar-width));
 }
 
 .toggle-btn {
   position: absolute;
-  top: 0px;
-  left: -5px;
+  top: 15px;
+  left: -15px;
   width: 30px;
   height: 30px;
   background-color: var(--primary-teal);
@@ -114,7 +114,7 @@ body, html {
   overflow-y: auto;
 }
 
-.sidebar-content h3 {
+.sidebar-content h2 {
   color: var(--dark-teal);
   margin-bottom: 15px;
   font-size: 1.1rem;
@@ -122,59 +122,29 @@ body, html {
   padding-bottom: 8px;
 }
 
-/* Map Viewport */
+#sidebar-widgets-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Map Viewport  ضمان أن حاوية الخريطة تتوسع بشكل كامل*/
 .map-viewport {
   flex: 1;
   background-color: #e5e5f7;
   position: relative;
+  height: 100%;
+  width: 100%;
+  min-height: 0; /* منع انكماش Flexbox */
 }
-
-/* Bottom Stats Bar */
-.bottom-stats-bar {
-  height: var(--footer-height);
-  background-color: var(--bg-dark);
-  color: var(--text-light);
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 0 20px;
-  font-size: 0.85rem;
-  z-index: 1000;
-}
-
-.stat-item {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.stat-label {
-  color: #94a3b8;
-}
-
-.stat-value {
-  color: var(--light-teal);
-  font-weight: 600;
-}
-
-/* Responsive Handling */
-@media (max-width: 768px) {
-  .sidebar {
-    position: absolute;
-    height: 100%;
-    right: 0;
-  }
-  
-  .bottom-stats-bar {
-    font-size: 0.75rem;
-  }
-}
-
-#sidebar-widgets-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* التحكم في المسافة بين كل كارت والآخر */
-  padding: 10px; /* مسافة داخلية من أطراف الشريط الجانبي */
+#main-map {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 /* Custom Map Controls UI */
@@ -255,4 +225,47 @@ body, html {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* Bottom Stats Bar (Footer) */
+.bottom-stats-bar {
+  height: var(--footer-height);
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 20px;
+  font-size: 0.85rem;
+  z-index: 1000;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.stat-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.stat-label {
+  color: #94a3b8;
+}
+
+.stat-value {
+  color: var(--light-teal);
+  font-weight: 600;
+}
+
+/* Responsive Handling */
+@media (max-width: 768px) {
+  .sidebar {
+    position: absolute;
+    height: 100%;
+    right: 0;
+  }
+  
+  .bottom-stats-bar {
+    font-size: 0.75rem;
+  }
 }

@@ -12,6 +12,15 @@ export class MapComponent {
     activeBasemap: 'osm'
   };
 
+  // أضف هذه الدالة داخل كلاس MapComponent
+    public invalidateSize(): void {
+    if (this.map) {
+        setTimeout(() => {
+        this.map.invalidateSize();
+        }, 100);
+    }
+    }
+
   private osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
   });
