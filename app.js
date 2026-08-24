@@ -187,6 +187,31 @@ const categorySelect = document.getElementById('sel-property-type');
 const summaryContainer = document.getElementById('search-summary-container');
 const noResultsMsg = document.getElementById('no-results-msg');
 
+// 🟢 دالة إدارة كارت حالة العدم (Empty State Card)
+const handleEmptyState = (resultsCount) => {
+  const existingEmptyState = document.getElementById('empty-state-card');
+
+  if (resultsCount === 0) {
+    if (!existingEmptyState) {
+      const emptyStateEl = document.createElement('div');
+      emptyStateEl.id = 'empty-state-card';
+      emptyStateEl.className = 'empty-state-card';
+      emptyStateEl.innerHTML = `
+        <span class="empty-state-icon">🔍</span>
+        <div class="empty-state-text">
+          <h4>لا توجد نتائج مطابقة</h4>
+          <p>جرب البحث باسم حي آخر أو إعادة ضبط الفلاتر.</p>
+        </div>
+      `;
+      document.querySelector('.map-viewport')?.appendChild(emptyStateEl);
+    }
+  } else {
+    if (existingEmptyState) {
+      existingEmptyState.remove();
+    }
+  }
+};
+
 const executeSearch = () => {
   const queryValue = searchInput ? searchInput.value.trim() : '';
   const categoryValue = categorySelect ? categorySelect.value : '';
@@ -202,6 +227,9 @@ const executeSearch = () => {
   const matchedResults = searchResult.results;
 
   console.log(`Found ${matchedResults.length} matching properties:`, matchedResults);
+
+  // 👈 استدعاء إدارة Empty State هنا
+  handleEmptyState(matchedResults.length);
 
   if (noResultsMsg) {
     noResultsMsg.style.display = matchedResults.length === 0 ? 'block' : 'none';
@@ -248,6 +276,9 @@ const resetMapView = () => {
   
   mapComponent.resetExtent(); // استخدام دالة إعادة التمركز المباشرة
   
+  // 🟢 إزالة Empty State عند إعادة الضبط
+  handleEmptyState(-1);
+
   if (summaryContainer) summaryContainer.innerHTML = '';
   if (noResultsMsg) noResultsMsg.style.display = 'none';
 };
