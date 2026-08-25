@@ -1,22 +1,18 @@
 export class PropertyDataService {
-    geojsonPath = "assets/data/properties.geojson";
+    dataUrl;
+    constructor(dataUrl = './data/riyadh-properties.geojson') {
+        this.dataUrl = dataUrl;
+    }
+    /**
+     * جلب ملف GeoJSON وإرجاع الـ FeatureCollection
+     */
     async loadProperties() {
-        try {
-            const response = await fetch(this.geojsonPath);
-            if (!response.ok)
-                throw new Error("فشل في تحميل البيانات");
-            const data = await response.json();
-            data.features.forEach((f) => {
-                if (f.properties.price && f.properties.area) {
-                    f.properties.pricePerMeter = Math.round(f.properties.price / f.properties.area);
-                }
-            });
-            return data;
+        const response = await fetch(this.dataUrl);
+        if (!response.ok) {
+            throw new Error(`فشل في جلب البيانات: ${response.statusText}`);
         }
-        catch (error) {
-            console.error("Error loading GeoJSON data:", error);
-            return null;
-        }
+        const data = await response.json();
+        return data;
     }
 }
 // اختبار سريع للتأكد من عمل الخدمة واسترجاع البيانات

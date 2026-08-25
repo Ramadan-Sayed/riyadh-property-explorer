@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["node", "jest"],
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "bundler",
@@ -10,5 +11,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*", "src/app/models/riyadh-mock-coords.ts", "src/app/core/models/property.model.ts"]
+  "include": [
+    "src/**/*"
+  ]
 }

@@ -2,31 +2,43 @@ import {
   PropertyGeoJSON,
   PropertyFeature,
 } from "../../core/models/property.model";
+
+
+export interface GeoJsonFeature {
+  type: string;
+  geometry: {
+    type: string;
+    coordinates: any;
+  };
+  properties: Record<string, any>;
+}
+
+export interface GeoJsonFeatureCollection {
+  type: string;
+  features: GeoJsonFeature[];
+}
+
 export class PropertyDataService {
-  private geojsonPath = "assets/data/properties.geojson";
+  private dataUrl: string;
 
-  async loadProperties(): Promise<PropertyGeoJSON | null> {
-    try {
-      const response = await fetch(this.geojsonPath);
-      if (!response.ok) throw new Error("فشل في تحميل البيانات");
+  constructor(dataUrl: string = './data/riyadh-properties.geojson') {
+    this.dataUrl = dataUrl;
+  }
 
-      const data: PropertyGeoJSON = await response.json();
-
-      data.features.forEach((f: PropertyFeature) => {
-        if (f.properties.price && f.properties.area) {
-          f.properties.pricePerMeter = Math.round(
-            f.properties.price / f.properties.area,
-          );
-        }
-      });
-
-      return data;
-    } catch (error) {
-      console.error("Error loading GeoJSON data:", error);
-      return null;
+  /**
+   * جلب ملف GeoJSON وإرجاع الـ FeatureCollection
+   */
+  public async loadProperties(): Promise<GeoJsonFeatureCollection> {
+    const response = await fetch(this.dataUrl);
+    if (!response.ok) {
+      throw new Error(`فشل في جلب البيانات: ${response.statusText}`);
     }
+    const data: GeoJsonFeatureCollection = await response.json();
+    return data;
   }
 }
+
+
 
 
 // اختبار سريع للتأكد من عمل الخدمة واسترجاع البيانات
@@ -41,3 +53,5 @@ export async function testPropertyService() {
     return false;
   }
 }
+
+
