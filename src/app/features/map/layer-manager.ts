@@ -1,7 +1,6 @@
-import L from 'leaflet';
-import { LoaderComponent } from '../../shared/components/loader.component';
-import { ErrorToastComponent } from '../../shared/components/error-toast.component';
-
+import * as L from 'leaflet';
+import { LoaderComponent } from '../../shared/components/loader.component.js';
+import { ErrorToastComponent } from '../../shared/components/error-toast.component.js';
 export class LayerManager {
   private map: L.Map;
   private geoJsonLayer: L.GeoJSON | null = null;

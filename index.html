@@ -4,29 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Riyadh Property Explorer</title>
-    
-    <!-- مكتبة Leaflet للتنسيق -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- مكتبة FontAwesome والأيقونات -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-    <link rel="shortcut icon" href="#">
-    <link rel="stylesheet" href="./src/assets/styles/layout.css">
-    <link rel="stylesheet" href="./src/assets/styles/feedback.css" />
-    <!-- ملف التنسيق الخاص بالمشروع -->
-    <link rel="stylesheet" href="style.css" type="text/css" />
 
+    <!-- 1. يجب أن يكون الـ importmap هو أول سكربت في الـ head -->
     <script type="importmap">
     {
       "imports": {
-        "leaflet": "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js"
+        "leaflet": "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js",
+        "proj4": "https://esm.sh/proj4@2.15.0"
       }
     }
     </script>
+    
+    <!-- 2. تنسيقات Leaflet و FontAwesome -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="shortcut icon" href="#">
 
-    <!-- إخبار المتصفح بكيفية الوصول لمكتبة proj4 كموديول -->
-    <script type="importmap"> {"imports": {"proj4": "https://esm.sh/proj4@2.15.0"} } </script>
+    <!-- 3. ملفات CSS الخاصة بالمشروع -->
+    <link rel="stylesheet" href="./src/assets/styles/layout.css">
+    <link rel="stylesheet" href="./src/assets/styles/feedback.css" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+
+    
+
   </head>
-
   <body>
     <!-- 1. الشريط العلوي (Header) -->
     <header class="app-header">
@@ -34,9 +35,6 @@
         <i class="fas fa-layer-group geo-icon"></i>
         <h1>Riyadh Property Explorer</h1>
       </div>
-      <!-- تحديث شارة الأسبوع إلى الأسبوع 5
-      <div class="badge">المرحلة 1: الاسبوع 7</div>
-      -->
     </header> 
 
     <!-- الحاوية الرئيسية -->

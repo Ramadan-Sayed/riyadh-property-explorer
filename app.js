@@ -5,20 +5,22 @@
    ========================================== */
 import * as L from 'leaflet';
 import { fetchRiyadhProperties } from './dataService.js';
-import { formatCoordinates } from './src/app/core/spatial/geo-helpers.js';
+// import { formatCoordinates } from './dist/app/core/spatial/geo-helpers.js';
+
 import { ConverterUIComponent } from './dist/components/converter.component.js';
-import { LayerService } from './src/app/core/services/layer.service.js';
+import { LayerService } from './dist/app/core/services/layer.service.js';
 import { LayerCategory } from './dist/types/layer.js';
+
 import { toggleMapLayer } from './dist/utils/leaflet-helper.js';
 import { SurveyStationCard } from './dist/components/SurveyStationCard.js';
 import { mockSurveyStations } from './dist/data/surveyStationsData.js';
-import { SpatialSearchService } from './src/app/core/services/spatial-search.service.js';
+import { SpatialSearchService } from './dist/app/core/services/spatial-search.service.js';
 import { debounce } from './dist/utils/debounce.js';
 import { getBoundsFromFeatures, filterGeoJsonLayer } from './dist/utils/spatial-helpers.js';
 import { SearchResultSummary } from './dist/components/SearchResultSummary.js';
 import { MainShell } from './dist/app/features/shell/main-shell.js';
 import { MapComponent } from './dist/app/features/map/map.component.js'; // 🆕 استيراد مكون الخريطة الجديد
-import { LayerManager } from './src/app/features/map/layer-manager.js';
+import { LayerManager } from './dist/app/features/map/layer-manager.js';
 
 
 
@@ -26,8 +28,12 @@ import { LayerManager } from './src/app/features/map/layer-manager.js';
    1. GLOBAL INITIALIZATION & SHELL BUILD
    ========================================== */
 
+
+
 // 🟢 أولاً: بناء هيكل الصفحة كاملاً لضمان توفر عناصر الـ DOM
 const mainShell = new MainShell();
+
+const converterUI = new ConverterUIComponent();
 
 const appConfig = {
     containerId: 'main-map',
@@ -45,7 +51,7 @@ const layerService = new LayerService();
 const spatialSearchService = new SpatialSearchService();
 const summaryComponent = new SearchResultSummary();
 
-console.log("Formatted Riyadh Coordinates (WKT & Array):", formatCoordinates(24.7136, 46.6753));
+// console.log("Formatted Riyadh Coordinates (WKT & Array):", formatCoordinates(24.7136, 46.6753));
 
 const RIYADH_DISTRICTS = ['Al-Malqa', 'Al-Yasmin', 'Al-Narjis', 'Al-Qairawan'];
 console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
