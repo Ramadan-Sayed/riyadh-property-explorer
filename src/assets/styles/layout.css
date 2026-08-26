@@ -1,15 +1,27 @@
+/* ===================================================
+   1. THEME VARIABLES (Teal Primary Palette)
+   =================================================== */
 :root {
-  --primary-teal: #008080;
-  --dark-teal: #005f73;
-  --light-teal: #e0f2f1;
-  --accent-teal: #00a896;
-  --bg-dark: #1e293b;
-  --text-light: #f8fafc;
+  --primary: #008080;        /* Teal الأساسي */
+  --primary-hover: #005f73;  
+  --primary-light: #e0f2f1;
+  --accent: #00a896;
+  --background: #f4f6f8;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --muted: #64748b;
+  --danger: #ef4444;
+  --success: #10b981;
+
   --sidebar-width: 320px;
   --header-height: 60px;
   --footer-height: 40px;
 }
 
+/* ===================================================
+   2. GLOBAL RESET & BASE STYLES
+   =================================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -18,12 +30,18 @@
 
 body, html {
   height: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   direction: rtl;
+  background-color: var(--background);
+  color: var(--text);
   overflow: hidden;
 }
 
-.shell-wrapper {
+/* ===================================================
+   3. APP SHELL LAYOUT (Header, Sidebar, Map, Stats)
+   =================================================== */
+.app-layout {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -32,38 +50,31 @@ body, html {
 }
 
 /* Header */
-.main-header {
+.app-header {
   height: var(--header-height);
-  background-color: var(--dark-teal);
-  color: var(--text-light);
+  background-color: var(--primary);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  padding: 0 1.25rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   z-index: 1000;
 }
 
-.header-brand {
+.logo-area {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.header-brand h1 {
+.logo-area h1 {
   font-size: 1.2rem;
   font-weight: 600;
 }
 
-.status-badge {
-  background: var(--accent-teal);
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-}
-
-/* Content & Sidebar */
-.main-content {
+/* Main Container (Sidebar + Content) */
+.main-body {
   display: flex;
   flex: 1;
   position: relative;
@@ -71,72 +82,47 @@ body, html {
   width: 100%;
 }
 
-.sidebar {
+/* Sidebar & Animation */
+.app-sidebar {
   width: var(--sidebar-width);
-  background-color: #ffffff;
-  border-left: 1px solid #e2e8f0;
+  background-color: var(--surface);
+  border-left: 1px solid var(--border);
   position: relative;
+  display: flex;
+  flex-direction: column;
   transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 900;
-  box-shadow: -2px 0 8px rgba(0,0,0,0.05);
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
 }
 
-.sidebar.collapsed {
+.app-sidebar.collapsed {
   margin-right: calc(-1 * var(--sidebar-width));
 }
 
-.toggle-btn {
-  position: absolute;
-  top: 15px;
-  left: -15px;
-  width: 30px;
-  height: 30px;
-  background-color: var(--primary-teal);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  z-index: 999;
-  transition: transform 0.3s ease;
-}
-
-.sidebar.collapsed .toggle-btn {
-  transform: rotate(180deg);
-}
-
 .sidebar-content {
-  padding: 20px;
+  padding: 1.25rem;
   height: 100%;
   overflow-y: auto;
 }
 
-.sidebar-content h2 {
-  color: var(--dark-teal);
-  margin-bottom: 15px;
-  font-size: 1.1rem;
-  border-bottom: 2px solid var(--light-teal);
-  padding-bottom: 8px;
-}
-
-#sidebar-widgets-container {
+/* Content Area (Map + Footer) */
+.content-area {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  position: relative;
 }
 
-/* Map Viewport  ضمان أن حاوية الخريطة تتوسع بشكل كامل*/
+/* Map Viewport Container */
 .map-viewport {
   flex: 1;
   background-color: #e5e5f7;
   position: relative;
   height: 100%;
   width: 100%;
-  min-height: 0; /* منع انكماش Flexbox */
+  min-height: 0;
 }
+
 #main-map {
   width: 100%;
   height: 100%;
@@ -147,7 +133,36 @@ body, html {
   right: 0;
 }
 
-/* Custom Map Controls UI */
+/* Statistics Footer */
+.app-statistics {
+  height: var(--footer-height);
+  background-color: var(--text);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  font-size: 0.85rem;
+  z-index: 1000;
+}
+
+/* ===================================================
+   4. MAP CONTROLS & UTILITIES (من كودك القديم)
+   =================================================== */
+.btn-toggle {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.btn-toggle:hover {
+  background-color: var(--primary-hover);
+}
+
 .custom-map-controls {
   position: absolute;
   top: 15px;
@@ -162,40 +177,17 @@ body, html {
   width: 36px;
   height: 36px;
   background: white;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  color: var(--dark-teal);
+  color: var(--primary);
 }
 
 .map-btn:hover {
-  background-color: var(--light-teal);
-}
-
-.basemap-switcher {
-  display: flex;
-  background: white;
-  border-radius: 6px;
-  padding: 3px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  gap: 3px;
-}
-
-.basemap-btn {
-  border: none;
-  background: transparent;
-  padding: 5px 10px;
-  font-size: 0.75rem;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.basemap-btn.active {
-  background: var(--primary-teal);
-  color: white;
+  background-color: var(--primary-light);
 }
 
 .map-loader {
@@ -227,45 +219,13 @@ body, html {
   to { transform: rotate(360deg); }
 }
 
-/* Bottom Stats Bar (Footer) */
-.bottom-stats-bar {
-  height: var(--footer-height);
-  background-color: var(--bg-dark);
-  color: var(--text-light);
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 0 20px;
-  font-size: 0.85rem;
-  z-index: 1000;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.stat-item {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.stat-label {
-  color: #94a3b8;
-}
-
-.stat-value {
-  color: var(--light-teal);
-  font-weight: 600;
-}
-
-/* Responsive Handling */
+/* ===================================================
+   5. RESPONSIVE DESIGN
+   =================================================== */
 @media (max-width: 768px) {
-  .sidebar {
+  .app-sidebar {
     position: absolute;
     height: 100%;
     right: 0;
-  }
-  
-  .bottom-stats-bar {
-    font-size: 0.75rem;
   }
 }
