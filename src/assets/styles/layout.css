@@ -220,12 +220,19 @@ body, html {
 }
 
 /* ===================================================
-   5. RESPONSIVE DESIGN
+   5. RESPONSIVE DESIGN (تجاوب الشاشات الصغيرة)
    =================================================== */
 @media (max-width: 768px) {
   .app-sidebar {
     position: absolute;
-    height: 100%;
     right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+  }
+
+  .app-sidebar.collapsed {
+    transform: translateX(100%); /* اختفاء كامل القائمة في الجوال */
   }
 }

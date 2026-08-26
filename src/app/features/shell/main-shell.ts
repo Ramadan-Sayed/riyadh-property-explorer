@@ -7,8 +7,12 @@ export class MainShell {
   private sidebar = new SidebarComponent();
   private statistics = new StatisticsComponent();
 
+  public isSidebarOpen: boolean = true;
+
   constructor() {
     this.buildShell();
+
+    this.initSidebarToggle();
   }
 
   private buildShell(): void {
@@ -26,5 +30,23 @@ export class MainShell {
         </div>
       </div>
     `;
+  }
+
+  private initSidebarToggle(): void {
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    const sidebarEl = document.getElementById('app-sidebar');
+
+    toggleBtn?.addEventListener('click', () => {
+      this.isSidebarOpen = !this.isSidebarOpen;
+      
+      if (this.isSidebarOpen) {
+        sidebarEl?.classList.remove('collapsed');
+      } else {
+        sidebarEl?.classList.add('collapsed');
+      }
+
+      // إعادة حساب أبعاد الخريطة تلقائياً
+      window.dispatchEvent(new Event('resize'));
+    });
   }
 }
