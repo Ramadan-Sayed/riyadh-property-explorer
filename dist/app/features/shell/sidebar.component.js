@@ -1,6 +1,6 @@
 export class SidebarComponent {
-  render(): string {
-    return `
+    render() {
+        return `
       <div class="sidebar-content">
         <h2>لوحة التحكم والميزات</h2>
         <div id="sidebar-widgets-container">
@@ -20,5 +20,6 @@ export class SidebarComponent {
         </div>
       </div>
     `;
-  }
+    }
 }
+//# sourceMappingURL=sidebar.component.js.map

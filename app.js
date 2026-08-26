@@ -23,16 +23,14 @@ import { MapComponent } from './dist/app/features/map/map.component.js'; // 🆕
 import { LayerManager } from './dist/app/features/map/layer-manager.js';
 
 
-
 /* ==========================================
    1. GLOBAL INITIALIZATION & SHELL BUILD
    ========================================== */
 
-
-
-// 🟢 أولاً: بناء هيكل الصفحة كاملاً لضمان توفر عناصر الـ DOM
+// 🟢 1. بناء هيكل الصفحة (Shell)
 const mainShell = new MainShell();
 
+// 🟢 2. تهيئة أدوات الـ UI (مما ينشئ عناصر الـ DOM الخاصة بها)
 const converterUI = new ConverterUIComponent();
 
 const appConfig = {
@@ -40,22 +38,24 @@ const appConfig = {
     defaultCenter: [24.7136, 46.6753]
 };
 
-// 🟢 ثانياً: تهيئة الخريطة بواسطة MapComponent والحصول على instance الخريطة
+// 🟢 3. تهيئة الخريطة
 const mapComponent = new MapComponent(appConfig.containerId, appConfig.defaultCenter, 11);
 const map = mapComponent.getMapInstance();
 mapComponent.invalidateSize();
 
-let propertiesLayer = null;
+// 🟢 4. تهيئة مدير الطبقات وتمرير الخريطة له
+window.layerManager = new LayerManager(map);
 
+// 🟢 5. الآن وبعد إنشاء المكونات في الـ DOM، نربط الأدوات بالـ Sidebar
+mainShell.mountExistingWidgets();
+
+let propertiesLayer = null;
 const layerService = new LayerService();
 const spatialSearchService = new SpatialSearchService();
 const summaryComponent = new SearchResultSummary();
 
-// console.log("Formatted Riyadh Coordinates (WKT & Array):", formatCoordinates(24.7136, 46.6753));
-
 const RIYADH_DISTRICTS = ['Al-Malqa', 'Al-Yasmin', 'Al-Narjis', 'Al-Qairawan'];
 console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
-
 
 /* ==========================================
    1.5. MAP CONTROLS EVENT LISTENERS (🆕 ربط أزرار التحكم بالخريطة)
