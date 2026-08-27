@@ -1,81 +1,68 @@
 import * as L from 'leaflet';
 
-export interface MapState {
-  isLayerLoading: boolean;
-  activeBasemap: 'osm' | 'satellite';
-}
-
 export class MapComponent {
   private map!: L.Map;
-  private state: MapState = {
-    isLayerLoading: false,
-    activeBasemap: 'osm'
-  };
+  private baseLayers: { [key: string]: L.TileLayer } = {};
+  private overlayLayers: { [key: string]: L.LayerGroup } = {};
 
-  // أضف هذه الدالة داخل كلاس MapComponent
-    public invalidateSize(): void {
-    if (this.map) {
-        setTimeout(() => {
-        this.map.invalidateSize();
-        }, 100);
-    }
-    }
+  // 🟢 الخطوة 6: تعريف حدود مدينة الرياض الجغرافية
+  public readonly RIYADH_BOUNDS = L.latLngBounds(
+    [24.4000, 46.4000], // الحدود الجنوبية الغربية (South, West)
+    [25.0000, 47.0000]  // الحدود الشمالية الشرقية (North, East)
+  );
 
-  private osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap'
-  });
-
-  private satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles © Esri'
-  });
-
-  constructor(private containerId: string, private center: [number, number], private zoom: number = 11) {
-    this.initMap();
+  constructor(containerId: string) {
+    this.initMap(containerId);
+    this.setupBaseLayers();
   }
 
-  private initMap(): void {
-    const container = document.getElementById(this.containerId);
-    if (!container) {
-      console.error(`Map container #${this.containerId} not found.`);
-      return;
-    }
-
-    this.map = L.map(this.containerId, {
-      center: this.center,
-      zoom: this.zoom,
-      zoomControl: false // إلغاء التحكم الافتراضي لإضافة أزرارنا الخاصة
+  // 🟢 الخطوة 1 و 2: Initialize Leaflet & Map View
+  private initMap(containerId: string): void {
+    this.map = L.map(containerId, {
+      zoomControl: true, // 🟢 الخطوة 5: الاستفادة من عناصر Zoom الأصلية لـ Leaflet
+      attributionControl: true
     });
 
-    this.osmLayer.addTo(this.map);
+    // ضبط العرض المبدئي بناءً على حدود الرياض
+    this.map.fitBounds(this.RIYADH_BOUNDS);
   }
 
-  public getMapInstance(): L.Map {
-    return this.map;
+  // 🟢 الخطوة 3 و 4: Base Layers (OSM & Satellite)
+  private setupBaseLayers(): void {
+    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    });
+
+    const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 18,
+      attribution: 'Tiles © Esri'
+    });
+
+    this.baseLayers = {
+      'osm': osm,
+      'satellite': satellite
+    };
+
+    // تعيين OpenStreetMap كخريطة افتراضية
+    osm.addTo(this.map);
   }
 
+  // 🟢 الخطوة 4: Overlay Layers Manager (Properties & Survey Stations)
+  public addOverlayLayer(name: string, layer: L.LayerGroup | L.GeoJSON): void {
+    this.overlayLayers[name] = layer;
+    layer.addTo(this.map);
+  }
+
+  // 🟢 الخطوة 3 و 4: التبديل بين الخرائط الأساسية
   public setBasemap(type: 'osm' | 'satellite'): void {
-    if (this.state.activeBasemap === type) return;
-
-    this.setLoadingState(true);
-
-    if (type === 'satellite') {
-      this.map.removeLayer(this.osmLayer);
-      this.satelliteLayer.addTo(this.map);
-    } else {
-      this.map.removeLayer(this.satelliteLayer);
-      this.osmLayer.addTo(this.map);
+    Object.values(this.baseLayers).forEach(layer => this.map.removeLayer(layer));
+    if (this.baseLayers[type]) {
+      this.baseLayers[type].addTo(this.map);
     }
-
-    this.state.activeBasemap = type;
-    
-    // محاكاة انتهاء تحميل الـ Tiles
-    setTimeout(() => this.setLoadingState(false), 400);
   }
 
-  public resetExtent(): void {
-    this.map.flyTo(this.center, this.zoom, { duration: 1.2 });
-  }
-
+  // 🟢 الخطوة 5: Zoom Controls
   public zoomIn(): void {
     this.map.zoomIn();
   }
@@ -84,15 +71,17 @@ export class MapComponent {
     this.map.zoomOut();
   }
 
-  public setLoadingState(loading: boolean): void {
-    this.state.isLayerLoading = loading;
-    const loaderEl = document.getElementById('map-loader');
-    if (loaderEl) {
-      loaderEl.style.display = loading ? 'flex' : 'none';
-    }
+  // 🟢 الخطوة 6: Reset Map Extent باستخدام fitBounds
+  public resetExtent(): void {
+    this.map.fitBounds(this.RIYADH_BOUNDS, { animate: true, padding: [20, 20] });
   }
 
-  public getState(): MapState {
-    return { ...this.state };
+  // 🟢 Getter للحصول على instance الخريطة
+  public getMapInstance(): L.Map {
+    return this.map;
+  }
+
+  public invalidateSize(): void {
+    this.map.invalidateSize();
   }
 }
