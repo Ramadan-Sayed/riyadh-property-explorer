@@ -1,17 +1,15 @@
 // app.js - الملف الرئيسي لربط المكونات
 
 /* ==========================================
-   0. IMPORTS (جميع الاستيرادات في الأعلى)
+   0. IMPORTS
    ========================================== */
 import * as L from 'leaflet';
 import { fetchRiyadhProperties } from './dataService.js';
-// import { formatCoordinates } from './dist/app/core/spatial/geo-helpers.js';
 
 import { ConverterUIComponent } from './dist/components/converter.component.js';
 import { LayerService } from './dist/app/core/services/layer.service.js';
 import { LayerCategory } from './dist/types/layer.js';
 
-import { toggleMapLayer } from './dist/utils/leaflet-helper.js';
 import { SurveyStationCard } from './dist/components/SurveyStationCard.js';
 import { mockSurveyStations } from './dist/data/surveyStationsData.js';
 import { SpatialSearchService } from './dist/app/core/services/spatial-search.service.js';
@@ -19,36 +17,25 @@ import { debounce } from './dist/utils/debounce.js';
 import { getBoundsFromFeatures, filterGeoJsonLayer } from './dist/utils/spatial-helpers.js';
 import { SearchResultSummary } from './dist/components/SearchResultSummary.js';
 import { MainShell } from './dist/app/features/shell/main-shell.js';
-import { MapComponent } from './dist/app/features/map/map.component.js'; // 🆕 استيراد مكون الخريطة الجديد
+import { MapComponent } from './dist/app/features/map/map.component.js';
 import { LayerManager } from './dist/app/features/map/layer-manager.js';
-
 
 /* ==========================================
    1. GLOBAL INITIALIZATION & SHELL BUILD
    ========================================== */
-
-// 🟢 1. بناء هيكل الصفحة (Shell)
 const mainShell = new MainShell();
 
-// 🟢 2. تهيئة أدوات الـ UI (مما ينشئ عناصر الـ DOM الخاصة بها)
-const converterUI = new ConverterUIComponent();
-
-const appConfig = {
-    containerId: 'main-map',
-    defaultCenter: [24.7136, 46.6753]
-};
-
-// 🟢 3. تهيئة الخريطة
-const mapComponent = new MapComponent(appConfig.containerId, appConfig.defaultCenter, 11);
+// تهيئة الخريطة الأساسية
+const mapComponent = new MapComponent('main-map');
 const map = mapComponent.getMapInstance();
-mapComponent.invalidateSize();
 
-// 🟢 4. تهيئة مدير الطبقات وتمرير الخريطة له
+const converterUI = new ConverterUIComponent();
 window.layerManager = new LayerManager(map);
 
-// 🟢 5. الآن وبعد إنشاء المكونات في الـ DOM، نربط الأدوات بالـ Sidebar
+// نقل الـ Widgets للـ Sidebar بعد إنشاء الـ DOM
 mainShell.mountExistingWidgets();
 
+// 🟢 إعلان المتغيرات العامة في البداية لتجنب أخطاء النطاق (Scope Issues)
 let propertiesLayer = null;
 const layerService = new LayerService();
 const spatialSearchService = new SpatialSearchService();
@@ -58,12 +45,14 @@ const RIYADH_DISTRICTS = ['Al-Malqa', 'Al-Yasmin', 'Al-Narjis', 'Al-Qairawan'];
 console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
 
 /* ==========================================
-   1.5. MAP CONTROLS EVENT LISTENERS (🆕 ربط أزرار التحكم بالخريطة)
+   1.5. MAP CONTROLS EVENT LISTENERS (الخطوة 5 و 6)
    ========================================== */
-
 document.getElementById('btn-zoom-in')?.addEventListener('click', () => mapComponent.zoomIn());
 document.getElementById('btn-zoom-out')?.addEventListener('click', () => mapComponent.zoomOut());
-document.getElementById('btn-reset-extent')?.addEventListener('click', () => mapComponent.resetExtent());
+
+document.getElementById('btn-reset-extent')?.addEventListener('click', () => {
+  mapComponent.resetExtent(); // تنفيذ fitBounds(RIYADH_BOUNDS)
+});
 
 const btnOsm = document.getElementById('btn-basemap-osm');
 const btnSat = document.getElementById('btn-basemap-sat');
@@ -83,21 +72,14 @@ btnSat?.addEventListener('click', () => {
 /* ==========================================
    2. COMPUTATIONAL & ASYNC LOGIC
    ========================================== */
-
-const layerManager = new LayerManager(map);
-
 const loadAndDisplayProperties = async () => {
-    // 🟢 1. إظهار مؤشر التحميل عبر MapComponent
     mapComponent.setLoadingState(true);
 
-    // 🟢 2. جلب البيانات مرة واحدة فقط
     const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
     
     if (data) {
-        // تغذية محرك البحث مكانيًا
         spatialSearchService.setDataset(data.features || []);
 
-        // رسم الطبقة على الخريطة
         propertiesLayer = L.geoJSON(data, {
             onEachFeature: (feature, layer) => {
                 if (feature.properties && feature.properties.name) {
@@ -112,7 +94,6 @@ const loadAndDisplayProperties = async () => {
             }
         }).addTo(map);
 
-        // تسجيل الطبقة في LayerService
         if (typeof layerService !== 'undefined' && LayerCategory) {
             layerService.addLayer({
                 id: 'chk-properties',
@@ -124,7 +105,6 @@ const loadAndDisplayProperties = async () => {
         }
     }
 
-    // 🟢 3. إخفاء مؤشر التحميل
     mapComponent.setLoadingState(false);
 };
 
@@ -133,7 +113,6 @@ loadAndDisplayProperties();
 /* ==========================================
    4. SURVEY STATIONS MODULE
    ========================================== */
-
 const surveyContainer = document.getElementById('survey-station-container');
 
 if (surveyContainer) {
@@ -183,17 +162,14 @@ if (surveyCheckbox) {
   });
 }
 
-
 /* ==========================================
-   5. SPATIAL SEARCH ENGINE MODULE
+   5. SPATIAL SEARCH ENGINE & MAP STATES (الخطوة 7)
    ========================================== */
-
 const searchInput = document.getElementById('txt-search-query');
 const categorySelect = document.getElementById('sel-property-type');
 const summaryContainer = document.getElementById('search-summary-container');
 const noResultsMsg = document.getElementById('no-results-msg');
 
-// 🟢 دالة إدارة كارت حالة العدم (Empty State Card)
 const handleEmptyState = (resultsCount) => {
   const existingEmptyState = document.getElementById('empty-state-card');
 
@@ -234,7 +210,6 @@ const executeSearch = () => {
 
   console.log(`Found ${matchedResults.length} matching properties:`, matchedResults);
 
-  // 👈 استدعاء إدارة Empty State هنا
   handleEmptyState(matchedResults.length);
 
   if (noResultsMsg) {
@@ -254,10 +229,13 @@ const executeSearch = () => {
     const matchedIds = new Set(matchedResults.map(r => r.properties.id));
     filterGeoJsonLayer(propertiesLayer, matchedIds);
 
+    // 🟢 الخطوة 7: Map State - Filtered or Selected
     if (matchedResults.length > 1) {
+      // 1. حالة الفلترة لعدة نتائج (Fit to filtered bounds)
       const bounds = getBoundsFromFeatures(matchedResults);
       map.fitBounds(bounds, { padding: [20, 20], maxZoom: 15 });
     } else if (matchedResults.length === 1) {
+      // 2. حالة اختيار عقار واحد (Zoom to selected property)
       const coords = matchedResults[0].geometry.coordinates;
       map.flyTo([coords[1], coords[0]], 16, { duration: 1.2 });
     }
@@ -280,9 +258,9 @@ const resetMapView = () => {
     filterGeoJsonLayer(propertiesLayer, allIds);
   }
   
-  mapComponent.resetExtent(); // استخدام دالة إعادة التمركز المباشرة
+  // 🟢 الخطوة 7: Map State - Reset (العودة لـ Riyadh Bounds)
+  mapComponent.resetExtent();
   
-  // 🟢 إزالة Empty State عند إعادة الضبط
   handleEmptyState(-1);
 
   if (summaryContainer) summaryContainer.innerHTML = '';

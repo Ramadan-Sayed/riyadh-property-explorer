@@ -1,83 +1,71 @@
 import * as L from 'leaflet';
 export class MapComponent {
-    containerId;
-    center;
-    zoom;
     map;
-    state = {
-        isLayerLoading: false,
-        activeBasemap: 'osm'
-    };
-    // أضف هذه الدالة داخل كلاس MapComponent
-    invalidateSize() {
-        if (this.map) {
-            setTimeout(() => {
-                this.map.invalidateSize();
-            }, 100);
-        }
+    baseLayers = {};
+    overlayLayers = {};
+    // 🟢 الخطوة 6: تعريف حدود مدينة الرياض الجغرافية
+    RIYADH_BOUNDS = L.latLngBounds([24.4000, 46.4000], // الحدود الجنوبية الغربية (South, West)
+    [25.0000, 47.0000] // الحدود الشمالية الشرقية (North, East)
+    );
+    constructor(containerId) {
+        this.initMap(containerId);
+        this.setupBaseLayers();
     }
-    osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-    });
-    satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles © Esri'
-    });
-    constructor(containerId, center, zoom = 11) {
-        this.containerId = containerId;
-        this.center = center;
-        this.zoom = zoom;
-        this.initMap();
-    }
-    initMap() {
-        const container = document.getElementById(this.containerId);
-        if (!container) {
-            console.error(`Map container #${this.containerId} not found.`);
-            return;
-        }
-        this.map = L.map(this.containerId, {
-            center: this.center,
-            zoom: this.zoom,
-            zoomControl: false // إلغاء التحكم الافتراضي لإضافة أزرارنا الخاصة
+    // 🟢 الخطوة 1 و 2: Initialize Leaflet & Map View
+    initMap(containerId) {
+        this.map = L.map(containerId, {
+            zoomControl: true, // 🟢 الخطوة 5: الاستفادة من عناصر Zoom الأصلية لـ Leaflet
+            attributionControl: true
         });
-        this.osmLayer.addTo(this.map);
+        // ضبط العرض المبدئي بناءً على حدود الرياض
+        this.map.fitBounds(this.RIYADH_BOUNDS);
     }
-    getMapInstance() {
-        return this.map;
+    // 🟢 الخطوة 3 و 4: Base Layers (OSM & Satellite)
+    setupBaseLayers() {
+        const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        });
+        const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 18,
+            attribution: 'Tiles © Esri'
+        });
+        this.baseLayers = {
+            'osm': osm,
+            'satellite': satellite
+        };
+        // تعيين OpenStreetMap كخريطة افتراضية
+        osm.addTo(this.map);
     }
+    // 🟢 الخطوة 4: Overlay Layers Manager (Properties & Survey Stations)
+    addOverlayLayer(name, layer) {
+        this.overlayLayers[name] = layer;
+        layer.addTo(this.map);
+    }
+    // 🟢 الخطوة 3 و 4: التبديل بين الخرائط الأساسية
     setBasemap(type) {
-        if (this.state.activeBasemap === type)
-            return;
-        this.setLoadingState(true);
-        if (type === 'satellite') {
-            this.map.removeLayer(this.osmLayer);
-            this.satelliteLayer.addTo(this.map);
+        Object.values(this.baseLayers).forEach(layer => this.map.removeLayer(layer));
+        if (this.baseLayers[type]) {
+            this.baseLayers[type].addTo(this.map);
         }
-        else {
-            this.map.removeLayer(this.satelliteLayer);
-            this.osmLayer.addTo(this.map);
-        }
-        this.state.activeBasemap = type;
-        // محاكاة انتهاء تحميل الـ Tiles
-        setTimeout(() => this.setLoadingState(false), 400);
     }
-    resetExtent() {
-        this.map.flyTo(this.center, this.zoom, { duration: 1.2 });
-    }
+    // 🟢 الخطوة 5: Zoom Controls
     zoomIn() {
         this.map.zoomIn();
     }
     zoomOut() {
         this.map.zoomOut();
     }
-    setLoadingState(loading) {
-        this.state.isLayerLoading = loading;
-        const loaderEl = document.getElementById('map-loader');
-        if (loaderEl) {
-            loaderEl.style.display = loading ? 'flex' : 'none';
-        }
+    // 🟢 الخطوة 6: Reset Map Extent باستخدام fitBounds
+    resetExtent() {
+        this.map.fitBounds(this.RIYADH_BOUNDS, { animate: true, padding: [20, 20] });
     }
-    getState() {
-        return { ...this.state };
+    // 🟢 Getter للحصول على instance الخريطة
+    getMapInstance() {
+        return this.map;
+    }
+    invalidateSize() {
+        this.map.invalidateSize();
     }
 }
 //# sourceMappingURL=map.component.js.map
