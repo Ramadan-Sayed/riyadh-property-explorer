@@ -84,4 +84,16 @@ export class MapComponent {
   public invalidateSize(): void {
     this.map.invalidateSize();
   }
+
+  // 🟢 إضافة دالة إدارة حالة التحميل
+  public setLoadingState(isLoading: boolean): void {
+    const mapElement = document.getElementById('main-map');
+    if (!mapElement) return;
+
+    if (isLoading) {
+      mapElement.classList.add('loading');
+    } else {
+      mapElement.classList.remove('loading');
+    }
+  }
 }

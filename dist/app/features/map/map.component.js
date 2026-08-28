@@ -67,5 +67,17 @@ export class MapComponent {
     invalidateSize() {
         this.map.invalidateSize();
     }
+    // 🟢 إضافة دالة إدارة حالة التحميل
+    setLoadingState(isLoading) {
+        const mapElement = document.getElementById('main-map');
+        if (!mapElement)
+            return;
+        if (isLoading) {
+            mapElement.classList.add('loading');
+        }
+        else {
+            mapElement.classList.remove('loading');
+        }
+    }
 }
 //# sourceMappingURL=map.component.js.map

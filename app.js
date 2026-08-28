@@ -30,6 +30,13 @@ const mapComponent = new MapComponent('main-map');
 const map = mapComponent.getMapInstance();
 
 const converterUI = new ConverterUIComponent();
+
+// إذا كان مكون محول الإحداثيات يحتاج استدعاء render يدوياً
+const converterContainer = document.getElementById('converter-widget');
+if (converterContainer && typeof converterUI.render === 'function') {
+  converterContainer.innerHTML = converterUI.render();
+}
+
 window.layerManager = new LayerManager(map);
 
 // نقل الـ Widgets للـ Sidebar بعد إنشاء الـ DOM
