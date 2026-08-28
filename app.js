@@ -19,6 +19,8 @@ import { SearchResultSummary } from './dist/components/SearchResultSummary.js';
 import { MainShell } from './dist/app/features/shell/main-shell.js';
 import { MapComponent } from './dist/app/features/map/map.component.js';
 import { LayerManager } from './dist/app/features/map/layer-manager.js';
+import { UiStateComponent } from './dist/components/ui-state.component.js';
+
 
 /* ==========================================
    1. GLOBAL INITIALIZATION & SHELL BUILD
@@ -47,6 +49,9 @@ let propertiesLayer = null;
 const layerService = new LayerService();
 const spatialSearchService = new SpatialSearchService();
 const summaryComponent = new SearchResultSummary();
+// 🟢 تهيئة مكون حالات الواجهة
+const mapStateUI = new UiStateComponent('main-map');
+
 
 const RIYADH_DISTRICTS = ['Al-Malqa', 'Al-Yasmin', 'Al-Narjis', 'Al-Qairawan'];
 console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
@@ -75,17 +80,23 @@ btnSat?.addEventListener('click', () => {
   btnSat.classList.add('active');
   btnOsm?.classList.remove('active');
 });
-
 /* ==========================================
-   2. COMPUTATIONAL & ASYNC LOGIC
+   2. COMPUTATIONAL & ASYNC LOGIC WITH UX STATES
    ========================================== */
 const loadAndDisplayProperties = async () => {
-    mapComponent.setLoadingState(true);
+    // 🟢1. حالة التحميل Loading State
+    mapStateUI.render('loading', { message: 'جاري تحميل عقارات الرياض...' });
 
-    const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
-    
-    if (data) {
-        spatialSearchService.setDataset(data.features || []);
+    try {
+        const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
+        
+        // 🟢 2. حالة البيانات الفارغة Empty Data State
+        if (!data || !data.features || data.features.length === 0) {
+            mapStateUI.render('empty', { message: 'ملف البيانات فارغ ولا يحتوي على عقارات.' });
+            return;
+        }
+
+        spatialSearchService.setDataset(data.features);
 
         propertiesLayer = L.geoJSON(data, {
             onEachFeature: (feature, layer) => {
@@ -110,9 +121,21 @@ const loadAndDisplayProperties = async () => {
                 leafletLayer: propertiesLayer
             });
         }
-    }
 
-    mapComponent.setLoadingState(false);
+        // 🟢 3. نجاح التحميل Success State
+        mapStateUI.render('success');
+
+    } catch (error) {
+        console.error('Error loading GeoJSON:', error);
+        
+        // 🟢 4. حالة الخطأ مع زر إعادة المحاولة Error State with Retry
+        mapStateUI.render('error', {
+            message: 'تعذر الاتصال بخادم البيانات الجغرافية.',
+            onRetry: () => {
+                loadAndDisplayProperties();
+            }
+        });
+    }
 };
 
 loadAndDisplayProperties();
