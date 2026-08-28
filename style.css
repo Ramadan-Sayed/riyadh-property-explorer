@@ -372,8 +372,65 @@ body {
 }
 
 #layer-manager-card {
-  background: #1a2332 ;
+  background: #1a2332;
   border-radius: 10px;
-  height: 150px;
+  min-height: 150px; /* تغيير لـ min-height لتتمدد حسب المحتوى */
+  height: auto;
   padding: 12px;
+}
+
+
+/* ==========================================
+   UX STATES STYLING (DAY 4)
+   ========================================== */
+.ui-state-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: #ffffff;
+  padding: 25px 35px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  max-width: 380px;
+  width: 90%;
+  direction: rtl;
+}
+
+.state-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0e0e0;
+  border-top: 4px solid #005f73;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.state-icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.btn-retry {
+  background-color: #005f73;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-retry:hover {
+  background-color: #0a9396;
 }

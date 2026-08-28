@@ -44,21 +44,9 @@
         <h2>لوحة التحكم والميزات</h2>
 
         <!-- ميزة محول الإحداثيات -->
-        <section class="feature-card light-gray" id="coordinate-converter">
-          <div class="converter-panel">
-            <h3>Coordinate Converter</h3>
-            <div class="input-group">
-              <label for="latInput">خط العرض (Latitude):</label>
-              <input type="number" id="latInput" value="24.8211" step="0.0001" placeholder="24.8211">
-            </div>
-            <div class="input-group">
-              <label for="lngInput">خط الطول (Longitude):</label>
-              <input type="number" id="lngInput" value="46.6343" step="0.0001" placeholder="46.6343">
-            </div>
-            <button id="convertBtn">تحويل وانتقال</button>
-            <div id="resultBox" class="result-box" style="display: none;">
-              <p id="resultText">النظام: --</p>
-            </div>
+        <section class="feature-card" id="coordinate-converter">
+          <div id="converter-widget">
+            <!-- سيتم حشوه ديناميكياً عبر converterUI.render() -->
           </div>
         </section>
 
@@ -66,14 +54,14 @@
         <section class="feature-card box-shadow" id="layer-manager-card">
           <h3>Layer Manager</h3>
           <div id="layers-list"></div>
-          
-          <div class="layer-control-item ">
+
+          <div class="layer-control-item">
             <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
               <input type="checkbox" id="chk-properties" checked />
               <span>عقارات الرياض</span>
             </label>
           </div>
-          
+
           <!-- خيار محطات المسح -->
           <div class="layer-control-item">
             <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
@@ -82,33 +70,30 @@
             </label>
           </div>
 
-          <!-- حاوية عرض كروت المحطات الجانبية -->
-          <!-- <div id="survey-station-container" class="survey-stations-list"> -->
+          <!-- حاوية عرض كروت المحطات الجانبية (تم فك التعليق عنها) -->
+          <div id="survey-station-container" class="survey-stations-list">
             <!-- سيتم توليد الكروت هنا ديناميكياً بواسطة JavaScript -->
-          <!-- </div> -->
+          </div>
         </section>
 
-       
-
-        <section class="feature-card " id="spatial-search">
+        <section class="feature-card" id="spatial-search">
           <h3>Spatial Search</h3>
           <div id="spatial-search-container" class="sidebar-section">
-                      
             <div id="search-panel">
-              <!-- حقول الإدخال والقوائم المنسدلة للبحث -->
               <input type="text" id="txt-search-query" placeholder="ابحث باسم الحي..." />
-              <select id="sel-property-type"><!-- ... --></select>
+              <select id="sel-property-type">
+                <option value="ALL">جميع الأنواع</option>
+              </select>
 
               <button id="btn-reset-search" type="button" class="btn-secondary" style="margin-top: 10px; width: 100%;">
                 🔄 إعادة ضبط البحث
               </button>
-              <!-- حاوية ملخص الإحصائيات الحية -->
+              
               <div id="search-summary-container"></div>
 
               <div id="no-results-msg" style="display: none; color: #ef4444; padding: 10px;">
                 عذراً، لم يتم العثور على نتائج تطابق معايير البحث.
               </div>
-
             </div>
           </div>
         </section>

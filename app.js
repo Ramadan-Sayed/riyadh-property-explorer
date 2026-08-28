@@ -19,8 +19,7 @@ import { SearchResultSummary } from './dist/components/SearchResultSummary.js';
 import { MainShell } from './dist/app/features/shell/main-shell.js';
 import { MapComponent } from './dist/app/features/map/map.component.js';
 import { LayerManager } from './dist/app/features/map/layer-manager.js';
-import { UiStateComponent } from './dist/components/ui-state.component.js';
-
+import { UiStateComponent } from './dist/app/components/ui-state.component.js';
 
 /* ==========================================
    1. GLOBAL INITIALIZATION & SHELL BUILD
@@ -33,7 +32,7 @@ const map = mapComponent.getMapInstance();
 
 const converterUI = new ConverterUIComponent();
 
-// إذا كان مكون محول الإحداثيات يحتاج استدعاء render يدوياً
+// 1. حقن محول الإحداثيات في الـ DOM أولاً
 const converterContainer = document.getElementById('converter-widget');
 if (converterContainer && typeof converterUI.render === 'function') {
   converterContainer.innerHTML = converterUI.render();
@@ -41,21 +40,20 @@ if (converterContainer && typeof converterUI.render === 'function') {
 
 window.layerManager = new LayerManager(map);
 
-// نقل الـ Widgets للـ Sidebar بعد إنشاء الـ DOM
-mainShell.mountExistingWidgets();
-
-// 🟢 إعلان المتغيرات العامة في البداية لتجنب أخطاء النطاق (Scope Issues)
+// 🟢 إعلان المتغيرات العامة
 let propertiesLayer = null;
 const layerService = new LayerService();
 const spatialSearchService = new SpatialSearchService();
 const summaryComponent = new SearchResultSummary();
-// 🟢 تهيئة مكون حالات الواجهة
-const mapStateUI = new UiStateComponent('main-map');
 
+let stateOverlay = document.getElementById('map-state-overlay');
+if (!stateOverlay) {
+  stateOverlay = document.createElement('div');
+  stateOverlay.id = 'map-state-overlay';
+  document.querySelector('.map-viewport')?.appendChild(stateOverlay);
+}
 
-const RIYADH_DISTRICTS = ['Al-Malqa', 'Al-Yasmin', 'Al-Narjis', 'Al-Qairawan'];
-console.log('Target Districts Loaded Successfully:', RIYADH_DISTRICTS);
-
+const mapStateUI = new UiStateComponent('map-state-overlay');
 /* ==========================================
    1.5. MAP CONTROLS EVENT LISTENERS (الخطوة 5 و 6)
    ========================================== */
@@ -80,11 +78,12 @@ btnSat?.addEventListener('click', () => {
   btnSat.classList.add('active');
   btnOsm?.classList.remove('active');
 });
+
 /* ==========================================
    2. COMPUTATIONAL & ASYNC LOGIC WITH UX STATES
    ========================================== */
 const loadAndDisplayProperties = async () => {
-    // 🟢1. حالة التحميل Loading State
+    // 🟢 1. حالة التحميل Loading State
     mapStateUI.render('loading', { message: 'جاري تحميل عقارات الرياض...' });
 
     try {
@@ -125,6 +124,11 @@ const loadAndDisplayProperties = async () => {
         // 🟢 3. نجاح التحميل Success State
         mapStateUI.render('success');
 
+        // 🟢 تحديث أبعاد الخريطة لضمان ظهور بلاطات الخريطة بشكل صحيح
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 100);
+
     } catch (error) {
         console.error('Error loading GeoJSON:', error);
         
@@ -153,6 +157,9 @@ if (surveyContainer) {
     surveyContainer.insertAdjacentHTML('beforeend', stationCard.render());
   });
 }
+
+// 🟢 نقل وحقن الـ Widgets في الـ Sidebar الآن بعد كتمال بنائها في الـ DOM
+mainShell.mountExistingWidgets();
 
 const surveyLayersGroup = L.layerGroup();
 
