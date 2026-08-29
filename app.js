@@ -21,6 +21,10 @@ import { MapComponent } from './dist/app/features/map/map.component.js';
 import { LayerManager } from './dist/app/features/map/layer-manager.js';
 import { UiStateComponent } from './dist/app/components/ui-state.component.js';
 
+// 🟢 استيراد مكونات اليوم 5 (Filter State & Component)
+import { FilterState } from './dist/app/features/filters/filter.state.js';
+import { FilterComponent } from './dist/app/features/filters/filter.component.js';
+
 /* ==========================================
    1. GLOBAL INITIALIZATION & SHELL BUILD
    ========================================== */
@@ -40,11 +44,15 @@ if (converterContainer && typeof converterUI.render === 'function') {
 
 window.layerManager = new LayerManager(map);
 
-// 🟢 إعلان المتغيرات العامة
+// 🟢 إعلان المتغيرات العامة والخدمات
 let propertiesLayer = null;
 const layerService = new LayerService();
 const spatialSearchService = new SpatialSearchService();
 const summaryComponent = new SearchResultSummary();
+
+// 🟢 تهيئة حالة الفلاتر ومكون الفلترة (اليوم 5)
+const filterState = FilterState.getInstance();
+const filterComponent = new FilterComponent('spatial-search');
 
 let stateOverlay = document.getElementById('map-state-overlay');
 if (!stateOverlay) {
@@ -54,8 +62,9 @@ if (!stateOverlay) {
 }
 
 const mapStateUI = new UiStateComponent('map-state-overlay');
+
 /* ==========================================
-   1.5. MAP CONTROLS EVENT LISTENERS (الخطوة 5 و 6)
+   1.5. MAP CONTROLS EVENT LISTENERS
    ========================================== */
 document.getElementById('btn-zoom-in')?.addEventListener('click', () => mapComponent.zoomIn());
 document.getElementById('btn-zoom-out')?.addEventListener('click', () => mapComponent.zoomOut());
@@ -80,66 +89,99 @@ btnSat?.addEventListener('click', () => {
 });
 
 /* ==========================================
-   2. COMPUTATIONAL & ASYNC LOGIC WITH UX STATES
+   2. COMPUTATIONAL & ASYNC LOGIC WITH FILTER SUBSCRIPTION
    ========================================== */
 const loadAndDisplayProperties = async () => {
-    // 🟢 1. حالة التحميل Loading State
-    mapStateUI.render('loading', { message: 'جاري تحميل عقارات الرياض...' });
+  // 🟢 1. حالة التحميل Loading State
+  mapStateUI.render('loading', { message: 'جاري تحميل عقارات الرياض...' });
 
-    try {
-        const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
-        
-        // 🟢 2. حالة البيانات الفارغة Empty Data State
-        if (!data || !data.features || data.features.length === 0) {
-            mapStateUI.render('empty', { message: 'ملف البيانات فارغ ولا يحتوي على عقارات.' });
-            return;
-        }
+  try {
+    const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
 
-        spatialSearchService.setDataset(data.features);
-
-        propertiesLayer = L.geoJSON(data, {
-            onEachFeature: (feature, layer) => {
-                if (feature.properties && feature.properties.name) {
-                    layer.bindPopup(`
-                        <div style="direction: rtl; text-align: right;">
-                            <h4 style="margin: 0 0 5px 0; color: #005f73;">${feature.properties.name}</h4>
-                            <p style="margin: 0;"><b>السعر:</b> ${feature.properties.price}</p>
-                            <p style="margin: 0;"><b>الحي:</b> ${feature.properties.district}</p>
-                        </div>
-                    `);
-                }
-            }
-        }).addTo(map);
-
-        if (typeof layerService !== 'undefined' && LayerCategory) {
-            layerService.addLayer({
-                id: 'chk-properties',
-                name: 'عقارات الرياض',
-                category: LayerCategory.PARCELS,
-                visible: true,
-                leafletLayer: propertiesLayer
-            });
-        }
-
-        // 🟢 3. نجاح التحميل Success State
-        mapStateUI.render('success');
-
-        // 🟢 تحديث أبعاد الخريطة لضمان ظهور بلاطات الخريطة بشكل صحيح
-        setTimeout(() => {
-            map.invalidateSize();
-        }, 100);
-
-    } catch (error) {
-        console.error('Error loading GeoJSON:', error);
-        
-        // 🟢 4. حالة الخطأ مع زر إعادة المحاولة Error State with Retry
-        mapStateUI.render('error', {
-            message: 'تعذر الاتصال بخادم البيانات الجغرافية.',
-            onRetry: () => {
-                loadAndDisplayProperties();
-            }
-        });
+    // 🟢 2. حالة البيانات الفارغة Empty Data State
+    if (!data || !data.features || data.features.length === 0) {
+      mapStateUI.render('empty', { message: 'ملف البيانات فارغ ولا يحتوي على عقارات.' });
+      return;
     }
+
+    // حفظ البيانات الأصلية واستخراج خيارات الأحياء والأنواع تلقائياً
+    spatialSearchService.setDataset(data.features);
+    filterComponent.initOptions(data.features);
+
+    propertiesLayer = L.geoJSON(data, {
+      onEachFeature: (feature, layer) => {
+        if (feature.properties && feature.properties.name) {
+          layer.bindPopup(`
+            <div style="direction: rtl; text-align: right;">
+              <h4 style="margin: 0 0 5px 0; color: #005f73;">${feature.properties.name}</h4>
+              <p style="margin: 0;"><b>السعر:</b> ${feature.properties.price || 'غير محدد'}</p>
+              <p style="margin: 0;"><b>الحي:</b> ${feature.properties.district || feature.properties.district_ar || 'غير محدد'}</p>
+            </div>
+          `);
+        }
+      }
+    }).addTo(map);
+
+    if (typeof layerService !== 'undefined' && LayerCategory) {
+      layerService.addLayer({
+        id: 'chk-properties',
+        name: 'عقارات الرياض',
+        category: LayerCategory.PARCELS,
+        visible: true,
+        leafletLayer: propertiesLayer
+      });
+    }
+
+    // 🟢 3. نجاح التحميل Success State
+    mapStateUI.render('success');
+
+    // 🟢 الخطوة 8 و 9: الاشتراك في التغيرات (Reactive Filter) وترحيل النتائج للخريطة
+    filterState.criteria$.subscribe((criteria) => {
+      const filteredFeatures = spatialSearchService.applyFilters(criteria);
+
+      handleEmptyState(filteredFeatures.length);
+
+      // 1. تحديث رؤية العناصر على الخريطة
+      const matchedIds = new Set(filteredFeatures.map((f) => f.properties.id));
+      filterGeoJsonLayer(propertiesLayer, matchedIds);
+
+      // 2. تحديث الملخص الإحصائي
+      const summaryContainer = document.getElementById('search-summary-container');
+      if (summaryContainer) {
+        const totalArea = summaryComponent.calculateTotalArea(filteredFeatures);
+        summaryContainer.innerHTML = summaryComponent.render(
+          filteredFeatures.length,
+          totalArea,
+          0
+        );
+      }
+
+      // 3. تعديل الزوم والإحداثيات حسب النتائج المتبقية
+      if (filteredFeatures.length > 1) {
+        const bounds = getBoundsFromFeatures(filteredFeatures);
+        map.fitBounds(bounds, { padding: [20, 20], maxZoom: 15 });
+      } else if (filteredFeatures.length === 1) {
+        const coords = filteredFeatures[0].geometry.coordinates;
+        map.flyTo([coords[1], coords[0]], 16, { duration: 1.2 });
+      }
+    });
+
+    // 🟢 تحديث أبعاد الخريطة لضمان ظهور البلاطات بشكل صحيح
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
+
+  } catch (error) {
+    console.error('Error loading GeoJSON:', error);
+
+    // 🟢 4. حالة الخطأ مع زر إعادة المحاولة
+    mapStateUI.render('error', {
+      message: 'تعذر الاتصال بخادم البيانات الجغرافية.',
+      onRetry: () => {
+        loadAndDisplayProperties();
+      }
+    });
+  }
 };
 
 loadAndDisplayProperties();
@@ -151,14 +193,14 @@ const surveyContainer = document.getElementById('survey-station-container');
 
 if (surveyContainer) {
   surveyContainer.innerHTML = '';
-  
+
   mockSurveyStations.forEach(stationData => {
     const stationCard = new SurveyStationCard(stationData);
     surveyContainer.insertAdjacentHTML('beforeend', stationCard.render());
   });
 }
 
-// 🟢 نقل وحقن الـ Widgets في الـ Sidebar الآن بعد كتمال بنائها في الـ DOM
+// 🟢 نقل وحقن الـ Widgets في الـ Sidebar
 mainShell.mountExistingWidgets();
 
 const surveyLayersGroup = L.layerGroup();
@@ -200,13 +242,8 @@ if (surveyCheckbox) {
 }
 
 /* ==========================================
-   5. SPATIAL SEARCH ENGINE & MAP STATES (الخطوة 7)
+   5. SPATIAL SEARCH ENGINE & MAP EMPTY STATES
    ========================================== */
-const searchInput = document.getElementById('txt-search-query');
-const categorySelect = document.getElementById('sel-property-type');
-const summaryContainer = document.getElementById('search-summary-container');
-const noResultsMsg = document.getElementById('no-results-msg');
-
 const handleEmptyState = (resultsCount) => {
   const existingEmptyState = document.getElementById('empty-state-card');
 
@@ -230,82 +267,3 @@ const handleEmptyState = (resultsCount) => {
     }
   }
 };
-
-const executeSearch = () => {
-  const queryValue = searchInput ? searchInput.value.trim() : '';
-  const categoryValue = categorySelect ? categorySelect.value : '';
-
-  const searchCriteria = {
-    query: queryValue,
-    category: categoryValue !== 'ALL' && categoryValue !== '' ? categoryValue : undefined
-  };
-
-  console.log('🔍 Executing Spatial Search with criteria:', searchCriteria);
-
-  const searchResult = spatialSearchService.filter(searchCriteria);
-  const matchedResults = searchResult.results;
-
-  console.log(`Found ${matchedResults.length} matching properties:`, matchedResults);
-
-  handleEmptyState(matchedResults.length);
-
-  if (noResultsMsg) {
-    noResultsMsg.style.display = matchedResults.length === 0 ? 'block' : 'none';
-  }
-
-  if (summaryContainer) {
-    const totalArea = summaryComponent.calculateTotalArea(matchedResults);
-    summaryContainer.innerHTML = summaryComponent.render(
-      searchResult.totalMatches,
-      totalArea,
-      searchResult.executionTimeMs
-    );
-  }
-
-  if (propertiesLayer && matchedResults) {
-    const matchedIds = new Set(matchedResults.map(r => r.properties.id));
-    filterGeoJsonLayer(propertiesLayer, matchedIds);
-
-    // 🟢 الخطوة 7: Map State - Filtered or Selected
-    if (matchedResults.length > 1) {
-      // 1. حالة الفلترة لعدة نتائج (Fit to filtered bounds)
-      const bounds = getBoundsFromFeatures(matchedResults);
-      map.fitBounds(bounds, { padding: [20, 20], maxZoom: 15 });
-    } else if (matchedResults.length === 1) {
-      // 2. حالة اختيار عقار واحد (Zoom to selected property)
-      const coords = matchedResults[0].geometry.coordinates;
-      map.flyTo([coords[1], coords[0]], 16, { duration: 1.2 });
-    }
-  }
-};
-
-const debouncedSearch = debounce(executeSearch, 300);
-
-if (searchInput) {
-  searchInput.addEventListener('input', debouncedSearch);
-}
-
-if (categorySelect) {
-  categorySelect.addEventListener('change', debouncedSearch);
-}
-
-const resetMapView = () => {
-  if (propertiesLayer) {
-    const allIds = new Set(spatialSearchService['dataset'].map(item => item.properties.id));
-    filterGeoJsonLayer(propertiesLayer, allIds);
-  }
-  
-  // 🟢 الخطوة 7: Map State - Reset (العودة لـ Riyadh Bounds)
-  mapComponent.resetExtent();
-  
-  handleEmptyState(-1);
-
-  if (summaryContainer) summaryContainer.innerHTML = '';
-  if (noResultsMsg) noResultsMsg.style.display = 'none';
-};
-
-document.getElementById('btn-reset-search')?.addEventListener('click', () => {
-  if (searchInput) searchInput.value = '';
-  if (categorySelect) categorySelect.value = 'ALL';
-  resetMapView();
-});
