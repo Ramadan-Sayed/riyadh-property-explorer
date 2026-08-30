@@ -97,6 +97,36 @@
             </div>
           </div>
         </section>
+
+        <section class="feature-card" id="spatial-search">
+          <h3>Advanced Spatial Filters</h3>
+          <div class="filter-controls-grid">
+            <!-- السعر -->
+            <div class="input-range-group">
+              <label>السعر (ريال):</label>
+              <input type="number" id="num-min-price" placeholder="الحد الأدنى" />
+              <input type="number" id="num-max-price" placeholder="الحد الأقصى" />
+            </div>
+
+            <!-- المساحة -->
+            <div class="input-range-group">
+              <label>المساحة (م²):</label>
+              <input type="number" id="num-min-area" placeholder="أقل مساحة" />
+              <input type="number" id="num-max-area" placeholder="أعلى مساحة" />
+            </div>
+
+            <!-- سعر المتر -->
+            <div class="input-range-group">
+              <label>سعر المتر المربع:</label>
+              <input type="number" id="num-min-price-sqm" placeholder="أقل سعر/م²" />
+              <input type="number" id="num-max-price-sqm" placeholder="أعلى سعر/م²" />
+            </div>
+
+            <button id="btn-clear-filters" class="btn-secondary">Clear Filters</button>
+          </div>
+        </section>
+
+
       </aside>
 
       <!-- 3. المساحة الرئيسية (Main) -->

@@ -2,64 +2,43 @@ import { FilterState } from './filter.state.js';
 
 export class FilterComponent {
   private filterState = FilterState.getInstance();
-  private container: HTMLElement;
 
-  constructor(containerId: string) {
-    const el = document.getElementById(containerId);
-    if (!el) throw new Error(`Container #${containerId} not found`);
-    this.container = el;
-  }
+  public bindEvents(): void {
+    const parseNum = (val: string): number | null => (val.trim() === '' ? null : Number(val));
 
-  public initOptions(features: any[]): void {
-    // الخطوة 5 و 6: اشتقاق الأحياء وأنواع العقارات الفريدة ديناميكياً من GeoJSON
-    const districts = Array.from(
-      new Set(features.map((f) => f.properties?.district).filter(Boolean))
-    ).sort();
-
-    const types = Array.from(
-      new Set(features.map((f) => f.properties?.type || f.properties?.category).filter(Boolean))
-    ).sort();
-
-    this.populateDropdown('sel-district', districts, 'جميع الأحياء');
-    this.populateDropdown('sel-type', types, 'جميع الأنواع');
-    this.bindEvents();
-  }
-
-  private populateDropdown(elementId: string, items: string[], defaultText: string): void {
-    const select = document.getElementById(elementId) as HTMLSelectElement;
-    if (!select) return;
-
-    select.innerHTML = `<option value="">${defaultText}</option>`;
-    items.forEach((item) => {
-      const option = document.createElement('option');
-      option.value = item;
-      option.textContent = item;
-      select.appendChild(option);
-    });
-  }
-
-  private bindEvents(): void {
-    const searchInput = document.getElementById('txt-search') as HTMLInputElement;
-    const districtSelect = document.getElementById('sel-district') as HTMLSelectElement;
-    const typeSelect = document.getElementById('sel-type') as HTMLSelectElement;
-    const clearBtn = document.getElementById('btn-clear-filters');
-
-    searchInput?.addEventListener('input', () => {
-      this.filterState.updateCriteria({ searchTerm: searchInput.value.trim() });
+    // استماع الفلاتر المتقدمة
+    document.getElementById('num-min-price')?.addEventListener('input', (e) => {
+      this.filterState.updateCriteria({ minPrice: parseNum((e.target as HTMLInputElement).value) });
     });
 
-    districtSelect?.addEventListener('change', () => {
-      this.filterState.updateCriteria({ district: districtSelect.value || null });
+    document.getElementById('num-max-price')?.addEventListener('input', (e) => {
+      this.filterState.updateCriteria({ maxPrice: parseNum((e.target as HTMLInputElement).value) });
     });
 
-    typeSelect?.addEventListener('change', () => {
-      this.filterState.updateCriteria({ propertyType: typeSelect.value || null });
+    document.getElementById('num-min-area')?.addEventListener('input', (e) => {
+      this.filterState.updateCriteria({ minArea: parseNum((e.target as HTMLInputElement).value) });
     });
 
-    clearBtn?.addEventListener('click', () => {
-      if (searchInput) searchInput.value = '';
-      if (districtSelect) districtSelect.value = '';
-      if (typeSelect) typeSelect.value = '';
+    document.getElementById('num-max-area')?.addEventListener('input', (e) => {
+      this.filterState.updateCriteria({ maxArea: parseNum((e.target as HTMLInputElement).value) });
+    });
+
+    document.getElementById('num-min-price-sqm')?.addEventListener('input', (e) => {
+      this.filterState.updateCriteria({ minPricePerSqm: parseNum((e.target as HTMLInputElement).value) });
+    });
+
+    document.getElementById('num-max-price-sqm')?.addEventListener('input', (e) => {
+      this.filterState.updateCriteria({ maxPricePerSqm: parseNum((e.target as HTMLInputElement).value) });
+    });
+
+    // 🟢 الخطوة 6: إعادة ضبط الفلاتر الكاملة
+    document.getElementById('btn-clear-filters')?.addEventListener('click', () => {
+      const inputs = document.querySelectorAll<HTMLInputElement>('#spatial-search input');
+      const selects = document.querySelectorAll<HTMLSelectElement>('#spatial-search select');
+
+      inputs.forEach((input) => (input.value = ''));
+      selects.forEach((select) => (select.value = ''));
+
       this.filterState.resetFilters();
     });
   }
