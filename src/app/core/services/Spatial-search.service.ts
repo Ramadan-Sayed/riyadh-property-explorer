@@ -1,76 +1,57 @@
-import { ISpatialSearchCriteria, ISearchResult, QueryStatus } from '../models/search.model.js';
-import { isWithinAreaRange } from '../spatial/spatial-helpers.js';
 import { FilterCriteria } from '../../features/filters/filter.model.js';
+import { calculatePricePerSqm } from '../../utils/spatial-helpers.js';
 
 export class SpatialSearchService<T extends { properties: Record<string, any> }> {
-    private dataset: T[] = [];
+  private dataset: T[] = [];
 
-    constructor(initialData: T[] = []) {
-        this.dataset = [...initialData];
-    }
+  public setDataset(data: T[]): void {
+    this.dataset = [...data];
+  }
 
-    public setDataset(data: T[]): void {
-        this.dataset = [...data];
-    }
+  public applyFilters(criteria: FilterCriteria): T[] {
+    const cleanQuery = (criteria.searchTerm || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&').trim().toLowerCase();
 
-    // 🟢 دالة اليوم 5: تطبيق الفلترة التفاعلية مع FilterCriteria
-    public applyFilters(criteria: FilterCriteria): T[] {
-        const cleanQuery = this.sanitizeQuery(criteria.searchTerm || '');
+    return this.dataset.filter((feature) => {
+      const props = feature.properties || {};
 
-        return this.dataset.filter((feature) => {
-            const props = feature.properties || {};
-            
-            // الخطوة 4: البحث حسب Property ID أو District أو Name
-            const matchSearch =
-                !cleanQuery ||
-                (props.id && String(props.id).toLowerCase().includes(cleanQuery.toLowerCase())) ||
-                (props.district && props.district.toLowerCase().includes(cleanQuery.toLowerCase())) ||
-                (props.district_ar && props.district_ar.includes(cleanQuery)) ||
-                (props.name && props.name.toLowerCase().includes(cleanQuery.toLowerCase()));
+      // 1. الفلاتر الأساسية
+      const matchSearch =
+        !cleanQuery ||
+        (props.id && String(props.id).toLowerCase().includes(cleanQuery)) ||
+        (props.district && props.district.toLowerCase().includes(cleanQuery)) ||
+        (props.district_ar && props.district_ar.includes(cleanQuery)) ||
+        (props.name && props.name.toLowerCase().includes(cleanQuery));
 
-            // الخطوة 5: الفلترة حسب الحي
-            const matchDistrict =
-                !criteria.district || props.district === criteria.district || props.district_ar === criteria.district;
+      const matchDistrict = !criteria.district || props.district === criteria.district || props.district_ar === criteria.district;
+      const matchType = !criteria.propertyType || props.type === criteria.propertyType || props.category === criteria.propertyType;
 
-            // الخطوة 6: الفلترة حسب النوع
-            const matchType =
-                !criteria.propertyType ||
-                props.type === criteria.propertyType ||
-                props.category === criteria.propertyType;
+      // 2. نطاق السعر (Min/Max Price)
+      const price = Number(props.price) || 0;
+      const matchMinPrice = criteria.minPrice === null || price >= criteria.minPrice;
+      const matchMaxPrice = criteria.maxPrice === null || price <= criteria.maxPrice;
 
-            return matchSearch && matchDistrict && matchType;
-        });
-    }
+      // 3. نطاق المساحة (Min/Max Area)
+      const area = Number(props.area) || 0;
+      const matchMinArea = criteria.minArea === null || area >= criteria.minArea;
+      const matchMaxArea = criteria.maxArea === null || area <= criteria.maxArea;
 
-    // تنفيذ البحث وتصفية النتائج بجميع المعايير السابقة (مع المحافظة على قياس الأداء)
-    public filter(criteria: ISpatialSearchCriteria): ISearchResult<T> {
-        const startTime = performance.now();
-        const cleanQuery = this.sanitizeQuery(criteria.query || '');
+      // 4. نطاق سعر المتر المربع (Min/Max Price per m²)
+      const pricePerSqm = calculatePricePerSqm(price, area);
+      const matchMinPriceSqm = criteria.minPricePerSqm === null || (pricePerSqm !== null && pricePerSqm >= criteria.minPricePerSqm);
+      const matchMaxPriceSqm = criteria.maxPricePerSqm === null || (pricePerSqm !== null && pricePerSqm <= criteria.maxPricePerSqm);
 
-        const filtered = this.dataset.filter(item => {
-            const props = item.properties || {};
-
-            const matchQuery = !cleanQuery || 
-                (props.district_ar && props.district_ar.includes(cleanQuery)) ||
-                (props.name && props.name.includes(cleanQuery));
-
-            const matchCategory = !criteria.category || props.category === criteria.category;
-            const matchArea = isWithinAreaRange(props.area || 0, criteria.minArea, criteria.maxArea);
-
-            return matchQuery && matchCategory && matchArea;
-        });
-
-        const endTime = performance.now();
-
-        return {
-            totalMatches: filtered.length,
-            results: filtered,
-            executionTimeMs: Number((endTime - startTime).toFixed(2)),
-            status: filtered.length ? QueryStatus.SUCCESS : QueryStatus.EMPTY
-        };
-    }
-
-    private sanitizeQuery(query: string): string {
-        return query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').trim();
-    }
+      // دمج جميع الشروط باستخدام (AND Logic)
+      return (
+        matchSearch &&
+        matchDistrict &&
+        matchType &&
+        matchMinPrice &&
+        matchMaxPrice &&
+        matchMinArea &&
+        matchMaxArea &&
+        matchMinPriceSqm &&
+        matchMaxPriceSqm
+      );
+    });
+  }
 }
