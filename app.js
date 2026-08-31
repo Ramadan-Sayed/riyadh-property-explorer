@@ -70,7 +70,7 @@ document.getElementById('btn-zoom-in')?.addEventListener('click', () => mapCompo
 document.getElementById('btn-zoom-out')?.addEventListener('click', () => mapComponent.zoomOut());
 
 document.getElementById('btn-reset-extent')?.addEventListener('click', () => {
-  mapComponent.resetExtent(); // تنفيذ fitBounds(RIYADH_BOUNDS)
+  mapComponent.resetExtent();
 });
 
 const btnOsm = document.getElementById('btn-basemap-osm');
@@ -96,7 +96,7 @@ const loadAndDisplayProperties = async () => {
   mapStateUI.render('loading', { message: 'جاري تحميل عقارات الرياض...' });
 
   try {
-    const data = await fetchRiyadhProperties('./data/riyadh-properties.geojson');
+    const data = await fetchRiyadhProperties('data/riyadh-properties.geojson');
 
     // 🟢 2. حالة البيانات الفارغة Empty Data State
     if (!data || !data.features || data.features.length === 0) {
@@ -106,7 +106,9 @@ const loadAndDisplayProperties = async () => {
 
     // حفظ البيانات الأصلية واستخراج خيارات الأحياء والأنواع تلقائياً
     spatialSearchService.setDataset(data.features);
-    filterComponent.initOptions(data.features);
+    if (typeof filterComponent.initOptions === 'function') {
+      filterComponent.initOptions(data.features);
+    }
 
     propertiesLayer = L.geoJSON(data, {
       onEachFeature: (feature, layer) => {
@@ -135,34 +137,27 @@ const loadAndDisplayProperties = async () => {
     // 🟢 3. نجاح التحميل Success State
     mapStateUI.render('success');
 
-    // 🟢 الخطوة 8 و 9: الاشتراك في التغيرات (Reactive Filter) وترحيل النتائج للخريطة
+    // 🟢 الاشتراك في التغيرات (Reactive Filter) مع معالجة حدود الخريطة بأمان تام
     filterState.criteria$.subscribe((criteria) => {
       const filteredFeatures = spatialSearchService.applyFilters(criteria);
 
       handleEmptyState(filteredFeatures.length);
 
-      // 1. تحديث رؤية العناصر على الخريطة
+      // تحديث العلامات المعروضة على الخريطة
       const matchedIds = new Set(filteredFeatures.map((f) => f.properties.id));
       filterGeoJsonLayer(propertiesLayer, matchedIds);
 
-      // 2. تحديث الملخص الإحصائي
-      const summaryContainer = document.getElementById('search-summary-container');
-      if (summaryContainer) {
-        const totalArea = summaryComponent.calculateTotalArea(filteredFeatures);
-        summaryContainer.innerHTML = summaryComponent.render(
-          filteredFeatures.length,
-          totalArea,
-          0
-        );
-      }
-
-      // 3. تعديل الزوم والإحداثيات حسب النتائج المتبقية
-      if (filteredFeatures.length > 1) {
-        const bounds = getBoundsFromFeatures(filteredFeatures);
-        map.fitBounds(bounds, { padding: [20, 20], maxZoom: 15 });
-      } else if (filteredFeatures.length === 1) {
-        const coords = filteredFeatures[0].geometry.coordinates;
-        map.flyTo([coords[1], coords[0]], 16, { duration: 1.2 });
+      // تعديل زوم الخريطة بطريقة آمنة تجنب الـ Invalid LatLng
+      if (filteredFeatures.length > 0) {
+        try {
+          const tempGeoJson = L.geoJSON({ type: 'FeatureCollection', features: filteredFeatures });
+          const bounds = tempGeoJson.getBounds();
+          if (bounds && bounds.isValid()) {
+            map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 });
+          }
+        } catch (e) {
+          console.warn('Could not fit bounds for filtered features:', e);
+        }
       }
     });
 

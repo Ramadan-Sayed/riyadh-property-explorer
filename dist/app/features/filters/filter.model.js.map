@@ -1,0 +1,1 @@
+{"version":3,"file":"filter.model.js","sourceRoot":"","sources":["../../../../src/app/features/filters/filter.model.ts"],"names":[],"mappings":"AAgBA,MAAM,CAAC,MAAM,uBAAuB,GAAmB;IACrD,UAAU,EAAE,EAAE;IACd,QAAQ,EAAE,IAAI;IACd,YAAY,EAAE,IAAI;IAClB,QAAQ,EAAE,IAAI;IACd,QAAQ,EAAE,IAAI;IACd,OAAO,EAAE,IAAI;IACb,OAAO,EAAE,IAAI;IACb,cAAc,EAAE,IAAI;IACpB,cAAc,EAAE,IAAI;CACrB,CAAC"}

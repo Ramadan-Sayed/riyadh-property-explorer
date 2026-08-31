@@ -1,42 +1,44 @@
-import { QueryStatus } from '../models/search.model.js';
-import { isWithinAreaRange } from '../spatial/spatial-helpers.js';
+import { calculatePricePerSqm } from '../../utils/spatial-helpers.js';
 export class SpatialSearchService {
     dataset = [];
-    constructor(initialData = []) {
-        this.dataset = initialData;
-    }
     setDataset(data) {
-        this.dataset = data;
+        this.dataset = [...data];
     }
-    // تنفيذ البحث وتصفية النتائج بجميع المعايير
-    filter(criteria) {
-        const startTime = performance.now();
-        // 1. تنقية وتجهيز نص البحث أولاً لضمان الأمان
-        const cleanQuery = this.sanitizeQuery(criteria.query || '');
-        const filtered = this.dataset.filter(item => {
-            const props = item.properties || {};
-            // 2. تصفية النص باستخدام cleanQuery بعد التنقية
-            const matchQuery = !cleanQuery ||
+    applyFilters(criteria) {
+        const cleanQuery = (criteria.searchTerm || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&').trim().toLowerCase();
+        return this.dataset.filter((feature) => {
+            const props = feature.properties || {};
+            // 1. الفلاتر الأساسية
+            const matchSearch = !cleanQuery ||
+                (props.id && String(props.id).toLowerCase().includes(cleanQuery)) ||
+                (props.district && props.district.toLowerCase().includes(cleanQuery)) ||
                 (props.district_ar && props.district_ar.includes(cleanQuery)) ||
-                (props.name && props.name.includes(cleanQuery));
-            // 3. تصفية نوع العقار (Category)
-            const matchCategory = !criteria.category || props.category === criteria.category;
-            // 4. تصفية نطاق المساحة باستعمال الدالة المساعدة
-            const matchArea = isWithinAreaRange(props.area || 0, criteria.minArea, criteria.maxArea);
-            // دمج الشروط الثلاثة معاً (AND Logic)
-            return matchQuery && matchCategory && matchArea;
+                (props.name && props.name.toLowerCase().includes(cleanQuery));
+            const matchDistrict = !criteria.district || props.district === criteria.district || props.district_ar === criteria.district;
+            const matchType = !criteria.propertyType || props.type === criteria.propertyType || props.category === criteria.propertyType;
+            // 2. نطاق السعر (Min/Max Price)
+            const price = Number(props.price) || 0;
+            const matchMinPrice = criteria.minPrice === null || price >= criteria.minPrice;
+            const matchMaxPrice = criteria.maxPrice === null || price <= criteria.maxPrice;
+            // 3. نطاق المساحة (Min/Max Area)
+            const area = Number(props.area) || 0;
+            const matchMinArea = criteria.minArea === null || area >= criteria.minArea;
+            const matchMaxArea = criteria.maxArea === null || area <= criteria.maxArea;
+            // 4. نطاق سعر المتر المربع (Min/Max Price per m²)
+            const pricePerSqm = calculatePricePerSqm(price, area);
+            const matchMinPriceSqm = criteria.minPricePerSqm === null || (pricePerSqm !== null && pricePerSqm >= criteria.minPricePerSqm);
+            const matchMaxPriceSqm = criteria.maxPricePerSqm === null || (pricePerSqm !== null && pricePerSqm <= criteria.maxPricePerSqm);
+            // دمج جميع الشروط باستخدام (AND Logic)
+            return (matchSearch &&
+                matchDistrict &&
+                matchType &&
+                matchMinPrice &&
+                matchMaxPrice &&
+                matchMinArea &&
+                matchMaxArea &&
+                matchMinPriceSqm &&
+                matchMaxPriceSqm);
         });
-        const endTime = performance.now();
-        return {
-            totalMatches: filtered.length,
-            results: filtered,
-            executionTimeMs: Number((endTime - startTime).toFixed(2)),
-            status: filtered.length ? QueryStatus.SUCCESS : QueryStatus.EMPTY
-        };
-    }
-    // دالة تنقية واستبعاد الرموز الخاصة لمنع أخطاء الـ Regex والرموز المفاجئة
-    sanitizeQuery(query) {
-        return query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').trim();
     }
 }
 //# sourceMappingURL=Spatial-search.service.js.map
