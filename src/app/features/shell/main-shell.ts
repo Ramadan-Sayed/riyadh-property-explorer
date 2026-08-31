@@ -7,16 +7,46 @@ export class MainShell {
   private sidebar = new SidebarComponent();
   private statistics = new StatisticsComponent();
   public isSidebarOpen: boolean = true;
+  private detachedWidgets: HTMLElement[] = [];
 
   constructor() {
+    this.preserveExistingWidgets();
     this.buildShell();
-    // ❌ تم إزالة mountExistingWidgets من هنا لأن العناصر لم تُنشأ بعد في الـ DOM
     this.initSidebarToggle();
   }
 
+  // 1️⃣ التقاط ونقل جميع عناصر الودجت الحالية للحفظ قبل تدمير الـ DOM
+  private preserveExistingWidgets(): void {
+    const ids = [
+      'land-calculator-widget',
+      'converter-widget',
+      'search-widget',
+      'layer-manager-card',
+      'layer-manager-widget',
+      'spatial-search',
+      'advanced-spatial-filters',
+      'survey-station-container'
+    ];
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        this.detachedWidgets.push(el);
+      }
+    });
+
+    // التقاط باقي الكروت التفاعلية
+    document.querySelectorAll('.widget-card, .feature-card').forEach((el) => {
+      if (el instanceof HTMLElement && !this.detachedWidgets.includes(el)) {
+        this.detachedWidgets.push(el);
+      }
+    });
+  }
+
+  // 2️⃣ بناء واجهة الـ Shell الرئيسية
   private buildShell(): void {
     const appContainer = document.querySelector('.app-container') || document.body;
-    
+
     appContainer.innerHTML = `
       <div class="app-layout">
         <header class="app-header">${this.header.render()}</header>
@@ -31,28 +61,20 @@ export class MainShell {
     `;
   }
 
-  // 👈 تحويل الدالة إلى public لاستدعائها يدوياً بعد تجهيز المكونات
+  // 3️⃣ إعادة حقن الودجت بأمان داخل حاوية القائمة الجانبية
   public mountExistingWidgets(): void {
-    const widgetsContainer = document.getElementById('sidebar-widgets-container');
+    const widgetsContainer =
+      document.getElementById('sidebar-widgets-container') ||
+      document.getElementById('sidebar-content') ||
+      document.querySelector('.sidebar-body') ||
+      document.getElementById('app-sidebar');
+
     if (!widgetsContainer) return;
 
-    const selectors = [
-      '#land-calculator-widget',
-      '#converter-widget',
-      '#search-widget',
-      '#layer-manager-widget',
-      '.feature-card',
-      '.widget-card',
-      '#survey-station-container'
-    ];
-
-    selectors.forEach(selector => {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(el => {
-        if (el && !widgetsContainer.contains(el)) {
-          widgetsContainer.appendChild(el);
-        }
-      });
+    this.detachedWidgets.forEach((el) => {
+      if (el) {
+        widgetsContainer.appendChild(el);
+      }
     });
   }
 

@@ -21,38 +21,52 @@ import { MapComponent } from './dist/app/features/map/map.component.js';
 import { LayerManager } from './dist/app/features/map/layer-manager.js';
 import { UiStateComponent } from './dist/app/components/ui-state.component.js';
 
-// 🟢 استيراد مكونات اليوم 5 (Filter State & Component)
+// استيراد مكونات الفلترة
 import { FilterState } from './dist/app/features/filters/filter.state.js';
 import { FilterComponent } from './dist/app/features/filters/filter.component.js';
 
 /* ==========================================
    1. GLOBAL INITIALIZATION & SHELL BUILD
    ========================================== */
+// 1️⃣ إنشاء الهيكل الأساسي للواجهة
 const mainShell = new MainShell();
 
-// تهيئة الخريطة الأساسية
-const mapComponent = new MapComponent('main-map');
-const map = mapComponent.getMapInstance();
-
+// 2️⃣ إنشاء تهيئة الكائنات المكونات أولاً
 const converterUI = new ConverterUIComponent();
+const filterState = FilterState.getInstance();
+const filterComponent = new FilterComponent('spatial-search');
 
-// 1. حقن محول الإحداثيات في الـ DOM أولاً
+// 3️⃣ نقل الكروت والحاويات إلى السايدبار فوراً قبل ربط الأحداث
+if (mainShell && typeof mainShell.mountExistingWidgets === 'function') {
+  mainShell.mountExistingWidgets();
+}
+
+// 4️⃣ حقن محول الإحداثيات وربط أحداثه بعد الاستقرار في الـ DOM
 const converterContainer = document.getElementById('converter-widget');
 if (converterContainer && typeof converterUI.render === 'function') {
   converterContainer.innerHTML = converterUI.render();
+  if (typeof converterUI.bindEvents === 'function') {
+    converterUI.bindEvents();
+  }
 }
+
+// 5️⃣ ربط أحداث الفلاتر
+if (filterComponent && typeof filterComponent.bindEvents === 'function') {
+  filterComponent.bindEvents();
+}
+
+/* ==========================================
+   2. MAP INITIALIZATION & CORE SERVICES
+   ========================================== */
+const mapComponent = new MapComponent('main-map');
+const map = mapComponent.getMapInstance();
 
 window.layerManager = new LayerManager(map);
 
-// 🟢 إعلان المتغيرات العامة والخدمات
 let propertiesLayer = null;
 const layerService = new LayerService();
 const spatialSearchService = new SpatialSearchService();
 const summaryComponent = new SearchResultSummary();
-
-// 🟢 تهيئة حالة الفلاتر ومكون الفلترة (اليوم 5)
-const filterState = FilterState.getInstance();
-const filterComponent = new FilterComponent('spatial-search');
 
 let stateOverlay = document.getElementById('map-state-overlay');
 if (!stateOverlay) {
@@ -64,7 +78,7 @@ if (!stateOverlay) {
 const mapStateUI = new UiStateComponent('map-state-overlay');
 
 /* ==========================================
-   1.5. MAP CONTROLS EVENT LISTENERS
+   3. MAP CONTROLS EVENT LISTENERS
    ========================================== */
 document.getElementById('btn-zoom-in')?.addEventListener('click', () => mapComponent.zoomIn());
 document.getElementById('btn-zoom-out')?.addEventListener('click', () => mapComponent.zoomOut());
@@ -89,22 +103,71 @@ btnSat?.addEventListener('click', () => {
 });
 
 /* ==========================================
-   2. COMPUTATIONAL & ASYNC LOGIC WITH FILTER SUBSCRIPTION
+   4. SURVEY STATIONS MODULE
+   ========================================== */
+const surveyContainer = document.getElementById('survey-station-container');
+
+if (surveyContainer) {
+  surveyContainer.innerHTML = '';
+
+  mockSurveyStations.forEach((stationData) => {
+    const stationCard = new SurveyStationCard(stationData);
+    surveyContainer.insertAdjacentHTML('beforeend', stationCard.render());
+  });
+}
+
+const surveyLayersGroup = L.layerGroup();
+
+mockSurveyStations.forEach((station) => {
+  const marker = L.marker(station.coordinates).bindPopup(`
+    <div style="direction: rtl; text-align: right;">
+      <b>رمز المحطة:</b> ${station.code}<br>
+      <b>الارتفاع:</b> ${station.elevation}m
+    </div>
+  `);
+  surveyLayersGroup.addLayer(marker);
+});
+
+layerService.addLayer({
+  id: 'survey-stations',
+  name: 'محطات المسح الجغرافي',
+  category: LayerCategory.PARCELS,
+  visible: false,
+  leafletLayer: surveyLayersGroup
+});
+
+const surveyCheckbox = document.getElementById('chk-survey-stations');
+
+if (surveyCheckbox) {
+  surveyCheckbox.addEventListener('change', (e) => {
+    const isChecked = e.target.checked;
+
+    layerService.toggleLayerVisibility('survey-stations');
+
+    if (map) {
+      if (isChecked) {
+        surveyLayersGroup.addTo(map);
+      } else {
+        map.removeLayer(surveyLayersGroup);
+      }
+    }
+  });
+}
+
+/* ==========================================
+   5. ASYNC DATA LOADING & REACTIVE FILTERS
    ========================================== */
 const loadAndDisplayProperties = async () => {
-  // 🟢 1. حالة التحميل Loading State
   mapStateUI.render('loading', { message: 'جاري تحميل عقارات الرياض...' });
 
   try {
     const data = await fetchRiyadhProperties('data/riyadh-properties.geojson');
 
-    // 🟢 2. حالة البيانات الفارغة Empty Data State
     if (!data || !data.features || data.features.length === 0) {
       mapStateUI.render('empty', { message: 'ملف البيانات فارغ ولا يحتوي على عقارات.' });
       return;
     }
 
-    // حفظ البيانات الأصلية واستخراج خيارات الأحياء والأنواع تلقائياً
     spatialSearchService.setDataset(data.features);
     if (typeof filterComponent.initOptions === 'function') {
       filterComponent.initOptions(data.features);
@@ -134,20 +197,16 @@ const loadAndDisplayProperties = async () => {
       });
     }
 
-    // 🟢 3. نجاح التحميل Success State
     mapStateUI.render('success');
 
-    // 🟢 الاشتراك في التغيرات (Reactive Filter) مع معالجة حدود الخريطة بأمان تام
     filterState.criteria$.subscribe((criteria) => {
       const filteredFeatures = spatialSearchService.applyFilters(criteria);
 
       handleEmptyState(filteredFeatures.length);
 
-      // تحديث العلامات المعروضة على الخريطة
       const matchedIds = new Set(filteredFeatures.map((f) => f.properties.id));
       filterGeoJsonLayer(propertiesLayer, matchedIds);
 
-      // تعديل زوم الخريطة بطريقة آمنة تجنب الـ Invalid LatLng
       if (filteredFeatures.length > 0) {
         try {
           const tempGeoJson = L.geoJSON({ type: 'FeatureCollection', features: filteredFeatures });
@@ -161,15 +220,12 @@ const loadAndDisplayProperties = async () => {
       }
     });
 
-    // 🟢 تحديث أبعاد الخريطة لضمان ظهور البلاطات بشكل صحيح
     setTimeout(() => {
       map.invalidateSize();
     }, 100);
-
   } catch (error) {
     console.error('Error loading GeoJSON:', error);
 
-    // 🟢 4. حالة الخطأ مع زر إعادة المحاولة
     mapStateUI.render('error', {
       message: 'تعذر الاتصال بخادم البيانات الجغرافية.',
       onRetry: () => {
@@ -182,62 +238,7 @@ const loadAndDisplayProperties = async () => {
 loadAndDisplayProperties();
 
 /* ==========================================
-   4. SURVEY STATIONS MODULE
-   ========================================== */
-const surveyContainer = document.getElementById('survey-station-container');
-
-if (surveyContainer) {
-  surveyContainer.innerHTML = '';
-
-  mockSurveyStations.forEach(stationData => {
-    const stationCard = new SurveyStationCard(stationData);
-    surveyContainer.insertAdjacentHTML('beforeend', stationCard.render());
-  });
-}
-
-// 🟢 نقل وحقن الـ Widgets في الـ Sidebar
-mainShell.mountExistingWidgets();
-
-const surveyLayersGroup = L.layerGroup();
-
-mockSurveyStations.forEach(station => {
-  const marker = L.marker(station.coordinates).bindPopup(`
-    <div style="direction: rtl; text-align: right;">
-      <b>رمز المحطة:</b> ${station.code}<br>
-      <b>الارتفاع:</b> ${station.elevation}m
-    </div>
-  `);
-  surveyLayersGroup.addLayer(marker);
-});
-
-layerService.addLayer({ 
-  id: 'survey-stations', 
-  name: 'محطات المسح الجغرافي', 
-  category: LayerCategory.PARCELS, 
-  visible: false,
-  leafletLayer: surveyLayersGroup
-});
-
-const surveyCheckbox = document.getElementById('chk-survey-stations');
-
-if (surveyCheckbox) {
-  surveyCheckbox.addEventListener('change', (e) => {
-    const isChecked = e.target.checked;
-    
-    layerService.toggleLayerVisibility('survey-stations');
-
-    if (map) {
-      if (isChecked) {
-        surveyLayersGroup.addTo(map);
-      } else {
-        map.removeLayer(surveyLayersGroup);
-      }
-    }
-  });
-}
-
-/* ==========================================
-   5. SPATIAL SEARCH ENGINE & MAP EMPTY STATES
+   6. SPATIAL SEARCH ENGINE & MAP EMPTY STATES
    ========================================== */
 const handleEmptyState = (resultsCount) => {
   const existingEmptyState = document.getElementById('empty-state-card');
