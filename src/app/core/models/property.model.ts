@@ -6,6 +6,9 @@ export interface PropertyProperties {
   price: number;
   area: number; // بالمتر المربع
   pricePerMeter?: number;
+  district_ar?: string; // 🟢 حل أخطاء district_ar
+  category?: string;    // 🟢 حل أخطاء category
+  [key: string]: any;   // 🟢 يسمح بمرور أي خصائص جغرافية إضافية بدون أخطاء
 }
 
 export interface PropertyFeature {
@@ -31,4 +34,7 @@ export interface FilterCriteria {
   minArea?: number;
   maxArea?: number;
 }
+
+
+
 

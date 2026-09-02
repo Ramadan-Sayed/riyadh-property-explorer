@@ -1,6 +1,9 @@
-import { PropertyFeature } from '../../../types/property.js';
+import { PropertyFeature } from '../models/property.model.js';
 import { FilterCriteria } from '../../features/filters/filter.model.js';
 import { calculatePricePerSqm } from '../../utils/spatial-helpers.js';
+
+
+
 export class SpatialSearchService {
   // 🟢 مصدر بيانات موحد دون استهلاك إضافي للذاكرة
   private originalProperties: PropertyFeature[] = [];
