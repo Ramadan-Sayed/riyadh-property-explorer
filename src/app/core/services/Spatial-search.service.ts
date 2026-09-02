@@ -1,20 +1,27 @@
+import { PropertyFeature } from '../../../types/property.js';
 import { FilterCriteria } from '../../features/filters/filter.model.js';
 import { calculatePricePerSqm } from '../../utils/spatial-helpers.js';
+export class SpatialSearchService {
+  // 🟢 مصدر بيانات موحد دون استهلاك إضافي للذاكرة
+  private originalProperties: PropertyFeature[] = [];
 
-export class SpatialSearchService<T extends { properties: Record<string, any> }> {
-  private dataset: T[] = [];
-
-  public setDataset(data: T[]): void {
-    this.dataset = [...data];
+  public setDataset(data: PropertyFeature[]): void {
+    this.originalProperties = data || [];
   }
 
-  public applyFilters(criteria: FilterCriteria): T[] {
+  public getDataset(): PropertyFeature[] {
+    return this.originalProperties;
+  }
+
+  public applyFilters(criteria: FilterCriteria): PropertyFeature[] {
+    if (!this.originalProperties.length) return [];
+
     const cleanQuery = (criteria.searchTerm || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&').trim().toLowerCase();
 
-    return this.dataset.filter((feature) => {
+    return this.originalProperties.filter((feature) => {
       const props = feature.properties || {};
 
-      // 1. الفلاتر الأساسية
+      // 1. فلتر نص البحث (الإصلاح والحي والاسم)
       const matchSearch =
         !cleanQuery ||
         (props.id && String(props.id).toLowerCase().includes(cleanQuery)) ||
@@ -22,36 +29,35 @@ export class SpatialSearchService<T extends { properties: Record<string, any> }>
         (props.district_ar && props.district_ar.includes(cleanQuery)) ||
         (props.name && props.name.toLowerCase().includes(cleanQuery));
 
+      if (!matchSearch) return false;
+
+      // 2. فلتر الحي ونوع العقار
       const matchDistrict = !criteria.district || props.district === criteria.district || props.district_ar === criteria.district;
-      const matchType = !criteria.propertyType || props.type === criteria.propertyType || props.category === criteria.propertyType;
+      if (!matchDistrict) return false;
 
-      // 2. نطاق السعر (Min/Max Price)
+      const matchType = !criteria.propertyType || criteria.propertyType === 'ALL' || props.type === criteria.propertyType || props.category === criteria.propertyType;
+      if (!matchType) return false;
+
+      // 3. نطاق السعر (Price Range)
       const price = Number(props.price) || 0;
-      const matchMinPrice = criteria.minPrice === null || price >= criteria.minPrice;
-      const matchMaxPrice = criteria.maxPrice === null || price <= criteria.maxPrice;
+      if (criteria.minPrice !== null && criteria.minPrice !== undefined && price < criteria.minPrice) return false;
+      if (criteria.maxPrice !== null && criteria.maxPrice !== undefined && price > criteria.maxPrice) return false;
 
-      // 3. نطاق المساحة (Min/Max Area)
+      // 4. نطاق المساحة (Area Range)
       const area = Number(props.area) || 0;
-      const matchMinArea = criteria.minArea === null || area >= criteria.minArea;
-      const matchMaxArea = criteria.maxArea === null || area <= criteria.maxArea;
+      if (criteria.minArea !== null && criteria.minArea !== undefined && area < criteria.minArea) return false;
+      if (criteria.maxArea !== null && criteria.maxArea !== undefined && area > criteria.maxArea) return false;
 
-      // 4. نطاق سعر المتر المربع (Min/Max Price per m²)
+      // 5. نطاق سعر المتر المربع (Price per m²)
       const pricePerSqm = calculatePricePerSqm(price, area);
-      const matchMinPriceSqm = criteria.minPricePerSqm === null || (pricePerSqm !== null && pricePerSqm >= criteria.minPricePerSqm);
-      const matchMaxPriceSqm = criteria.maxPricePerSqm === null || (pricePerSqm !== null && pricePerSqm <= criteria.maxPricePerSqm);
+      if (criteria.minPricePerSqm !== null && criteria.minPricePerSqm !== undefined) {
+        if (pricePerSqm === null || pricePerSqm < criteria.minPricePerSqm) return false;
+      }
+      if (criteria.maxPricePerSqm !== null && criteria.maxPricePerSqm !== undefined) {
+        if (pricePerSqm === null || pricePerSqm > criteria.maxPricePerSqm) return false;
+      }
 
-      // دمج جميع الشروط باستخدام (AND Logic)
-      return (
-        matchSearch &&
-        matchDistrict &&
-        matchType &&
-        matchMinPrice &&
-        matchMaxPrice &&
-        matchMinArea &&
-        matchMaxArea &&
-        matchMinPriceSqm &&
-        matchMaxPriceSqm
-      );
+      return true;
     });
   }
 }
