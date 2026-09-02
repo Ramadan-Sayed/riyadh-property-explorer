@@ -263,3 +263,40 @@ const handleEmptyState = (resultsCount) => {
     }
   }
 };
+
+
+/* ==========================================
+   OPTIMIZED FILTER SUBSCRIPTION (NO LAYER RE-CREATION)
+   ========================================== */
+// إلغاء أي اشتراكات سابقة إن وجدت وتحديث الرؤية فقط
+filterState.criteria$.subscribe((criteria) => {
+  // 1. تطبيق الفلترة على المصدر الموحد
+  const filteredFeatures = spatialSearchService.applyFilters(criteria);
+
+  // 2. تحديث رؤية العلامات الحالية على الخريطة دون تدمير الطبقة
+  const matchedIds = new Set(filteredFeatures.map((f) => f.properties.id));
+  if (propertiesLayer) {
+    filterGeoJsonLayer(propertiesLayer, matchedIds);
+  }
+
+  // 3. تحديث الإحصائيات والنتائج
+  if (summaryComponent && typeof summaryComponent.update === 'function') {
+    summaryComponent.update(filteredFeatures.length);
+  }
+
+  // 4. معالجة حالة النتيجة الفارغة (Empty State)
+  handleEmptyState(filteredFeatures.length);
+
+  // 5. ضبط أبعاد الخريطة فقط في حال وجود نتائج
+  if (filteredFeatures.length > 0 && propertiesLayer) {
+    try {
+      const tempGeoJson = L.geoJSON({ type: 'FeatureCollection', features: filteredFeatures });
+      const bounds = tempGeoJson.getBounds();
+      if (bounds && bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 });
+      }
+    } catch (e) {
+      console.warn('Bounds auto-fit skipped:', e);
+    }
+  }
+});
