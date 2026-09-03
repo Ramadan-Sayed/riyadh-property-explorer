@@ -434,3 +434,59 @@ body {
 .btn-retry:hover {
   background-color: #0a9396;
 }
+
+
+
+/* Property Details Widget Styling */
+#property-details-widget {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 320px;
+  width: 100%;
+}
+
+.property-details-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  direction: rtl;
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.details-header h4 {
+  margin: 0;
+  color: #005f73;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #888;
+}
+
+.details-body p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.details-actions {
+  margin-top: 12px;
+}
+
+.details-actions button {
+  width: 100%;
+}
