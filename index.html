@@ -25,8 +25,6 @@
     <link rel="stylesheet" href="./src/assets/styles/feedback.css" />
     <link rel="stylesheet" href="style.css" type="text/css" />
 
-    
-
   </head>
   <body>
     <!-- 1. الشريط العلوي (Header) -->
@@ -70,7 +68,7 @@
             </label>
           </div>
 
-          <!-- حاوية عرض كروت المحطات الجانبية (تم فك التعليق عنها) -->
+          <!-- حاوية عرض كروت المحطات الجانبية -->
           <div id="survey-station-container" class="survey-stations-list">
             <!-- سيتم توليد الكروت هنا ديناميكياً بواسطة JavaScript -->
           </div>
@@ -98,7 +96,7 @@
           </div>
         </section>
 
-        <section class="feature-card" id="spatial-search">
+        <section class="feature-card" id="spatial-filters">
           <h3>Advanced Spatial Filters</h3>
           <div class="filter-controls-grid">
             <!-- السعر -->
@@ -126,7 +124,6 @@
           </div>
         </section>
 
-
       </aside>
 
       <!-- 3. المساحة الرئيسية (Main) -->
@@ -135,6 +132,9 @@
         <!-- مكان ظهور خريطة Leaflet -->
         <div id="map"></div>
         
+        <!-- واجهة تفاصيل العقار المحدد (تمت الإضافة هنا) -->
+        <div id="property-details-widget" class="hidden"></div>
+
         <!-- واجهة حاسبة مساحات الأراضي -->
         <div id="land-calculator-widget" class="feature-card">
           <h3>حاسبة مساحات الأراضي في الرياض</h3>
@@ -162,8 +162,3 @@
 
   </body>
 </html>
-
-
-
-
-

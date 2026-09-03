@@ -25,6 +25,9 @@ import { UiStateComponent } from './dist/app/components/ui-state.component.js';
 import { FilterState } from './dist/app/features/filters/filter.state.js';
 import { FilterComponent } from './dist/app/features/filters/filter.component.js';
 
+// 🟢 [اليوم 8]: استيراد مكون تفاصيل العقار
+import { PropertyDetailsComponent } from './dist/app/features/properties/property-details/property-details.component.js';
+
 /* ==========================================
    1. GLOBAL INITIALIZATION & SHELL BUILD
    ========================================== */
@@ -35,6 +38,27 @@ const mainShell = new MainShell();
 const converterUI = new ConverterUIComponent();
 const filterState = FilterState.getInstance();
 const filterComponent = new FilterComponent('spatial-search');
+
+// 🟢 [اليوم 8]: إدارة حالة العقار المحدد وتجهيز المكون
+let selectedProperty = null;
+const propertyDetailsComponent = new PropertyDetailsComponent('property-details-widget');
+
+const selectProperty = (feature) => {
+  selectedProperty = feature;
+  propertyDetailsComponent.render(
+    selectedProperty,
+    (coords) => {
+      // 🎯 [الخطوة 6 - Zoom to Property]: التكبير ونقل الخريطة لموقع العقار
+      if (map && coords) {
+        map.setView(coords, 17, { animate: true });
+      }
+    },
+    () => {
+      // 🎯 [الخطوة 7 - Close]: إعادة الحالة إلى null لإغلاق اللوحة
+      selectProperty(null);
+    }
+  );
+};
 
 // 3️⃣ نقل الكروت والحاويات إلى السايدبار فوراً قبل ربط الأحداث
 if (mainShell && typeof mainShell.mountExistingWidgets === 'function') {
@@ -175,6 +199,11 @@ const loadAndDisplayProperties = async () => {
 
     propertiesLayer = L.geoJSON(data, {
       onEachFeature: (feature, layer) => {
+        // 🎯 [الخطوة 3 - Marker Click Event]: عند النقر على العقار يتم تحديد العقار وفتح لوحة التفاصيل
+        layer.on('click', () => {
+          selectProperty(feature);
+        });
+
         if (feature.properties && feature.properties.name) {
           layer.bindPopup(`
             <div style="direction: rtl; text-align: right;">
@@ -264,30 +293,23 @@ const handleEmptyState = (resultsCount) => {
   }
 };
 
-
 /* ==========================================
    OPTIMIZED FILTER SUBSCRIPTION (NO LAYER RE-CREATION)
    ========================================== */
-// إلغاء أي اشتراكات سابقة إن وجدت وتحديث الرؤية فقط
 filterState.criteria$.subscribe((criteria) => {
-  // 1. تطبيق الفلترة على المصدر الموحد
   const filteredFeatures = spatialSearchService.applyFilters(criteria);
 
-  // 2. تحديث رؤية العلامات الحالية على الخريطة دون تدمير الطبقة
   const matchedIds = new Set(filteredFeatures.map((f) => f.properties.id));
   if (propertiesLayer) {
     filterGeoJsonLayer(propertiesLayer, matchedIds);
   }
 
-  // 3. تحديث الإحصائيات والنتائج
   if (summaryComponent && typeof summaryComponent.update === 'function') {
     summaryComponent.update(filteredFeatures.length);
   }
 
-  // 4. معالجة حالة النتيجة الفارغة (Empty State)
   handleEmptyState(filteredFeatures.length);
 
-  // 5. ضبط أبعاد الخريطة فقط في حال وجود نتائج
   if (filteredFeatures.length > 0 && propertiesLayer) {
     try {
       const tempGeoJson = L.geoJSON({ type: 'FeatureCollection', features: filteredFeatures });
