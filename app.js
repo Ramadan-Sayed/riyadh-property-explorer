@@ -34,12 +34,17 @@ import { PropertyDetailsComponent } from './dist/app/features/properties/propert
 // 1️⃣ إنشاء الهيكل الأساسي للواجهة
 const mainShell = new MainShell();
 
-// 2️⃣ إنشاء تهيئة الكائنات المكونات أولاً
+// 2️⃣ نقل العناصر إلى السايدبار أولاً قبل تهيئة المكونات وحقن الأحداث
+if (mainShell && typeof mainShell.mountExistingWidgets === 'function') {
+  mainShell.mountExistingWidgets();
+}
+
+// 3️⃣ تهيئة كائنات المكونات بعد استقرار عناصر الـ DOM في مواقعها النهائية
 const converterUI = new ConverterUIComponent();
 const filterState = FilterState.getInstance();
-const filterComponent = new FilterComponent('spatial-search');
+const filterComponent = new FilterComponent('spatial-filters');
 
-// 🟢 [اليوم 8]: إدارة حالة العقار المحدد وتجهيز المكون
+// 🟢 إدارة حالة العقار المحدد وتجهيز المكون
 let selectedProperty = null;
 const propertyDetailsComponent = new PropertyDetailsComponent('property-details-widget');
 
@@ -48,24 +53,17 @@ const selectProperty = (feature) => {
   propertyDetailsComponent.render(
     selectedProperty,
     (coords) => {
-      // 🎯 [الخطوة 6 - Zoom to Property]: التكبير ونقل الخريطة لموقع العقار
       if (map && coords) {
         map.setView(coords, 17, { animate: true });
       }
     },
     () => {
-      // 🎯 [الخطوة 7 - Close]: إعادة الحالة إلى null لإغلاق اللوحة
       selectProperty(null);
     }
   );
 };
 
-// 3️⃣ نقل الكروت والحاويات إلى السايدبار فوراً قبل ربط الأحداث
-if (mainShell && typeof mainShell.mountExistingWidgets === 'function') {
-  mainShell.mountExistingWidgets();
-}
-
-// 4️⃣ حقن محول الإحداثيات وربط أحداثه بعد الاستقرار في الـ DOM
+// 4️⃣ حقن محول الإحداثيات وربط أحداثه داخل الحاوية المستقرة
 const converterContainer = document.getElementById('converter-widget');
 if (converterContainer && typeof converterUI.render === 'function') {
   converterContainer.innerHTML = converterUI.render();
