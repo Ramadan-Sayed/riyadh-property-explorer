@@ -63,17 +63,20 @@ export class MainShell {
 
   // 3️⃣ إعادة حقن الودجت بأمان داخل حاوية القائمة الجانبية
   public mountExistingWidgets(): void {
-    const widgetsContainer =
-      document.getElementById('sidebar-widgets-container') ||
-      document.getElementById('sidebar-content') ||
-      document.querySelector('.sidebar-body') ||
-      document.getElementById('app-sidebar');
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
 
-    if (!widgetsContainer) return;
+    const widgetsToMove = [
+      'coordinate-converter',
+      'layer-manager-card',
+      'spatial-search',
+      'spatial-filters'
+    ];
 
-    this.detachedWidgets.forEach((el) => {
-      if (el) {
-        widgetsContainer.appendChild(el);
+    widgetsToMove.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) {
+        sidebar.appendChild(element); // ✅ ينقل العنصر بأحداثه المربوطة دون إعادة بناء الـ DOM
       }
     });
   }
