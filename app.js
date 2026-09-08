@@ -21,9 +21,7 @@ import { MapComponent } from './dist/app/features/map/map.component.js';
 import { LayerManager } from './dist/app/features/map/layer-manager.js';
 import { UiStateComponent } from './dist/app/components/ui-state.component.js';
 import './dist/app/core/services/spatial-math.service.spec.js';
-
-
-
+import { StatisticsComponent } from './dist/app/features/statistics/statistics.component.js';
 
 // استيراد مكونات الفلترة
 import { FilterState } from './dist/app/features/filters/filter.state.js';
@@ -35,6 +33,10 @@ import { PropertyDetailsComponent } from './dist/app/features/properties/propert
 /* ==========================================
    1. GLOBAL INITIALIZATION & SHELL BUILD
    ========================================== */
+
+// 🟢 تهيئة مكون الإحصائيات المربوط بالحاوية الموجودة في السايدبار
+const statsComponent = new StatisticsComponent('statistics-widget');
+
 // 1️⃣ إنشاء الهيكل الأساسي للواجهة
 const mainShell = new MainShell();
 
@@ -181,7 +183,7 @@ if (surveyCheckbox) {
 }
 
 /* ==========================================
-   5. ASYNC DATA LOADING & REACTIVE FILTERS
+   5. ASYNC DATA LOADING & INITIAL RENDER
    ========================================== */
 const loadAndDisplayProperties = async () => {
   mapStateUI.render('loading', { message: 'جاري تحميل عقارات الرياض...' });
@@ -201,7 +203,6 @@ const loadAndDisplayProperties = async () => {
 
     propertiesLayer = L.geoJSON(data, {
       onEachFeature: (feature, layer) => {
-        // 🎯 [الخطوة 3 - Marker Click Event]: عند النقر على العقار يتم تحديد العقار وفتح لوحة التفاصيل
         layer.on('click', () => {
           selectProperty(feature);
         });
@@ -228,28 +229,13 @@ const loadAndDisplayProperties = async () => {
       });
     }
 
+    // 🟢 حساب وعرض الإحصائيات المبدئية عند أول تحميل للبيانات
+    if (statsComponent && typeof statsComponent.calculateStatistics === 'function') {
+      const initialStats = statsComponent.calculateStatistics(data.features);
+      statsComponent.render(initialStats);
+    }
+
     mapStateUI.render('success');
-
-    filterState.criteria$.subscribe((criteria) => {
-      const filteredFeatures = spatialSearchService.applyFilters(criteria);
-
-      handleEmptyState(filteredFeatures.length);
-
-      const matchedIds = new Set(filteredFeatures.map((f) => f.properties.id));
-      filterGeoJsonLayer(propertiesLayer, matchedIds);
-
-      if (filteredFeatures.length > 0) {
-        try {
-          const tempGeoJson = L.geoJSON({ type: 'FeatureCollection', features: filteredFeatures });
-          const bounds = tempGeoJson.getBounds();
-          if (bounds && bounds.isValid()) {
-            map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 });
-          }
-        } catch (e) {
-          console.warn('Could not fit bounds for filtered features:', e);
-        }
-      }
-    });
 
     setTimeout(() => {
       map.invalidateSize();
@@ -296,10 +282,16 @@ const handleEmptyState = (resultsCount) => {
 };
 
 /* ==========================================
-   OPTIMIZED FILTER SUBSCRIPTION (NO LAYER RE-CREATION)
+   OPTIMIZED FILTER SUBSCRIPTION (REACTIVE STATS & LAYERS)
    ========================================== */
 filterState.criteria$.subscribe((criteria) => {
   const filteredFeatures = spatialSearchService.applyFilters(criteria);
+
+  // 🟢 [اليوم 11]: تحديث الإحصائيات تفاعلياً عند تغير الفلاتر
+  if (statsComponent && typeof statsComponent.calculateStatistics === 'function') {
+    const currentStats = statsComponent.calculateStatistics(filteredFeatures);
+    statsComponent.render(currentStats);
+  }
 
   const matchedIds = new Set(filteredFeatures.map((f) => f.properties.id));
   if (propertiesLayer) {
