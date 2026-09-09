@@ -68,7 +68,8 @@ export class MainShell {
             'spatial-search',
             'advanced-spatial-filters',
             'statistics-dashboard-section',
-            'statistics-widget'
+            'statistics-widget',
+            'survey-station-container'
         ];
         widgetsToMove.forEach((id) => {
             const element = document.getElementById(id);
