@@ -490,3 +490,27 @@ body {
 .details-actions button {
   width: 100%;
 }
+
+/* تنسيق container القائمة الجانبية وتفعيل التمرير العمودي */
+.app-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  overflow-y: auto;
+  max-height: calc(100vh - 60px); /* ضبط ارتفاع السايدبار تحت الهيدر */
+  box-sizing: border-box;
+}
+
+/* إعادة تصفير التموضع المطلق لأي كرت داخل السايدبار لمنع التداخل */
+.app-sidebar .widget-card,
+.app-sidebar .feature-card,
+.app-sidebar > div {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}

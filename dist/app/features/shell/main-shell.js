@@ -22,7 +22,10 @@ export class MainShell {
             'layer-manager-widget',
             'spatial-search',
             'advanced-spatial-filters',
-            'survey-station-container'
+            'spatial-filters',
+            'survey-station-container',
+            'statistics-widget',
+            'statistics-dashboard-section'
         ];
         ids.forEach((id) => {
             const el = document.getElementById(id);
@@ -55,20 +58,28 @@ export class MainShell {
     }
     // 3️⃣ إعادة حقن الودجت بأمان داخل حاوية القائمة الجانبية
     mountExistingWidgets() {
-        const sidebar = document.querySelector('.sidebar');
+        const sidebar = document.getElementById('app-sidebar') || document.querySelector('.app-sidebar');
         if (!sidebar)
             return;
         const widgetsToMove = [
-            'coordinate-converter',
+            'land-calculator-widget',
+            'converter-widget',
             'layer-manager-card',
             'spatial-search',
-            'spatial-filters',
-            'statistics-dashboard-section'
+            'advanced-spatial-filters',
+            'statistics-dashboard-section',
+            'statistics-widget'
         ];
         widgetsToMove.forEach((id) => {
             const element = document.getElementById(id);
             if (element) {
-                sidebar.appendChild(element); // ✅ ينقل العنصر بأحداثه المربوطة دون إعادة بناء الـ DOM
+                sidebar.appendChild(element); // ينقل العنصر بأحداثه المربوطة دون إعادة بناء الـ DOM
+            }
+        });
+        // 🟢 نقل الكروت المنفصلة التي تم حفظها سابقاً داخل دالة mountExistingWidgets
+        this.detachedWidgets.forEach((widget) => {
+            if (widget && !sidebar.contains(widget) && widget.id !== 'survey-station-container') {
+                sidebar.appendChild(widget);
             }
         });
     }

@@ -25,7 +25,10 @@ export class MainShell {
       'layer-manager-widget',
       'spatial-search',
       'advanced-spatial-filters',
-      'survey-station-container'
+      'spatial-filters',
+      'survey-station-container',
+      'statistics-widget',
+      'statistics-dashboard-section'
     ];
 
     ids.forEach((id) => {
@@ -63,31 +66,33 @@ export class MainShell {
 
   // 3️⃣ إعادة حقن الودجت بأمان داخل حاوية القائمة الجانبية
   public mountExistingWidgets(): void {
-const sidebar = document.getElementById('app-sidebar') || document.querySelector('.app-sidebar');    if (!sidebar) return;
+    const sidebar = document.getElementById('app-sidebar') || document.querySelector('.app-sidebar');
+    if (!sidebar) return;
 
-    const widgetsToMove = [
-      'coordinate-converter',
-      'layer-manager-card',
-      'spatial-search',
-      'spatial-filters',
-      'statistics-dashboard-section'
-    ];
+   const widgetsToMove = [
+    'land-calculator-widget',
+    'converter-widget',
+    'layer-manager-card',
+    'spatial-search',
+    'advanced-spatial-filters',
+    'statistics-dashboard-section',
+    'statistics-widget'
+  ];
 
     widgetsToMove.forEach((id) => {
       const element = document.getElementById(id);
       if (element) {
-        sidebar.appendChild(element); // ✅ ينقل العنصر بأحداثه المربوطة دون إعادة بناء الـ DOM
+        sidebar.appendChild(element); // ينقل العنصر بأحداثه المربوطة دون إعادة بناء الـ DOM
+      }
+    });
+
+    // 🟢 نقل الكروت المنفصلة التي تم حفظها سابقاً داخل دالة mountExistingWidgets
+    this.detachedWidgets.forEach((widget) => {
+      if (widget && !sidebar.contains(widget) && widget.id !== 'survey-station-container') {
+        sidebar.appendChild(widget);
       }
     });
   }
-
-
-  // 🟢 في حال كانت الكروت مفصولة بدون ID، نقل العناصر التي تم حفظها سابقاً
-  this.detachedWidgets.forEach((widget) => {
-    if (widget && !sidebar.contains(widget)) {
-      sidebar.appendChild(widget);
-    }
-  });
 
   private initSidebarToggle(): void {
     const toggleBtn = document.getElementById('sidebar-toggle-btn');
