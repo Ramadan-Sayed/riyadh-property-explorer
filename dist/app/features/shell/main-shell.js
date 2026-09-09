@@ -62,7 +62,8 @@ export class MainShell {
             'coordinate-converter',
             'layer-manager-card',
             'spatial-search',
-            'spatial-filters'
+            'spatial-filters',
+            'statistics-dashboard-section'
         ];
         widgetsToMove.forEach((id) => {
             const element = document.getElementById(id);

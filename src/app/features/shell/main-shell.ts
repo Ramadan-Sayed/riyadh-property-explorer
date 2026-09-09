@@ -63,8 +63,7 @@ export class MainShell {
 
   // 3️⃣ إعادة حقن الودجت بأمان داخل حاوية القائمة الجانبية
   public mountExistingWidgets(): void {
-    const sidebar = document.querySelector('.sidebar');
-    if (!sidebar) return;
+const sidebar = document.getElementById('app-sidebar') || document.querySelector('.app-sidebar');    if (!sidebar) return;
 
     const widgetsToMove = [
       'coordinate-converter',
@@ -81,6 +80,14 @@ export class MainShell {
       }
     });
   }
+
+
+  // 🟢 في حال كانت الكروت مفصولة بدون ID، نقل العناصر التي تم حفظها سابقاً
+  this.detachedWidgets.forEach((widget) => {
+    if (widget && !sidebar.contains(widget)) {
+      sidebar.appendChild(widget);
+    }
+  });
 
   private initSidebarToggle(): void {
     const toggleBtn = document.getElementById('sidebar-toggle-btn');
