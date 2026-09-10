@@ -1,4 +1,4 @@
-// app.js - الملف الرئيسي لربط المكونات
+// app.js - الملف الرئيسي لربط المكونات مع دمقرطة قياس الأداء Baseline V1
 
 /* ==========================================
    0. IMPORTS
@@ -27,30 +27,35 @@ import { StatisticsComponent } from './dist/app/features/statistics/statistics.c
 import { FilterState } from './dist/app/features/filters/filter.state.js';
 import { FilterComponent } from './dist/app/features/filters/filter.component.js';
 
-// 🟢 [اليوم 8]: استيراد مكون تفاصيل العقار
+// استيراد مكون تفاصيل العقار
 import { PropertyDetailsComponent } from './dist/app/features/properties/property-details/property-details.component.js';
+
+// 🟢 [اليوم 12]: استيراد خدمة قياس الأداء (Performance Measurement Service)
+import { PerformanceService } from './dist/app/core/services/performance.service.js';
+
+const perfService = PerformanceService.getInstance();
 
 /* ==========================================
    1. GLOBAL INITIALIZATION & SHELL BUILD
    ========================================== */
 
-// 🟢 تهيئة مكون الإحصائيات المربوط بالحاوية الموجودة في السايدبار
+// تهيئة مكون الإحصائيات المربوط بالحاوية الموجودة في السايدبار
 const statsComponent = new StatisticsComponent('statistics-widget');
 
-// 1️⃣ إنشاء الهيكل الأساسي للواجهة
+// إنشاء الهيكل الأساسي للواجهة
 const mainShell = new MainShell();
 
-// 2️⃣ نقل العناصر إلى السايدبار أولاً قبل تهيئة المكونات وحقن الأحداث
+// نقل العناصر إلى السايدبار أولاً قبل تهيئة المكونات وحقن الأحداث
 if (mainShell && typeof mainShell.mountExistingWidgets === 'function') {
   mainShell.mountExistingWidgets();
 }
 
-// 3️⃣ تهيئة كائنات المكونات بعد استقرار عناصر الـ DOM في مواقعها النهائية
+// تهيئة كائنات المكونات بعد استقرار عناصر الـ DOM
 const converterUI = new ConverterUIComponent();
 const filterState = FilterState.getInstance();
 const filterComponent = new FilterComponent('spatial-filters');
 
-// 🟢 إدارة حالة العقار المحدد وتجهيز المكون
+// إدارة حالة العقار المحدد وتجهيز المكون
 let selectedProperty = null;
 const propertyDetailsComponent = new PropertyDetailsComponent('property-details-widget');
 
@@ -69,7 +74,7 @@ const selectProperty = (feature) => {
   );
 };
 
-// 4️⃣ حقن محول الإحداثيات وربط أحداثه داخل الحاوية المستقرة
+// حقن محول الإحداثيات وربط أحداثه
 const converterContainer = document.getElementById('converter-widget');
 if (converterContainer && typeof converterUI.render === 'function') {
   converterContainer.innerHTML = converterUI.render();
@@ -78,7 +83,7 @@ if (converterContainer && typeof converterUI.render === 'function') {
   }
 }
 
-// 5️⃣ ربط أحداث الفلاتر
+// ربط أحداث الفلاتر
 if (filterComponent && typeof filterComponent.bindEvents === 'function') {
   filterComponent.bindEvents();
 }
@@ -183,24 +188,40 @@ if (surveyCheckbox) {
 }
 
 /* ==========================================
-   5. ASYNC DATA LOADING & INITIAL RENDER
+   5. ASYNC DATA LOADING & INITIAL RENDER WITH BENCHMARKING
    ========================================== */
 const loadAndDisplayProperties = async () => {
   mapStateUI.render('loading', { message: 'جاري تحميل عقارات الرياض...' });
 
+  // ⏱️ بداية قياس الإجمالي لعملية التحميل
+  perfService.startMark('initial-load');
+
   try {
-    const data = await fetchRiyadhProperties('data/riyadh-properties.geojson');
+    // ⏱️ 1. Fetch Phase
+    perfService.startMark('fetch');
+    const response = await fetch('data/riyadh-properties.geojson');
+    perfService.endMark('fetch', 'Fetch Time');
+
+    // ⏱️ 2. Parse Phase
+    perfService.startMark('parse');
+    const data = await response.json();
+    perfService.endMark('parse', 'Parse Time');
 
     if (!data || !data.features || data.features.length === 0) {
       mapStateUI.render('empty', { message: 'ملف البيانات فارغ ولا يحتوي على عقارات.' });
       return;
     }
 
+    // ⏱️ 3. Transform / Indexing Phase
+    perfService.startMark('transform');
     spatialSearchService.setDataset(data.features);
     if (typeof filterComponent.initOptions === 'function') {
       filterComponent.initOptions(data.features);
     }
+    perfService.endMark('transform', 'Transform Time');
 
+    // ⏱️ 4. Application Layer Creation Phase
+    perfService.startMark('layer-creation');
     propertiesLayer = L.geoJSON(data, {
       onEachFeature: (feature, layer) => {
         layer.on('click', () => {
@@ -217,7 +238,12 @@ const loadAndDisplayProperties = async () => {
           `);
         }
       }
-    }).addTo(map);
+    });
+    perfService.endMark('layer-creation', 'Application Layer Creation Time');
+
+    // ⏱️ 5. Render Phase
+    perfService.startMark('render');
+    propertiesLayer.addTo(map);
 
     if (typeof layerService !== 'undefined' && LayerCategory) {
       layerService.addLayer({
@@ -229,11 +255,14 @@ const loadAndDisplayProperties = async () => {
       });
     }
 
-    // 🟢 حساب وعرض الإحصائيات المبدئية عند أول تحميل للبيانات
     if (statsComponent && typeof statsComponent.calculateStatistics === 'function') {
       const initialStats = statsComponent.calculateStatistics(data.features);
       statsComponent.render(initialStats);
     }
+    perfService.endMark('render', 'Render Time');
+
+    // ⏱️ نهاية قياس التحميل المبدئي الكلي
+    perfService.endMark('initial-load', 'Total Initial Load');
 
     mapStateUI.render('success');
 
@@ -282,21 +311,26 @@ const handleEmptyState = (resultsCount) => {
 };
 
 /* ==========================================
-   OPTIMIZED FILTER SUBSCRIPTION (REACTIVE STATS & LAYERS)
+   OPTIMIZED FILTER SUBSCRIPTION WITH Granular Benchmarking
    ========================================== */
 filterState.criteria$.subscribe((criteria) => {
+  // ⏱️ 1. قياس معالجة الفلترة (Filter Processing)
+  perfService.startMark('filter-processing');
   const filteredFeatures = spatialSearchService.applyFilters(criteria);
+  perfService.endMark('filter-processing', 'Filter Processing Time');
 
-  // 🟢 [اليوم 11]: تحديث الإحصائيات تفاعلياً عند تغير الفلاتر
   if (statsComponent && typeof statsComponent.calculateStatistics === 'function') {
     const currentStats = statsComponent.calculateStatistics(filteredFeatures);
     statsComponent.render(currentStats);
   }
 
+  // ⏱️ 2. قياس زمن تحديث الطبقة بالكتلة التطبيقية (Application Layer Update Time)
+  perfService.startMark('layer-update');
   const matchedIds = new Set(filteredFeatures.map((f) => f.properties.id));
   if (propertiesLayer) {
     filterGeoJsonLayer(propertiesLayer, matchedIds);
   }
+  perfService.endMark('layer-update', 'Application Layer Update Time');
 
   if (summaryComponent && typeof summaryComponent.update === 'function') {
     summaryComponent.update(filteredFeatures.length);
