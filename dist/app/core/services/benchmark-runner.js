@@ -28,4 +28,4 @@ export class BenchmarkRunner {
         console.table([filterStats, updateStats]);
     }
 }
-//# sourceMappingURL=coordinate.service.spec.js.map
+//# sourceMappingURL=benchmark-runner.js.map
