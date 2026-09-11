@@ -1,31 +1,35 @@
-import { PerformanceService } from './performance.service.js';
-export class BenchmarkRunner {
-    perfService = PerformanceService.getInstance();
-    async runBenchmarkSuite(datasetSizeLabel, iterations = 10) {
-        console.log(`🚀 Starting Benchmark Suite (${datasetSizeLabel}) across ${iterations} iterations...`);
-        for (let i = 0; i < iterations; i++) {
-            // محاكاة دورة الفلترة والتحديث لتسجيل البيانات
-            this.perfService.startMark('filter-processing');
-            // إجراء عملية المعالجة
-            this.perfService.endMark('filter-processing', 'Filter Processing');
-            this.perfService.startMark('layer-update');
-            // إجراء تحديث الطبقة
-            this.perfService.endMark('layer-update', 'Application Layer Update');
-        }
-        this.printEnvironmentAndResults(datasetSizeLabel);
-    }
-    printEnvironmentAndResults(datasetSizeLabel) {
-        // 🟢 سجل البيئة (Environment Log)
-        console.group('📌 Benchmark Environment Context');
-        console.log(`Browser: ${navigator.userAgent}`);
-        console.log(`CPU Cores: ${navigator.hardwareConcurrency || 'N/A'}`);
-        console.log(`Dataset Size: ${datasetSizeLabel}`);
-        console.log(`Build Mode: Development / Unminified`);
-        console.groupEnd();
-        // 🟢 استخراج جدول V1 Baseline
-        const filterStats = this.perfService.getSummary('Filter Processing', datasetSizeLabel);
-        const updateStats = this.perfService.getSummary('Application Layer Update', datasetSizeLabel);
-        console.table([filterStats, updateStats]);
-    }
-}
+import { CoordinateService } from './coordinate.service.js';
+describe('CoordinateService', () => {
+    let service;
+    beforeEach(() => {
+        service = new CoordinateService();
+    });
+    describe('Validation', () => {
+        it('should validate correct latitude and longitude ranges', () => {
+            expect(service.isValidLatitude(24.7136)).toBe(true);
+            expect(service.isValidLongitude(46.6753)).toBe(true);
+        });
+        it('should reject invalid coordinates out of bounds', () => {
+            expect(service.isValidLatitude(95.0)).toBe(false);
+            expect(service.isValidLatitude(-91.0)).toBe(false);
+            expect(service.isValidLongitude(185.0)).toBe(false);
+        });
+        it('should correctly handle boundary values', () => {
+            expect(service.isValidLatitude(90)).toBe(true);
+            expect(service.isValidLatitude(-90)).toBe(true);
+            expect(service.isValidLongitude(180)).toBe(true);
+            expect(service.isValidLongitude(-180)).toBe(true);
+        });
+    });
+    describe('Conversions', () => {
+        it('should accurately convert Decimal Degrees to DMS format', () => {
+            const dms = service.decimalToDMS(24.7136);
+            expect(dms).toEqual({ degrees: 24, minutes: 42, seconds: 48.96 });
+        });
+        it('should accurately convert DMS to Decimal Degrees', () => {
+            const decimal = service.dmsToDecimal(24, 42, 48.96);
+            expect(decimal).toBeCloseTo(24.7136, 4);
+        });
+    });
+});
 //# sourceMappingURL=coordinate.service.spec.js.map

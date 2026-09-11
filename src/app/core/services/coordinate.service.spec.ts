@@ -1,38 +1,53 @@
-import { PerformanceService } from './performance.service.js';
+import { CoordinateService, DMSCoordinate } from './coordinate.service.js';
 
-export class BenchmarkRunner {
-  private perfService = PerformanceService.getInstance();
+describe('CoordinateService', () => {
+  describe('Validation', () => {
+    it('should validate correct latitude and longitude ranges', () => {
+      expect(CoordinateService.isValidLatitude(24.7136)).toBe(true);
+      expect(CoordinateService.isValidLongitude(46.6753)).toBe(true);
+    });
 
-  public async runBenchmarkSuite(datasetSizeLabel: string, iterations: number = 10): Promise<void> {
-    console.log(`🚀 Starting Benchmark Suite (${datasetSizeLabel}) across ${iterations} iterations...`);
+    it('should reject invalid coordinates out of bounds', () => {
+      expect(CoordinateService.isValidLatitude(95.0)).toBe(false);
+      expect(CoordinateService.isValidLatitude(-91.0)).toBe(false);
+      expect(CoordinateService.isValidLongitude(185.0)).toBe(false);
+    });
 
-    for (let i = 0; i < iterations; i++) {
-      // محاكاة دورة الفلترة والتحديث لتسجيل البيانات
-      this.perfService.startMark('filter-processing');
-      // إجراء عملية المعالجة
-      this.perfService.endMark('filter-processing', 'Filter Processing');
+    it('should correctly handle boundary values', () => {
+      expect(CoordinateService.isValidLatitude(90)).toBe(true);
+      expect(CoordinateService.isValidLatitude(-90)).toBe(true);
+      expect(CoordinateService.isValidLongitude(180)).toBe(true);
+      expect(CoordinateService.isValidLongitude(-180)).toBe(true);
+    });
+  });
 
-      this.perfService.startMark('layer-update');
-      // إجراء تحديث الطبقة
-      this.perfService.endMark('layer-update', 'Application Layer Update');
-    }
+  describe('Conversions', () => {
+    it('should accurately convert Decimal Degrees to DMS format', () => {
+      const dms = CoordinateService.decimalToDMS(24.7136, true);
+      expect(dms).toEqual({
+        degrees: 24,
+        minutes: 42,
+        seconds: 48.96,
+        direction: 'N'
+      });
+    });
 
-    this.printEnvironmentAndResults(datasetSizeLabel);
-  }
+    it('should accurately convert DMS to Decimal Degrees', () => {
+      const dmsInput: DMSCoordinate = {
+        degrees: 24,
+        minutes: 42,
+        seconds: 48.96,
+        direction: 'N'
+      };
+      const decimal = CoordinateService.dmsToDecimal(dmsInput);
+      expect(decimal).toBeCloseTo(24.7136, 4);
+    });
+  });
 
-  private printEnvironmentAndResults(datasetSizeLabel: string): void {
-    // 🟢 سجل البيئة (Environment Log)
-    console.group('📌 Benchmark Environment Context');
-    console.log(`Browser: ${navigator.userAgent}`);
-    console.log(`CPU Cores: ${navigator.hardwareConcurrency || 'N/A'}`);
-    console.log(`Dataset Size: ${datasetSizeLabel}`);
-    console.log(`Build Mode: Development / Unminified`);
-    console.groupEnd();
-
-    // 🟢 استخراج جدول V1 Baseline
-    const filterStats = this.perfService.getSummary('Filter Processing', datasetSizeLabel);
-    const updateStats = this.perfService.getSummary('Application Layer Update', datasetSizeLabel);
-
-    console.table([filterStats, updateStats]);
-  }
-}
+  describe('GeoJSON Helpers', () => {
+    it('should format coordinates correctly to GeoJSON position [lon, lat]', () => {
+      const position = CoordinateService.toGeoJSONPosition({ latitude: 24.7136, longitude: 46.6753 });
+      expect(position).toEqual([46.6753, 24.7136]);
+    });
+  });
+});
