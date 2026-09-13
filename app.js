@@ -20,7 +20,7 @@ import { MainShell } from './dist/app/features/shell/main-shell.js';
 import { MapComponent } from './dist/app/features/map/map.component.js';
 import { LayerManager } from './dist/app/features/map/layer-manager.js';
 import { UiStateComponent } from './dist/app/components/ui-state.component.js';
-import './dist/app/core/services/spatial-math.service.spec.js';
+// import './dist/app/core/services/spatial-math.service.spec.js';
 import { StatisticsComponent } from './dist/app/features/statistics/statistics.component.js';
 
 // استيراد مكونات الفلترة

@@ -5,7 +5,8 @@ import type { FilterCriteria } from '../../features/filters/filter.model.js';
 describe('SpatialSearchService - Filtering Engine', () => {
   let service: SpatialSearchService;
 
-  const mockDataset: PropertyFeature[] = [
+  // استخدام any[] لتفادي قيود الحقول الإجبارية للأنماط داخل بيانات الاختبار
+  const mockDataset: any[] = [
     {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [46.6753, 24.7136] },
@@ -13,7 +14,6 @@ describe('SpatialSearchService - Filtering Engine', () => {
         id: '1', 
         name: 'فيلا الملقا', 
         district: 'الملقا', 
-        type: 'villa',
         propertyType: 'villa', 
         price: 2000000, 
         area: 400 
@@ -26,7 +26,6 @@ describe('SpatialSearchService - Filtering Engine', () => {
         id: '2', 
         name: 'شقة الياسمين', 
         district: 'الياسمين', 
-        type: 'apartment',
         propertyType: 'apartment', 
         price: 800000, 
         area: 160 
@@ -39,7 +38,6 @@ describe('SpatialSearchService - Filtering Engine', () => {
         id: '3', 
         name: 'أرض الملقا', 
         district: 'الملقا', 
-        type: 'land',
         propertyType: 'land', 
         price: 5000000, 
         area: 1000 
@@ -49,51 +47,51 @@ describe('SpatialSearchService - Filtering Engine', () => {
 
   beforeEach(() => {
     service = new SpatialSearchService();
-    service.setDataset(mockDataset);
+    service.setDataset(mockDataset as PropertyFeature[]);
   });
 
   it('should filter properties by search term (text matching)', () => {
-    const criteria: FilterCriteria = { searchTerm: 'فيلا' };
-    const results = service.applyFilters(criteria);
+    const criteria: Partial<FilterCriteria> = { searchTerm: 'فيلا' };
+    const results = service.applyFilters(criteria as FilterCriteria);
     expect(results.length).toBe(1);
     expect(results[0].properties.id).toBe('1');
   });
 
   it('should filter by specific district and propertyType', () => {
-    const criteria: FilterCriteria = { district: 'الملقا', propertyType: 'land' };
-    const results = service.applyFilters(criteria);
+    const criteria: Partial<FilterCriteria> = { district: 'الملقا', propertyType: 'land' };
+    const results = service.applyFilters(criteria as FilterCriteria);
     expect(results.length).toBe(1);
     expect(results[0].properties.id).toBe('3');
   });
 
   it('should apply range filters (Price and Area)', () => {
-    const criteria: FilterCriteria = { minPrice: 500000, maxPrice: 1000000, minArea: 100 };
-    const results = service.applyFilters(criteria);
+    const criteria: Partial<FilterCriteria> = { minPrice: 500000, maxPrice: 1000000, minArea: 100 };
+    const results = service.applyFilters(criteria as FilterCriteria);
     expect(results.length).toBe(1);
     expect(results[0].properties.id).toBe('2');
   });
 
   it('should support combining multiple criteria simultaneously', () => {
-    const criteria: FilterCriteria = {
+    const criteria: Partial<FilterCriteria> = {
       district: 'الملقا',
       minPrice: 1500000,
       maxPrice: 3000000,
       propertyType: 'villa'
     };
-    const results = service.applyFilters(criteria);
+    const results = service.applyFilters(criteria as FilterCriteria);
     expect(results.length).toBe(1);
     expect(results[0].properties.id).toBe('1');
   });
 
   it('should return empty array when zero results match criteria', () => {
-    const criteria: FilterCriteria = { district: 'النرجس' };
-    const results = service.applyFilters(criteria);
+    const criteria: Partial<FilterCriteria> = { district: 'النرجس' };
+    const results = service.applyFilters(criteria as FilterCriteria);
     expect(results.length).toBe(0);
   });
 
   it('should return full dataset when filters are cleared', () => {
-    const criteria: FilterCriteria = {};
-    const results = service.applyFilters(criteria);
+    const criteria: Partial<FilterCriteria> = {};
+    const results = service.applyFilters(criteria as FilterCriteria);
     expect(results.length).toBe(3);
   });
 });
