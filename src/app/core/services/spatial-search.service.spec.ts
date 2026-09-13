@@ -13,7 +13,8 @@ describe('SpatialSearchService - Filtering Engine', () => {
         id: '1', 
         name: 'فيلا الملقا', 
         district: 'الملقا', 
-        type: 'villa', 
+        type: 'villa',
+        propertyType: 'villa', 
         price: 2000000, 
         area: 400 
       }
@@ -25,7 +26,8 @@ describe('SpatialSearchService - Filtering Engine', () => {
         id: '2', 
         name: 'شقة الياسمين', 
         district: 'الياسمين', 
-        type: 'apartment', 
+        type: 'apartment',
+        propertyType: 'apartment', 
         price: 800000, 
         area: 160 
       }
@@ -37,7 +39,8 @@ describe('SpatialSearchService - Filtering Engine', () => {
         id: '3', 
         name: 'أرض الملقا', 
         district: 'الملقا', 
-        type: 'land', 
+        type: 'land',
+        propertyType: 'land', 
         price: 5000000, 
         area: 1000 
       }
