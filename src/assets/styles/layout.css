@@ -250,3 +250,27 @@ body, html {
   border-bottom: 2px solid var(--primary-light);
   padding-bottom: 0.5rem;
 }
+
+
+
+
+/* تقييد حاوية كروت محطات المسح الجغرافي داخل كارت Layer Manager */
+#survey-station-container {
+  max-height: 250px;          /* تحديد أقصى ارتفاع مسموح به */
+  overflow-y: auto;           /* تفعيل التمرير العمودي عند زيادة الكروت */
+  margin-top: 10px;
+  padding-left: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;                   /* مسافة منتظمة بين الكروت */
+}
+
+/* تحسين شكل شريط التمرير (Scrollbar) */
+#survey-station-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+#survey-station-container::-webkit-scrollbar-thumb {
+  background-color: #005f73;
+  border-radius: 4px;
+}
