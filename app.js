@@ -310,6 +310,37 @@ const handleEmptyState = (resultsCount) => {
   }
 };
 
+
+/* ==========================================
+   7. LAND CALCULATOR MODULE
+   ========================================== */
+const calcBtn = document.getElementById('btn-calculate');
+const lengthInput = document.getElementById('land-length');
+const widthInput = document.getElementById('land-width');
+const resultDiv = document.getElementById('calculation-result');
+
+if (calcBtn && lengthInput && widthInput && resultDiv) {
+  calcBtn.addEventListener('click', () => {
+    const length = parseFloat(lengthInput.value);
+    const width = parseFloat(widthInput.value);
+
+    // التحقق من صحة المدخلات
+    if (isNaN(length) || isNaN(width) || length <= 0 || width <= 0) {
+      resultDiv.textContent = 'يرجى إدخال قيم صالحة للطول والعرض.';
+      resultDiv.style.color = '#ef4444'; // لون أحمر للتنبيه
+      return;
+    }
+
+    // حساب المساحة
+    const area = length * width;
+
+    // عرض النتيجة
+    resultDiv.textContent = `المساحة الإجمالية: ${area.toLocaleString('ar-SA')} م²`;
+    resultDiv.style.color = '#005f73'; // إعادة اللون الرئيسي
+  });
+}
+
+
 /* ==========================================
    OPTIMIZED FILTER SUBSCRIPTION WITH Granular Benchmarking
    ========================================== */
