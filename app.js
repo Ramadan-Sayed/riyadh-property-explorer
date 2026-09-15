@@ -76,10 +76,13 @@ const selectProperty = (feature) => {
 
 // حقن محول الإحداثيات وربط أحداثه
 const converterContainer = document.getElementById('converter-widget');
-if (converterContainer && typeof converterUI.render === 'function') {
-  converterContainer.innerHTML = converterUI.render();
-  if (typeof converterUI.bindEvents === 'function') {
-    converterUI.bindEvents();
+if (converterContainer) {
+  const renderedContent = converterUI.render();
+  if (renderedContent) {
+    converterContainer.innerHTML = renderedContent;
+    if (typeof converterUI.bindEvents === 'function') {
+      converterUI.bindEvents();
+    }
   }
 }
 
