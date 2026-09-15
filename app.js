@@ -76,13 +76,17 @@ const selectProperty = (feature) => {
 
 // حقن محول الإحداثيات وربط أحداثه
 const converterContainer = document.getElementById('converter-widget');
-if (converterContainer) {
-  const renderedContent = converterUI.render();
-  if (renderedContent) {
-    converterContainer.innerHTML = renderedContent;
-    if (typeof converterUI.bindEvents === 'function') {
-      converterUI.bindEvents();
+if (converterContainer && typeof converterUI !== 'undefined') {
+  try {
+    const renderedContent = converterUI.render();
+    if (renderedContent) {
+      converterContainer.innerHTML = renderedContent;
+      if (typeof converterUI.bindEvents === 'function') {
+        converterUI.bindEvents();
+      }
     }
+  } catch (error) {
+    console.error('خطأ أثناء تحميل محول الإحداثيات:', error);
   }
 }
 
